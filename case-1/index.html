@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case File — Detective Hub</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAME GATE -->
+<div class="name-gate" id="nameGate">
+  <div class="name-gate-inner">
+    <div class="name-gate-stamp">CLASSIFIED MATERIAL</div>
+    <div class="name-gate-title">Case File Access</div>
+    <p class="name-gate-sub">This file is restricted to assigned personnel only.<br>Please identify yourself to proceed.</p>
+    <input class="name-gate-input" type="text" id="nameInput" placeholder="Enter your name, Detective" autocomplete="off" autofocus>
+    <div class="name-gate-add-row" id="addNameRow">
+      <button class="name-gate-add-btn" id="addNameBtn" onclick="addDetective()">+ Add another detective</button>
+    </div>
+    <div class="name-gate-names" id="nameList"></div>
+    <button class="name-gate-btn" id="nameBtn" disabled onclick="enterCase()">Open Case File</button>
+    <div class="name-gate-footer">Investigating solo or with a team — all are welcome</div>
+  </div>
+</div>
+
+<!-- MAIN HUB -->
+<div class="container" id="mainHub" style="display:none;">
+
+  <div class="folder-tab" id="caseTab">Case — Active</div>
+  <div class="folder-body">
+    <div class="coffee-stain" style="bottom:30px;right:40px;"></div>
+    <div class="coffee-stain" style="bottom:60px;right:50px;width:45px;height:45px;border-width:3px;"></div>
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="stamp">COLD CASE — REOPENED</div>
+      <h1 class="case-title" id="caseTitle"></h1>
+      <div class="case-meta" id="caseSubtitle"></div>
+    </div>
+
+    <!-- NOTEBOOK -->
+    <div class="notebook" id="notebook"></div>
+
+    <!-- PROGRESS -->
+    <div class="progress-section">
+      <div class="progress-item">
+        <div class="progress-num" id="evidenceCount">0/0</div>
+        <div class="progress-label">Evidence</div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-num" id="suspectCount">0/0</div>
+        <div class="progress-label">Suspects</div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-num" id="questionCount">0/0</div>
+        <div class="progress-label">Questions</div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-num" id="progressPct">0%</div>
+        <div class="progress-label">Complete</div>
+      </div>
+    </div>
+
+    <!-- EVIDENCE -->
+    <div class="section-divider">
+      <span>Evidence locker</span>
+      <span class="section-count" id="evidenceSectionCount" style="margin-left:auto"></span>
+    </div>
+    <div class="evidence-grid" id="evidenceGrid"></div>
+
+    <!-- AUDIO -->
+    <div class="section-divider"><span>Audio evidence</span></div>
+    <div class="audio-list" id="audioList"></div>
+
+    <!-- SUSPECTS -->
+    <div class="section-divider">
+      <span>Suspect board</span>
+      <span class="section-count" id="suspectSectionCount" style="margin-left:auto"></span>
+    </div>
+    <div class="suspect-grid" id="suspectGrid"></div>
+
+    <!-- INPUT -->
+    <div class="input-area">
+      <div class="input-title">Submit evidence</div>
+      <div class="input-subtitle">Found a code in the evidence? A phone number on a document? An answer to the case? Enter it here.</div>
+      <div class="input-row">
+        <input class="text-input" type="text" id="codeInput" placeholder="Enter password, phone number, or answer..." autocomplete="off">
+        <button class="submit-btn" onclick="submitCode()">Submit</button>
+      </div>
+      <div class="hint-area">
+        <button class="hint-btn" id="hintBtn" onclick="showHint()">Stuck on the case? Request a hint...</button>
+        <span class="hint-remaining" id="hintCount">3 hints remaining</span>
+      </div>
+      <div class="hint-box" id="hintBox"></div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+
+  </div>
+
+  <div class="folder-footer" id="footerText"></div>
+
+  <!-- RESET (hidden, for testing) -->
+  <div style="text-align:center;margin-bottom:2rem;">
+    <button onclick="resetGame()" style="background:none;border:1px dashed var(--border);padding:6px 14px;font-family:'Courier Prime',monospace;font-size:10px;color:var(--text-muted);cursor:pointer;border-radius:4px;">Reset case progress</button>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

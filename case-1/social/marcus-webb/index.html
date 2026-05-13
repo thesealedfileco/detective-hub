@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instalook</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #fafafa;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #262626;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV BAR */
+    .nav {
+      background: #fff;
+      border-bottom: 1px solid #dbdbdb;
+      padding: 0 16px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-inner {
+      max-width: 935px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #262626;
+    }
+
+    .nav-icons {
+      display: flex;
+      gap: 16px;
+      font-size: 13px;
+      color: #8e8e8e;
+    }
+
+    /* PROFILE */
+    .profile-section {
+      max-width: 935px;
+      margin: 0 auto;
+      padding: 30px 20px 0;
+    }
+
+    .profile-top {
+      display: flex;
+      gap: 28px;
+      margin-bottom: 20px;
+      align-items: flex-start;
+    }
+
+    .profile-pic {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 3px solid #dbdbdb;
+      flex-shrink: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #efefef;
+      font-size: 48px;
+      color: #8e8e8e;
+    }
+
+    .profile-pic img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-info { flex: 1; }
+
+    .profile-name-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .profile-username {
+      font-size: 20px;
+      font-weight: 400;
+      color: #262626;
+    }
+
+    .profile-btn {
+      background: #efefef;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: #262626;
+      cursor: default;
+    }
+
+    .profile-verified {
+      width: 18px;
+      height: 18px;
+      display: none;
+    }
+
+    .stats {
+      display: flex;
+      gap: 32px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .stats span { color: #262626; }
+    .stat-num { font-weight: 600; }
+
+    .bio {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #262626;
+      margin-bottom: 4px;
+    }
+
+    .bio-name {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .bio-text {
+      white-space: pre-line;
+    }
+
+    .bio-link {
+      color: #00376b;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 2px;
+    }
+
+    /* HIGHLIGHTS */
+    .highlights {
+      display: flex;
+      gap: 16px;
+      padding: 12px 0 20px;
+      overflow-x: auto;
+    }
+
+    .highlight-item {
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .highlight-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 1px solid #dbdbdb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 4px;
+      background: #fafafa;
+      font-size: 24px;
+    }
+
+    .highlight-label {
+      font-size: 12px;
+      color: #262626;
+      max-width: 64px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* TABS */
+    .tabs {
+      border-top: 1px solid #dbdbdb;
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+    }
+
+    .tab {
+      padding: 12px 0;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: #8e8e8e;
+      text-transform: uppercase;
+      border-top: 1px solid transparent;
+      margin-top: -1px;
+      cursor: default;
+    }
+
+    .tab.active {
+      color: #262626;
+      border-top-color: #262626;
+    }
+
+    /* POST GRID */
+    .post-grid {
+      max-width: 935px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      padding: 4px 0;
+    }
+
+    .post-thumb {
+      aspect-ratio: 1;
+      background: #efefef;
+      cursor: pointer;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .post-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .post-thumb-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: #c7c7c7;
+      background: #efefef;
+    }
+
+    .post-thumb:hover .post-overlay {
+      opacity: 1;
+    }
+
+    .post-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .post-overlay-stat {
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* POST MODAL */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      background: #fff;
+      border-radius: 4px;
+      max-width: 900px;
+      width: 100%;
+      max-height: 90vh;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .modal-image {
+      flex: 1.2;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+    }
+
+    .modal-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .modal-image-placeholder {
+      font-size: 64px;
+      color: #555;
+    }
+
+    .modal-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      border-bottom: 1px solid #efefef;
+    }
+
+    .modal-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #efefef;
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #8e8e8e;
+    }
+
+    .modal-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .modal-user {
+      font-size: 14px;
+      font-weight: 600;
+      color: #262626;
+    }
+
+    .modal-location {
+      font-size: 12px;
+      color: #8e8e8e;
+      font-weight: 400;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 28px;
+      cursor: pointer;
+      z-index: 1001;
+      line-height: 1;
+    }
+
+    .modal-caption {
+      padding: 14px 16px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #262626;
+      border-bottom: 1px solid #efefef;
+    }
+
+    .modal-caption strong {
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .modal-comments {
+      padding: 10px 16px;
+      flex: 1;
+    }
+
+    .comment {
+      padding: 6px 0;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .comment strong {
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .comment-time {
+      font-size: 11px;
+      color: #8e8e8e;
+      margin-top: 2px;
+    }
+
+    .modal-footer {
+      padding: 12px 16px;
+      border-top: 1px solid #efefef;
+      font-size: 10px;
+      color: #8e8e8e;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .modal-actions {
+      padding: 8px 16px;
+      border-top: 1px solid #efefef;
+      display: flex;
+      gap: 12px;
+      font-size: 22px;
+      color: #262626;
+    }
+
+    .modal-action { cursor: default; }
+
+    /* MOBILE */
+    @media (max-width: 735px) {
+      .profile-pic { width: 77px; height: 77px; font-size: 28px; }
+      .profile-top { gap: 16px; }
+      .profile-username { font-size: 18px; }
+      .stats { gap: 16px; font-size: 13px; }
+      .post-grid { gap: 2px; }
+      .modal { flex-direction: column; max-height: 95vh; }
+      .modal-image { min-height: 200px; max-height: 40vh; }
+      .highlights { padding: 8px 0 16px; gap: 12px; }
+      .highlight-circle { width: 56px; height: 56px; font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">Instalook</div>
+    <div class="nav-icons">
+      <span>+</span>
+      <span>&hearts;</span>
+      <span>&#9776;</span>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div class="profile-section" id="profileSection">
+  <!-- Populated by config below -->
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active">Posts</div>
+  <div class="tab">Tagged</div>
+</div>
+
+<!-- POST GRID -->
+<div class="post-grid" id="postGrid">
+  <!-- Populated by config below -->
+</div>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
+  <button class="modal-close" onclick="closeModal()">&times;</button>
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-image" id="modalImage"></div>
+    <div class="modal-content">
+      <div class="modal-header" id="modalHeader"></div>
+      <div class="modal-actions">
+        <span class="modal-action">&hearts;</span>
+        <span class="modal-action">&#128172;</span>
+        <span class="modal-action">&#9993;</span>
+      </div>
+      <div class="modal-caption" id="modalCaption"></div>
+      <div class="modal-comments" id="modalComments"></div>
+      <div class="modal-footer" id="modalFooter"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/*
+  ============================================================
+  CONFIGURATION — EDIT THIS SECTION FOR EACH CASE
+  ============================================================
+  Replace the profile info and posts array below with your
+  character's content. Everything else stays the same.
+  ============================================================
+*/
+
+var PROFILE = {
+  // Character's username (no @ symbol)
+  username: "marcuswebb_official",
+
+  // Character's display name
+  displayName: "Marcus Webb",
+
+  // Profile photo — use a path to an image file, or null for a placeholder
+  // Example: "images/marcus-profile.jpg"
+  photo: null,
+
+  // Bio text — use \n for line breaks
+  bio: "Morrow Creek Real Estate Group\nFounder & Managing Partner\nBuilding futures since '94\nLicensed in OR & WA",
+
+  // Optional link shown below bio
+  bioLink: "morrowcreekrealty.com",
+
+  // Stats
+  posts: 47,
+  followers: 892,
+  following: 341,
+
+  // Story highlights — emoji + label (or set to empty array [] for none)
+  highlights: [
+    { emoji: "\uD83C\uDFE0", label: "Listings" },
+    { emoji: "\uD83C\uDF1F", label: "Sold" },
+    { emoji: "\uD83C\uDFCC", label: "Golf" },
+    { emoji: "\uD83D\uDC68\u200D\uD83D\uDC69\u200D\uD83D\uDC67", label: "Family" }
+  ]
+};
+
+var POSTS = [
+  {
+    // Post image — use a path to an image file, or null for a placeholder
+    image: null,
+    placeholderEmoji: "\uD83C\uDFE0",
+    // Location tag shown on the post
+    location: "Morrow Creek, Oregon",
+    // Caption text
+    caption: "Another beautiful property hitting the market this week. 4 bed, 2.5 bath, sits right on the creek. This one won't last. DM for details. #morrowcreek #realestate #oregonliving",
+    // Date shown at bottom of expanded post
+    date: "MARCH 10, 1997",
+    // Likes count
+    likes: 34,
+    // Comments array — each has username and text
+    comments: [
+      { user: "diane_harlow", text: "Beautiful property! Is this the one on Creekside Drive?" },
+      { user: "marcuswebb_official", text: "@diane_harlow sure is! Swing by the open house Saturday \uD83D\uDC4D" },
+      { user: "jenny_oakes_design", text: "That kitchen is gorgeous" }
+    ]
+  },
+  {
+    image: null,
+    placeholderEmoji: "\uD83C\uDFCC",
+    location: "Pine Ridge Golf Club",
+    caption: "Best way to close a deal \u2014 18 holes and a handshake. Great round with the team today. #golflife #networking #pineridge",
+    date: "MARCH 8, 1997",
+    likes: 22,
+    comments: [
+      { user: "tom_reeves_pga", text: "You still owe me a rematch Webb \uD83D\uDE02" },
+      { user: "marcuswebb_official", text: "@tom_reeves_pga anytime old man" }
+    ]
+  },
+  {
+    image: null,
+    placeholderEmoji: "\uD83C\uDF89",
+    location: "Morrow Creek Community Center",
+    caption: "Proud to sponsor the Morrow Creek Youth Sports League for the 3rd year running. This community gave me everything. Time to give back. #community #morrowcreek #youthsports",
+    date: "FEBRUARY 28, 1997",
+    likes: 67,
+    comments: [
+      { user: "mc_youth_sports", text: "Thank you Marcus!! The kids love you \u2764\uFE0F" },
+      { user: "diane_harlow", text: "This is wonderful Marcus. You've always been so generous." },
+      { user: "sarah_webb_97", text: "So proud of you babe \u2764\uFE0F" },
+      { user: "marcuswebb_official", text: "@sarah_webb_97 \u2764\uFE0F" }
+    ]
+  },
+  {
+    image: null,
+    placeholderEmoji: "\uD83C\uDF05",
+    location: "Morrow Creek",
+    caption: "Some nights this town looks like a painting. Drove past the old mill on the way home. Still can't believe this is where I get to live and work.",
+    date: "FEBRUARY 20, 1997",
+    likes: 45,
+    comments: [
+      { user: "oregon_landscapes", text: "Stunning shot! What camera?" },
+      { user: "diane_harlow", text: "You should see it in autumn. Even more beautiful." }
+    ]
+  },
+  {
+    image: null,
+    placeholderEmoji: "\uD83D\uDD11",
+    location: "Webb Real Estate Office",
+    caption: "SOLD. Congratulations to the Martinez family on their first home! This is why I do what I do. Nothing beats handing over those keys. #sold #firsttimehomebuyer #morrowcreek",
+    date: "FEBRUARY 14, 1997",
+    likes: 89,
+    comments: [
+      { user: "martinez_familia", text: "THANK YOU MARCUS!! We love it so much!!" },
+      { user: "marcuswebb_official", text: "@martinez_familia you deserve it! Enjoy every minute \uD83C\uDFE1" },
+      { user: "jenny_oakes_design", text: "Congrats!! That house is a gem" },
+      { user: "sarah_webb_97", text: "The best husband AND the best realtor \u2764\uFE0F" }
+    ]
+  },
+  {
+    image: null,
+    placeholderEmoji: "\u2615",
+    location: "Brewed Awakening Cafe",
+    caption: "Monday morning fuel. If you haven't tried the new espresso at Brewed Awakening you're missing out. Tell Pam I sent you.",
+    date: "FEBRUARY 10, 1997",
+    likes: 18,
+    comments: [
+      { user: "brewed_awakening_mc", text: "Marcus you're our best customer! \u2615\u2764\uFE0F" }
+    ]
+  }
+];
+
+/*
+  ============================================================
+  END OF CONFIGURATION — do not edit below this line
+  ============================================================
+*/
+
+function renderProfile() {
+  var p = PROFILE;
+  var photoHtml = p.photo
+    ? '<img src="' + p.photo + '" alt="' + p.displayName + '">'
+    : '\uD83D\uDC64';
+
+  var highlightsHtml = '';
+  if (p.highlights && p.highlights.length > 0) {
+    highlightsHtml = '<div class="highlights">';
+    for (var i = 0; i < p.highlights.length; i++) {
+      highlightsHtml += '<div class="highlight-item"><div class="highlight-circle">' +
+        p.highlights[i].emoji + '</div><div class="highlight-label">' +
+        p.highlights[i].label + '</div></div>';
+    }
+    highlightsHtml += '</div>';
+  }
+
+  var linkHtml = p.bioLink
+    ? '<a class="bio-link" href="#">' + p.bioLink + '</a>'
+    : '';
+
+  document.getElementById('profileSection').innerHTML =
+    '<div class="profile-top">' +
+      '<div class="profile-pic">' + photoHtml + '</div>' +
+      '<div class="profile-info">' +
+        '<div class="profile-name-row">' +
+          '<span class="profile-username">' + p.username + '</span>' +
+          '<button class="profile-btn">Following</button>' +
+          '<button class="profile-btn">Message</button>' +
+        '</div>' +
+        '<div class="stats">' +
+          '<span><span class="stat-num">' + p.posts + '</span> posts</span>' +
+          '<span><span class="stat-num">' + p.followers.toLocaleString() + '</span> followers</span>' +
+          '<span><span class="stat-num">' + p.following + '</span> following</span>' +
+        '</div>' +
+        '<div class="bio">' +
+          '<span class="bio-name">' + p.displayName + '</span>' +
+          '<span class="bio-text">' + p.bio.replace(/\n/g, '<br>') + '</span>' +
+          linkHtml +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    highlightsHtml;
+}
+
+function renderGrid() {
+  var grid = document.getElementById('postGrid');
+  var html = '';
+
+  for (var i = 0; i < POSTS.length; i++) {
+    var post = POSTS[i];
+    var imgHtml = post.image
+      ? '<img src="' + post.image + '" alt="Post">'
+      : '<div class="post-thumb-placeholder">' + (post.placeholderEmoji || '\uD83D\uDDBC') + '</div>';
+
+    html += '<div class="post-thumb" onclick="openModal(' + i + ')">' +
+      imgHtml +
+      '<div class="post-overlay">' +
+        '<div class="post-overlay-stat">&hearts; ' + post.likes + '</div>' +
+        '<div class="post-overlay-stat">&#128172; ' + post.comments.length + '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  grid.innerHTML = html;
+}
+
+function openModal(index) {
+  var post = POSTS[index];
+  var p = PROFILE;
+  var backdrop = document.getElementById('modalBackdrop');
+
+  var imgHtml = post.image
+    ? '<img src="' + post.image + '" alt="Post">'
+    : '<div class="modal-image-placeholder">' + (post.placeholderEmoji || '\uD83D\uDDBC') + '</div>';
+
+  document.getElementById('modalImage').innerHTML = imgHtml;
+
+  var avatarHtml = p.photo
+    ? '<img src="' + p.photo + '" alt="">'
+    : '\uD83D\uDC64';
+
+  var locationHtml = post.location
+    ? '<div class="modal-location">' + post.location + '</div>'
+    : '';
+
+  document.getElementById('modalHeader').innerHTML =
+    '<div class="modal-avatar">' + avatarHtml + '</div>' +
+    '<div><div class="modal-user">' + p.username + '</div>' + locationHtml + '</div>';
+
+  document.getElementById('modalCaption').innerHTML =
+    '<strong>' + p.username + '</strong> ' + post.caption;
+
+  var commentsHtml = '';
+  for (var i = 0; i < post.comments.length; i++) {
+    var c = post.comments[i];
+    commentsHtml += '<div class="comment"><strong>' + c.user + '</strong> ' + c.text +
+      '<div class="comment-time">' + (c.time || '1w') + '</div></div>';
+  }
+  document.getElementById('modalComments').innerHTML = commentsHtml;
+  document.getElementById('modalFooter').textContent = post.date || '';
+
+  backdrop.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modalBackdrop') && e.target.className !== 'modal-close') return;
+  document.getElementById('modalBackdrop').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+
+window.addEventListener('DOMContentLoaded', function() {
+  renderProfile();
+  renderGrid();
+});
+</script>
+
+</body>
+</html>

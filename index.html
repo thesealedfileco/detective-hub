@@ -3,110 +3,537 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Case File — Detective Hub</title>
-  <link rel="stylesheet" href="style.css">
+  <title>The Sealed File Co — Archive</title>
+  <meta name="description" content="Recovered case file archive. Restored investigative materials for independent investigators.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --term-bg: #0a0c08;
+      --term-green: #8a9a7a;
+      --term-green-bright: #a0b890;
+      --term-green-dim: #5a6a50;
+      --term-green-dark: #3a4a30;
+      --term-green-faint: #2a3020;
+      --term-green-glow: #4a6a3a;
+      --term-amber: #9a8a3a;
+      --term-amber-dim: rgba(154,138,58,0.12);
+      --term-red-dim: #9a5a5a;
+      --term-red-bg: rgba(154,90,90,0.1);
+      --term-blue-dim: #5a7a9a;
+      --term-blue-bg: rgba(90,122,154,0.1);
+      --term-green-tag: #6a9a5a;
+      --term-green-tag-bg: rgba(106,154,90,0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--term-bg);
+      color: var(--term-green);
+      font-family: 'IBM Plex Mono', monospace;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 100;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.06) 2px,
+        rgba(0,0,0,0.06) 4px
+      );
+    }
+
+    .crt-vignette {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 101;
+      background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.5) 100%);
+    }
+
+    .crt-flicker {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 99;
+      animation: flicker 0.15s infinite alternate;
+      opacity: 0;
+    }
+
+    @keyframes flicker {
+      0% { opacity: 0; }
+      50% { opacity: 0.005; background: rgba(138,154,122,0.02); }
+      100% { opacity: 0; }
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* HEADER */
+    .header {
+      border-bottom: 1px solid var(--term-green-faint);
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .sys-line {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--term-green-dark);
+      margin-bottom: 6px;
+    }
+
+    .title {
+      font-family: 'Courier Prime', monospace;
+      font-size: clamp(18px, 4vw, 22px);
+      font-weight: 700;
+      color: var(--term-green-bright);
+      letter-spacing: 0.06em;
+      margin-bottom: 2px;
+    }
+
+    .subtitle {
+      font-size: 11px;
+      color: var(--term-green-dim);
+    }
+
+    .cursor {
+      animation: blink 1s step-end infinite;
+      color: var(--term-green-glow);
+    }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* STATUS BAR */
+    .status-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 1.5rem;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      color: var(--term-green-dim);
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .dot-active { background: var(--term-green-tag); }
+    .dot-warn { background: var(--term-amber); }
+
+    /* LORE BLOCK */
+    .lore {
+      border: 1px solid var(--term-green-faint);
+      border-radius: 2px;
+      padding: 14px 16px;
+      margin-bottom: 1.5rem;
+      font-size: 12px;
+      line-height: 1.75;
+      color: #6a7a5a;
+    }
+
+    .lore-label {
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      color: var(--term-green-dark);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    /* CASE INDEX */
+    .index { margin-bottom: 1.5rem; }
+
+    .index-header {
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      color: var(--term-green-dark);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #141a10;
+    }
+
+    .index-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 0;
+      border-bottom: 1px solid #111610;
+      font-size: 11px;
+    }
+
+    .case-id {
+      color: var(--term-green-dim);
+      min-width: 100px;
+      flex-shrink: 0;
+    }
+
+    .case-name {
+      flex: 1;
+      color: var(--term-green);
+    }
+
+    .tag {
+      font-size: 9px;
+      letter-spacing: 0.06em;
+      padding: 2px 7px;
+      border-radius: 2px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .tag-sealed { color: var(--term-amber); background: var(--term-amber-dim); border: 1px solid rgba(154,138,58,0.2); }
+    .tag-recovered { color: var(--term-green-tag); background: var(--term-green-tag-bg); border: 1px solid rgba(106,154,90,0.2); }
+    .tag-distributed { color: var(--term-blue-dim); background: var(--term-blue-bg); border: 1px solid rgba(90,122,154,0.15); }
+    .tag-restricted { color: var(--term-red-dim); background: var(--term-red-bg); border: 1px solid rgba(154,90,90,0.15); }
+
+    /* SEARCH */
+    .search { margin-bottom: 1.5rem; }
+
+    .search-label {
+      font-size: 10px;
+      color: var(--term-green-dark);
+      margin-bottom: 6px;
+      letter-spacing: 0.06em;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .search-input {
+      flex: 1;
+      background: #080a06;
+      border: 1px solid var(--term-green-faint);
+      border-radius: 2px;
+      padding: 9px 12px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--term-green);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus { border-color: var(--term-green-glow); }
+    .search-input::placeholder { color: var(--term-green-dark); }
+
+    .search-btn {
+      background: #1a2a14;
+      border: 1px solid var(--term-green-faint);
+      border-radius: 2px;
+      padding: 9px 16px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      color: var(--term-green-dim);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .search-btn:hover { background: #243a1a; border-color: var(--term-green-dark); color: var(--term-green); }
+
+    .search-result {
+      margin-top: 8px;
+      font-size: 11px;
+      color: #6a5a3a;
+      padding: 8px 10px;
+      background: rgba(154,106,58,0.05);
+      border: 1px solid rgba(154,106,58,0.12);
+      border-radius: 2px;
+      display: none;
+      line-height: 1.6;
+    }
+
+    .search-result.visible { display: block; }
+
+    .search-result a {
+      color: var(--term-green-tag);
+      text-decoration: none;
+      border-bottom: 1px solid var(--term-green-dark);
+      transition: color 0.15s;
+    }
+
+    .search-result a:hover { color: var(--term-green-bright); }
+
+    /* NOTICE */
+    .notice {
+      font-size: 10px;
+      color: var(--term-green-dark);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      padding: 10px 12px;
+      border-left: 2px solid #1a2010;
+    }
+
+    /* FOOTER */
+    .footer {
+      border-top: 1px solid #141a10;
+      padding-top: 1rem;
+      font-size: 9px;
+      color: var(--term-green-dark);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      letter-spacing: 0.04em;
+    }
+
+    /* AUDIO */
+    .mute-btn {
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      z-index: 200;
+      background: rgba(10,12,8,0.8);
+      border: 1px solid var(--term-green-faint);
+      border-radius: 2px;
+      padding: 5px 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      color: var(--term-green-dark);
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: all 0.15s;
+    }
+
+    .mute-btn:hover { border-color: var(--term-green-dark); color: var(--term-green-dim); }
+
+    /* TYPING EFFECT */
+    .type-target { visibility: hidden; }
+    .type-target.typed { visibility: visible; }
+
+    /* RESPONSIVE */
+    @media (max-width: 500px) {
+      .container { padding: 1.5rem 1rem; }
+      .index-row { flex-wrap: wrap; gap: 4px; }
+      .case-id { min-width: 80px; font-size: 10px; }
+      .case-name { font-size: 10px; }
+      .status-bar { gap: 10px; }
+      .search-row { flex-direction: column; }
+      .footer { flex-direction: column; gap: 4px; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- NAME GATE -->
-<div class="name-gate" id="nameGate">
-  <div class="name-gate-inner">
-    <div class="name-gate-stamp">CLASSIFIED MATERIAL</div>
-    <div class="name-gate-title">Case File Access</div>
-    <p class="name-gate-sub">This file is restricted to assigned personnel only.<br>Please identify yourself to proceed.</p>
-    <input class="name-gate-input" type="text" id="nameInput" placeholder="Enter your name, Detective" autocomplete="off" autofocus>
-    <div class="name-gate-add-row" id="addNameRow">
-      <button class="name-gate-add-btn" id="addNameBtn" onclick="addDetective()">+ Add another detective</button>
-    </div>
-    <div class="name-gate-names" id="nameList"></div>
-    <button class="name-gate-btn" id="nameBtn" disabled onclick="enterCase()">Open Case File</button>
-    <div class="name-gate-footer">Investigating solo or with a team — all are welcome</div>
-  </div>
-</div>
+<div class="scanlines"></div>
+<div class="crt-vignette"></div>
+<div class="crt-flicker"></div>
 
-<!-- MAIN HUB -->
-<div class="container" id="mainHub" style="display:none;">
+<button class="mute-btn" id="muteBtn" onclick="toggleAudio()">UNMUTE</button>
 
-  <div class="folder-tab" id="caseTab">Case — Active</div>
-  <div class="folder-body">
-    <div class="coffee-stain" style="bottom:30px;right:40px;"></div>
-    <div class="coffee-stain" style="bottom:60px;right:50px;width:45px;height:45px;border-width:3px;"></div>
+<div class="container">
 
-    <!-- HEADER -->
-    <div class="header">
-      <div class="stamp">COLD CASE — REOPENED</div>
-      <h1 class="case-title" id="caseTitle"></h1>
-      <div class="case-meta" id="caseSubtitle"></div>
-    </div>
-
-    <!-- NOTEBOOK -->
-    <div class="notebook" id="notebook"></div>
-
-    <!-- PROGRESS -->
-    <div class="progress-section">
-      <div class="progress-item">
-        <div class="progress-num" id="evidenceCount">0/0</div>
-        <div class="progress-label">Evidence</div>
-      </div>
-      <div class="progress-item">
-        <div class="progress-num" id="suspectCount">0/0</div>
-        <div class="progress-label">Suspects</div>
-      </div>
-      <div class="progress-item">
-        <div class="progress-num" id="questionCount">0/0</div>
-        <div class="progress-label">Questions</div>
-      </div>
-      <div class="progress-item">
-        <div class="progress-num" id="progressPct">0%</div>
-        <div class="progress-label">Complete</div>
-      </div>
-    </div>
-
-    <!-- EVIDENCE -->
-    <div class="section-divider">
-      <span>Evidence locker</span>
-      <span class="section-count" id="evidenceSectionCount" style="margin-left:auto"></span>
-    </div>
-    <div class="evidence-grid" id="evidenceGrid"></div>
-
-    <!-- AUDIO -->
-    <div class="section-divider"><span>Audio evidence</span></div>
-    <div class="audio-list" id="audioList"></div>
-
-    <!-- SUSPECTS -->
-    <div class="section-divider">
-      <span>Suspect board</span>
-      <span class="section-count" id="suspectSectionCount" style="margin-left:auto"></span>
-    </div>
-    <div class="suspect-grid" id="suspectGrid"></div>
-
-    <!-- INPUT -->
-    <div class="input-area">
-      <div class="input-title">Submit evidence</div>
-      <div class="input-subtitle">Found a code in the evidence? A phone number on a document? An answer to the case? Enter it here.</div>
-      <div class="input-row">
-        <input class="text-input" type="text" id="codeInput" placeholder="Enter password, phone number, or answer..." autocomplete="off">
-        <button class="submit-btn" onclick="submitCode()">Submit</button>
-      </div>
-      <div class="hint-area">
-        <button class="hint-btn" id="hintBtn" onclick="showHint()">Stuck on the case? Request a hint...</button>
-        <span class="hint-remaining" id="hintCount">3 hints remaining</span>
-      </div>
-      <div class="hint-box" id="hintBox"></div>
-      <div class="feedback" id="feedback"></div>
-    </div>
-
+  <div class="header">
+    <div class="sys-line" id="sysLine"></div>
+    <div class="title" id="titleEl"></div>
+    <div class="subtitle" id="subtitleEl"></div>
   </div>
 
-  <div class="folder-footer" id="footerText"></div>
+  <div class="status-bar">
+    <div class="status-item"><div class="dot dot-active"></div>ARCHIVE: ONLINE</div>
+    <div class="status-item"><div class="dot dot-warn"></div>FILES: 4 INDEXED</div>
+    <div class="status-item"><div class="dot dot-active"></div>LAST UPDATE: 2026-05-09</div>
+  </div>
 
-  <!-- RESET (hidden, for testing) -->
-  <div style="text-align:center;margin-bottom:2rem;">
-    <button onclick="resetGame()" style="background:none;border:1px dashed var(--border);padding:6px 14px;font-family:'Courier Prime',monospace;font-size:10px;color:var(--text-muted);cursor:pointer;border-radius:4px;">Reset case progress</button>
+  <div class="lore">
+    <div class="lore-label">About this archive</div>
+    In 2025, a private archivist uncovered sealed investigative files connected to discontinued cold cases. Some files referenced websites, recordings, and evidence that still existed online. This archive was established to restore and distribute recovered materials to independent investigators. File integrity cannot be guaranteed. Some evidence may have been altered prior to recovery.
+  </div>
+
+  <div class="index">
+    <div class="index-header">Case file index</div>
+    <div class="index-row">
+      <span class="case-id">CF-1997-0342</span>
+      <span class="case-name">The Vanishing at Morrow Creek</span>
+      <span class="tag tag-distributed">DISTRIBUTED</span>
+    </div>
+    <div class="index-row">
+      <span class="case-id">CF-2003-0118</span>
+      <span class="case-name">[TITLE REDACTED]</span>
+      <span class="tag tag-sealed">SEALED</span>
+    </div>
+    <div class="index-row">
+      <span class="case-id">CF-1989-0561</span>
+      <span class="case-name">[PENDING RECOVERY]</span>
+      <span class="tag tag-restricted">RESTRICTED</span>
+    </div>
+    <div class="index-row">
+      <span class="case-id">CF-2011-0029</span>
+      <span class="case-name">[PENDING RECOVERY]</span>
+      <span class="tag tag-sealed">SEALED</span>
+    </div>
+  </div>
+
+  <div class="search">
+    <div class="search-label">> query archive<span class="cursor">_</span></div>
+    <div class="search-row">
+      <input class="search-input" type="text" placeholder="Enter case ID or keyword..." id="searchInput" autocomplete="off">
+      <button class="search-btn" onclick="doSearch()">SEARCH</button>
+    </div>
+    <div class="search-result" id="searchResult"></div>
+  </div>
+
+  <div class="notice">
+    NOTICE: Recovered case files are distributed through authorized channels only. If you have received a case reference URL, navigate directly to the provided address. For access to sealed or restricted files, contact the archive administrator.
+  </div>
+
+  <div class="footer">
+    <span>The Sealed File Co // Archive Node 7</span>
+    <span>Unauthorized access is logged</span>
   </div>
 
 </div>
 
-<script src="script.js"></script>
+<script>
+// Typing effect for header
+function typeText(el, text, speed, callback) {
+  let i = 0;
+  el.textContent = '';
+  el.style.visibility = 'visible';
+  function type() {
+    if (i < text.length) {
+      el.textContent += text.charAt(i);
+      i++;
+      setTimeout(type, speed);
+    } else if (callback) {
+      callback();
+    }
+  }
+  type();
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  var sysLine = document.getElementById('sysLine');
+  var titleEl = document.getElementById('titleEl');
+  var subtitleEl = document.getElementById('subtitleEl');
+
+  typeText(sysLine, 'ARCHIVE TERMINAL v2.1.4 // SESSION ACTIVE', 20, function() {
+    setTimeout(function() {
+      typeText(titleEl, 'THE SEALED FILE CO', 40, function() {
+        titleEl.innerHTML += '<span class="cursor">_</span>';
+        setTimeout(function() {
+          typeText(subtitleEl, 'Recovered case file archive // Est. 2025', 18);
+        }, 200);
+      });
+    }, 300);
+  });
+});
+
+// Search
+function doSearch() {
+  var r = document.getElementById('searchResult');
+  var v = document.getElementById('searchInput').value.trim().toLowerCase();
+  r.classList.add('visible');
+
+  if (!v) {
+    r.innerHTML = '> ERROR: No query entered. Awaiting input<span class="cursor">_</span>';
+    return;
+  }
+
+  if (v.includes('morrow') || v.includes('1997') || v.includes('0342') || v.includes('vanishing')) {
+    r.innerHTML = '> 1 result found. CF-1997-0342: STATUS DISTRIBUTED. File has been released to authorized investigators. <a href="https://thesealedfileco.etsy.com" target="_blank" rel="noopener">Request access through distribution channel</a><span class="cursor">_</span>';
+  } else if (v.includes('2003') || v.includes('0118')) {
+    r.innerHTML = '> CF-2003-0118: STATUS SEALED. This file is pending archival review. Check back for updates.<span class="cursor">_</span>';
+  } else if (v.includes('1989') || v.includes('0561') || v.includes('2011') || v.includes('0029')) {
+    r.innerHTML = '> File recovery in progress. Materials are being restored from archived storage. Check back for updates.<span class="cursor">_</span>';
+  } else {
+    r.innerHTML = '> ACCESS RESTRICTED. No matching files available for public query. Recovered files are distributed through <a href="https://thesealedfileco.etsy.com" target="_blank" rel="noopener">authorized channels</a>.<span class="cursor">_</span>';
+  }
+}
+
+document.getElementById('searchInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doSearch();
+});
+
+// Ambient audio
+var audioCtx = null;
+var audioPlaying = false;
+
+function createAmbientAudio() {
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+  // Low electrical hum (60Hz)
+  var hum = audioCtx.createOscillator();
+  hum.type = 'sine';
+  hum.frequency.value = 60;
+  var humGain = audioCtx.createGain();
+  humGain.gain.value = 0.015;
+  hum.connect(humGain);
+  humGain.connect(audioCtx.destination);
+  hum.start();
+
+  // Higher harmonic (120Hz)
+  var hum2 = audioCtx.createOscillator();
+  hum2.type = 'sine';
+  hum2.frequency.value = 120;
+  var humGain2 = audioCtx.createGain();
+  humGain2.gain.value = 0.008;
+  hum2.connect(humGain2);
+  humGain2.connect(audioCtx.destination);
+  hum2.start();
+
+  // Subtle noise (like old equipment)
+  var bufferSize = 2 * audioCtx.sampleRate;
+  var noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+  var output = noiseBuffer.getChannelData(0);
+  for (var i = 0; i < bufferSize; i++) {
+    output[i] = Math.random() * 2 - 1;
+  }
+  var noise = audioCtx.createBufferSource();
+  noise.buffer = noiseBuffer;
+  noise.loop = true;
+  var noiseGain = audioCtx.createGain();
+  noiseGain.gain.value = 0.006;
+  var noiseFilter = audioCtx.createBiquadFilter();
+  noiseFilter.type = 'lowpass';
+  noiseFilter.frequency.value = 400;
+  noise.connect(noiseFilter);
+  noiseFilter.connect(noiseGain);
+  noiseGain.connect(audioCtx.destination);
+  noise.start();
+
+  audioPlaying = true;
+}
+
+function toggleAudio() {
+  var btn = document.getElementById('muteBtn');
+  if (!audioCtx) {
+    createAmbientAudio();
+    btn.textContent = 'MUTE';
+  } else if (audioPlaying) {
+    audioCtx.suspend();
+    audioPlaying = false;
+    btn.textContent = 'UNMUTE';
+  } else {
+    audioCtx.resume();
+    audioPlaying = true;
+    btn.textContent = 'MUTE';
+  }
+}
+</script>
+
 </body>
 </html>
