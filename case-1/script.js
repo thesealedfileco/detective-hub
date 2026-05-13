@@ -7,7 +7,11 @@ let gameState = {
   revealedSuspects: [],
   currentStage: 'start',
   completedStages: [],
-  hintsUsedPerStage: {}
+  hintsUsedPerStage: {},
+  selectedSuspect: null,
+  solutionAnswers: [],
+  caseSolved: false,
+  solvedDate: null
 };
 
 const STORAGE_KEY = 'detective-hub-save';
@@ -630,5 +634,534 @@ function submitCode() {
 
   input.value = '';
 }
+
+// ── SOLUTION SYSTEM ──
+
+function renderSolution() {
+  var section = document.getElementById('solutionSection');
+  if (!config.solution) { section.style.display = 'none'; return; }
+
+  // Check if solution stage has been reached
+  var solutionUnlocked = false;
+  if (config.solution.unlockedByStage) {
+    solutionUnlocked = gameState.completedStages.includes(config.solution.unlockedByStage);
+  }
+
+  // Already solved
+  if (gameState.caseSolved) {
+    showRevealPage();
+    return;
+  }
+
+  var locked = document.getElementById('envelopeLocked');
+  var unlocked = document.getElementById('envelopeUnlocked');
+
+  if (solutionUnlocked) {
+    locked.style.display = 'none';
+    unlocked.style.display = 'block';
+    renderSuspectSelect();
+    renderSolutionQuestions();
+  } else {
+    locked.style.display = 'block';
+    unlocked.style.display = 'none';
+    var note = document.getElementById('envelopeProgress');
+    note.textContent = 'Continue investigating to unlock case resolution.';
+  }
+}
+
+function renderSuspectSelect() {
+  var container = document.getElementById('suspectSelect');
+  var html = '';
+
+  config.suspects.forEach(function(sus) {
+    if (sus.status === 'classified') return;
+    if (!gameState.revealedSuspects.includes(sus.id)) return;
+
+    var selected = gameState.selectedSuspect === sus.id ? ' selected' : '';
+    html += '<div class="suspect-option' + selected + '" onclick="selectSuspect(\'' + sus.id + '\')">' +
+      '<div class="suspect-option-photo">' + (sus.status === 'poi' ? '\uD83D\uDC64' : '\uD83D\uDC64') + '</div>' +
+      '<div class="suspect-option-name">' + sus.name + '</div>' +
+    '</div>';
+  });
+
+  container.innerHTML = html;
+  checkSolutionReady();
+}
+
+function selectSuspect(id) {
+  gameState.selectedSuspect = id;
+  saveGame();
+  renderSuspectSelect();
+}
+
+function renderSolutionQuestions() {
+  var container = document.getElementById('solutionQuestions');
+  if (!config.solution.questions || config.solution.questions.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+
+  var html = '';
+  config.solution.questions.forEach(function(q, i) {
+    var savedAnswer = (gameState.solutionAnswers && gameState.solutionAnswers[i]) || '';
+    html += '<div class="solution-q-item">' +
+      '<div class="solution-q-label">' + q.question + '</div>' +
+      '<input class="solution-q-input" type="text" placeholder="' + (q.placeholder || 'Your answer...') + '" ' +
+      'value="' + savedAnswer + '" oninput="saveSolutionAnswer(' + i + ', this.value)" autocomplete="off">' +
+    '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+function saveSolutionAnswer(index, value) {
+  if (!gameState.solutionAnswers) gameState.solutionAnswers = [];
+  gameState.solutionAnswers[index] = value;
+  saveGame();
+  checkSolutionReady();
+}
+
+function checkSolutionReady() {
+  var btn = document.getElementById('solutionSubmitBtn');
+  if (!btn) return;
+
+  var hasSuspect = !!gameState.selectedSuspect;
+  var hasAnswers = true;
+
+  if (config.solution.questions && config.solution.questions.length > 0) {
+    for (var i = 0; i < config.solution.questions.length; i++) {
+      if (!gameState.solutionAnswers || !gameState.solutionAnswers[i] || gameState.solutionAnswers[i].trim() === '') {
+        hasAnswers = false;
+        break;
+      }
+    }
+  }
+
+  btn.disabled = !(hasSuspect && hasAnswers);
+}
+
+function submitSolution() {
+  var correctSuspect = config.solution.correctSuspect;
+  var isCorrect = gameState.selectedSuspect === correctSuspect;
+
+  // Check additional questions
+  var questionsCorrect = true;
+  if (config.solution.questions && config.solution.questions.length > 0) {
+    config.solution.questions.forEach(function(q, i) {
+      var playerAnswer = (gameState.solutionAnswers[i] || '').trim().toLowerCase();
+      var accepted = q.acceptedAnswers.some(function(a) { return a.toLowerCase() === playerAnswer; });
+      if (!accepted) questionsCorrect = false;
+    });
+  }
+
+  if (isCorrect && questionsCorrect) {
+    gameState.caseSolved = true;
+    gameState.solvedDate = new Date().toISOString();
+    saveGame();
+    showRevealPage();
+  } else {
+    document.getElementById('solutionForm').style.display = 'none';
+    document.getElementById('solutionWrong').style.display = 'block';
+  }
+}
+
+function retrySolution() {
+  gameState.selectedSuspect = null;
+  gameState.solutionAnswers = [];
+  saveGame();
+  document.getElementById('solutionForm').style.display = 'block';
+  document.getElementById('solutionWrong').style.display = 'none';
+  renderSuspectSelect();
+  renderSolutionQuestions();
+}
+
+function showRevealPage() {
+  document.getElementById('solutionSection').style.display = 'none';
+  var reveal = document.getElementById('revealPage');
+  reveal.style.display = 'block';
+
+  document.getElementById('revealTitle').textContent = config.title + ' \u2014 Case resolved';
+  document.getElementById('revealCorrectMsg').textContent =
+    'Excellent work, ' + formatDetectiveTitle() + '. Your findings have been verified. This case is now closed.';
+
+  document.getElementById('revealStory').innerHTML = config.solution.revealStory || 'The full story has not been configured for this case.';
+
+  document.getElementById('revealFooterNote').textContent =
+    config.solution.finalNote || '';
+
+  // Update the stamp at the top of the page
+  var headerStamp = document.querySelector('.stamp');
+  if (headerStamp) {
+    headerStamp.textContent = 'CASE CLOSED';
+    headerStamp.style.color = '#4a7a4a';
+    headerStamp.style.borderColor = '#4a7a4a';
+  }
+}
+
+// ── DOWNLOADABLE REWARDS ──
+
+function createCanvas(w, h) {
+  var c = document.createElement('canvas');
+  c.width = w;
+  c.height = h;
+  return c;
+}
+
+function downloadCanvas(canvas, filename) {
+  var link = document.createElement('a');
+  link.download = filename;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+function downloadCertificate() {
+  var c = createCanvas(1200, 800);
+  var ctx = c.getContext('2d');
+
+  // Background
+  ctx.fillStyle = '#f8f4ec';
+  ctx.fillRect(0, 0, 1200, 800);
+
+  // Border
+  ctx.strokeStyle = '#d4c9b0';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(30, 30, 1140, 740);
+  ctx.strokeStyle = '#b8a98a';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(40, 40, 1120, 720);
+
+  // Top color strip
+  var grad = ctx.createLinearGradient(40, 40, 1160, 40);
+  grad.addColorStop(0, '#c47a6a');
+  grad.addColorStop(0.5, '#e8d88c');
+  grad.addColorStop(1, '#8cb88a');
+  ctx.fillStyle = grad;
+  ctx.fillRect(40, 40, 1120, 4);
+
+  // Header
+  ctx.fillStyle = '#9a8b72';
+  ctx.font = '11px Courier';
+  ctx.textAlign = 'center';
+  ctx.fillText('THE SEALED FILE CO // OFFICIAL CASE CLOSURE DOCUMENT', 600, 85);
+
+  // Case closed stamp
+  ctx.save();
+  ctx.translate(600, 160);
+  ctx.rotate(-0.03);
+  ctx.strokeStyle = '#4a7a4a';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(-100, -25, 200, 50);
+  ctx.fillStyle = '#4a7a4a';
+  ctx.font = 'bold 24px Courier';
+  ctx.textAlign = 'center';
+  ctx.fillText('CASE CLOSED', 0, 8);
+  ctx.restore();
+
+  // Case title
+  ctx.fillStyle = '#2c2518';
+  ctx.font = 'bold 28px Georgia';
+  ctx.textAlign = 'center';
+  ctx.fillText(config.title, 600, 240);
+
+  // Case ID
+  ctx.fillStyle = '#9a8b72';
+  ctx.font = '14px Courier';
+  ctx.fillText('Case File #' + config.caseId, 600, 270);
+
+  // Divider
+  ctx.strokeStyle = '#d4c9b0';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(300, 300);
+  ctx.lineTo(900, 300);
+  ctx.stroke();
+
+  // Certificate text
+  ctx.fillStyle = '#2c2518';
+  ctx.font = '16px Georgia';
+  ctx.fillText('This document certifies that', 600, 350);
+
+  // Detective name
+  ctx.fillStyle = '#2a4066';
+  ctx.font = 'bold 24px Georgia';
+  ctx.fillText(formatDetectiveTitle(), 600, 395);
+
+  // More text
+  ctx.fillStyle = '#2c2518';
+  ctx.font = '16px Georgia';
+  ctx.fillText('has successfully resolved the investigation and identified', 600, 440);
+  ctx.fillText('the responsible party through careful evidence analysis.', 600, 465);
+
+  // Date
+  var solvedDate = gameState.solvedDate ? new Date(gameState.solvedDate) : new Date();
+  var dateStr = solvedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  ctx.fillStyle = '#6b5d48';
+  ctx.font = '14px Courier';
+  ctx.fillText('Date of resolution: ' + dateStr, 600, 520);
+
+  // Divider
+  ctx.strokeStyle = '#d4c9b0';
+  ctx.beginPath();
+  ctx.moveTo(300, 560);
+  ctx.lineTo(900, 560);
+  ctx.stroke();
+
+  // Footer - two authorities
+  ctx.fillStyle = '#9a8b72';
+  ctx.font = '12px Courier';
+  ctx.textAlign = 'left';
+  ctx.fillText(config.departmentName || 'Police Department', 100, 620);
+  ctx.fillText('Case Archives Division', 100, 640);
+
+  ctx.textAlign = 'right';
+  ctx.fillText('The Sealed File Co', 1100, 620);
+  ctx.fillText('Recovered Files Archive', 1100, 640);
+
+  // Signature lines
+  ctx.strokeStyle = '#b8a98a';
+  ctx.beginPath();
+  ctx.moveTo(100, 700);
+  ctx.lineTo(400, 700);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(800, 700);
+  ctx.lineTo(1100, 700);
+  ctx.stroke();
+
+  ctx.fillStyle = '#9a8b72';
+  ctx.font = '10px Courier';
+  ctx.textAlign = 'center';
+  ctx.fillText('Authorized signatory', 250, 720);
+  ctx.fillText('Archive administrator', 950, 720);
+
+  // Coffee stain
+  ctx.beginPath();
+  ctx.arc(1050, 150, 35, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(139,109,63,0.08)';
+  ctx.lineWidth = 5;
+  ctx.stroke();
+
+  downloadCanvas(c, 'case-closure-certificate.png');
+}
+
+function downloadBadge() {
+  var c = createCanvas(1080, 1920);
+  var ctx = c.getContext('2d');
+
+  // Background
+  ctx.fillStyle = '#0a0c08';
+  ctx.fillRect(0, 0, 1080, 1920);
+
+  // Scanlines
+  ctx.fillStyle = 'rgba(138,154,122,0.03)';
+  for (var i = 0; i < 1920; i += 4) {
+    ctx.fillRect(0, i, 1080, 2);
+  }
+
+  // Vignette
+  var vignette = ctx.createRadialGradient(540, 960, 200, 540, 960, 900);
+  vignette.addColorStop(0, 'transparent');
+  vignette.addColorStop(1, 'rgba(0,0,0,0.4)');
+  ctx.fillStyle = vignette;
+  ctx.fillRect(0, 0, 1080, 1920);
+
+  // Archive header
+  ctx.fillStyle = '#3a4a30';
+  ctx.font = '18px Courier';
+  ctx.textAlign = 'center';
+  ctx.fillText('THE SEALED FILE CO // ARCHIVE', 540, 200);
+
+  // Case closed stamp
+  ctx.save();
+  ctx.translate(540, 500);
+  ctx.rotate(-0.02);
+  ctx.strokeStyle = '#6a9a5a';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(-180, -50, 360, 100);
+  ctx.fillStyle = '#6a9a5a';
+  ctx.font = 'bold 48px Courier';
+  ctx.fillText('CASE CLOSED', 0, 16);
+  ctx.restore();
+
+  // Case ID
+  ctx.fillStyle = '#5a6a50';
+  ctx.font = '24px Courier';
+  ctx.fillText('CF-' + config.caseId, 540, 640);
+
+  // Case title
+  ctx.fillStyle = '#a0b890';
+  ctx.font = 'bold 36px Courier';
+  var titleWords = config.title.split(' ');
+  var line1 = '';
+  var line2 = '';
+  var mid = Math.ceil(titleWords.length / 2);
+  line1 = titleWords.slice(0, mid).join(' ');
+  line2 = titleWords.slice(mid).join(' ');
+  ctx.fillText(line1, 540, 760);
+  if (line2) ctx.fillText(line2, 540, 810);
+
+  // Solved by
+  ctx.fillStyle = '#5a6a50';
+  ctx.font = '20px Courier';
+  ctx.fillText('RESOLVED BY', 540, 960);
+
+  ctx.fillStyle = '#8a9a7a';
+  ctx.font = 'bold 28px Courier';
+  ctx.fillText(formatDetectiveTitle().toUpperCase(), 540, 1010);
+
+  // Date
+  var solvedDate = gameState.solvedDate ? new Date(gameState.solvedDate) : new Date();
+  var dateStr = solvedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  ctx.fillStyle = '#3a4a30';
+  ctx.font = '18px Courier';
+  ctx.fillText(dateStr, 540, 1100);
+
+  // Divider
+  ctx.strokeStyle = '#2a3020';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(300, 1200);
+  ctx.lineTo(780, 1200);
+  ctx.stroke();
+
+  // Bottom text
+  ctx.fillStyle = '#3a4a30';
+  ctx.font = '16px Courier';
+  ctx.fillText('thesealedfileco.com', 540, 1700);
+  ctx.font = '14px Courier';
+  ctx.fillText('RECOVERED FILES ARCHIVE', 540, 1730);
+
+  downloadCanvas(c, 'sealed-file-co-badge.png');
+}
+
+function downloadID() {
+  var c = createCanvas(900, 560);
+  var ctx = c.getContext('2d');
+
+  // Background
+  ctx.fillStyle = '#f8f4ec';
+  ctx.fillRect(0, 0, 900, 560);
+
+  // Border
+  ctx.strokeStyle = '#d4c9b0';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(10, 10, 880, 540);
+
+  // Top strip
+  ctx.fillStyle = '#2a4066';
+  ctx.fillRect(10, 10, 880, 50);
+
+  // Header text
+  ctx.fillStyle = '#f8f4ec';
+  ctx.font = 'bold 16px Courier';
+  ctx.textAlign = 'left';
+  ctx.fillText('THE SEALED FILE CO', 30, 42);
+  ctx.textAlign = 'right';
+  ctx.font = '12px Courier';
+  ctx.fillText('INVESTIGATOR CREDENTIALS', 870, 42);
+
+  // Photo placeholder
+  ctx.fillStyle = '#e8dfc8';
+  ctx.fillRect(30, 80, 160, 200);
+  ctx.strokeStyle = '#d4c9b0';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(30, 80, 160, 200);
+  ctx.fillStyle = '#9a8b72';
+  ctx.font = '48px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('\uD83D\uDC64', 110, 200);
+
+  // Info
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#9a8b72';
+  ctx.font = '11px Courier';
+  ctx.fillText('NAME', 220, 105);
+  ctx.fillStyle = '#2c2518';
+  ctx.font = 'bold 20px Georgia';
+  ctx.fillText(formatNames(), 220, 132);
+
+  ctx.fillStyle = '#9a8b72';
+  ctx.font = '11px Courier';
+  ctx.fillText('DESIGNATION', 220, 170);
+  ctx.fillStyle = '#2c2518';
+  ctx.font = '16px Georgia';
+  ctx.fillText('Independent Investigator', 220, 194);
+
+  ctx.fillStyle = '#9a8b72';
+  ctx.font = '11px Courier';
+  ctx.fillText('CREDENTIAL ID', 220, 235);
+  ctx.fillStyle = '#2c2518';
+  ctx.font = '16px Courier';
+  var credId = 'SF-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+  ctx.fillText(credId, 220, 258);
+
+  // Cases cleared
+  ctx.fillStyle = '#9a8b72';
+  ctx.font = '11px Courier';
+  ctx.fillText('CLEARANCE LEVEL', 600, 105);
+  ctx.fillStyle = '#4a7a4a';
+  ctx.font = 'bold 28px Courier';
+  ctx.fillText('LEVEL 1', 600, 138);
+
+  ctx.fillStyle = '#9a8b72';
+  ctx.font = '11px Courier';
+  ctx.fillText('CASES RESOLVED', 600, 185);
+  ctx.fillStyle = '#2c2518';
+  ctx.font = 'bold 28px Georgia';
+  ctx.fillText('1', 600, 218);
+
+  // Divider
+  ctx.strokeStyle = '#d4c9b0';
+  ctx.beginPath();
+  ctx.moveTo(30, 310);
+  ctx.lineTo(870, 310);
+  ctx.stroke();
+
+  // Cases list
+  ctx.fillStyle = '#9a8b72';
+  ctx.font = '11px Courier';
+  ctx.fillText('RESOLVED CASE LOG', 30, 345);
+
+  ctx.fillStyle = '#2c2518';
+  ctx.font = '13px Courier';
+  ctx.fillText('CF-' + config.caseId + '  ' + config.title, 30, 375);
+
+  var solvedDate = gameState.solvedDate ? new Date(gameState.solvedDate) : new Date();
+  var dateStr = solvedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  ctx.fillStyle = '#4a7a4a';
+  ctx.font = '12px Courier';
+  ctx.fillText('RESOLVED ' + dateStr, 30, 398);
+
+  // Stamp
+  ctx.save();
+  ctx.translate(780, 430);
+  ctx.rotate(-0.15);
+  ctx.strokeStyle = 'rgba(184,58,42,0.25)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(-55, -20, 110, 40);
+  ctx.fillStyle = 'rgba(184,58,42,0.25)';
+  ctx.font = 'bold 14px Courier';
+  ctx.textAlign = 'center';
+  ctx.fillText('VERIFIED', 0, 5);
+  ctx.restore();
+
+  // Bottom strip
+  ctx.fillStyle = '#e8dfc8';
+  ctx.fillRect(10, 490, 880, 60);
+  ctx.fillStyle = '#9a8b72';
+  ctx.font = '10px Courier';
+  ctx.textAlign = 'left';
+  ctx.fillText('This credential is issued by The Sealed File Co and the associated case archive.', 30, 515);
+  ctx.fillText('Clearance level increases with each resolved case.', 30, 535);
+
+  downloadCanvas(c, 'detective-id-card.png');
+}
+
+// Update renderHub to include solution
+var originalRenderHub = renderHub;
+renderHub = function() {
+  originalRenderHub();
+  renderSolution();
+};
 
 document.addEventListener('DOMContentLoaded', init);

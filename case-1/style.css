@@ -629,4 +629,251 @@ body {
   .notebook-entry { padding: 10px 12px; }
   .notebook-entry.detective { font-size: 14px; }
   .notebook-entry.dispatch { font-size: 12px; }
+  .solution-form-questions { grid-template-columns: 1fr; }
+  .reveal-download-grid { grid-template-columns: 1fr; }
+  .modal-content { flex-direction: column; }
+}
+
+/* SOLUTION SECTION */
+.solution-section { margin-top: 1.5rem; }
+.solution-envelope {
+  background: var(--bg-manila);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+.envelope-flap {
+  height: 6px;
+  background: linear-gradient(90deg, var(--tab-red), var(--tab-yellow), var(--tab-green));
+  opacity: 0.4;
+}
+.envelope-body { padding: 20px; }
+.envelope-stamp {
+  font-family: 'Special Elite', cursive;
+  font-size: 14px;
+  color: var(--stamp-red);
+  border: 2px solid var(--stamp-red);
+  display: inline-block;
+  padding: 3px 12px;
+  transform: rotate(-1deg);
+  opacity: 0.7;
+  letter-spacing: 0.08em;
+  margin-bottom: 14px;
+}
+.envelope-locked { text-align: center; padding: 20px 0; }
+.envelope-lock-icon { font-size: 28px; margin-bottom: 8px; }
+.envelope-lock-text {
+  font-family: 'Courier Prime', monospace;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+.envelope-progress-note {
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+.envelope-intro {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+.solution-label {
+  font-family: 'Courier Prime', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+.suspect-select {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.suspect-option {
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.suspect-option:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
+.suspect-option.selected { border-color: var(--ink-blue); background: var(--ink-blue-light); }
+.suspect-option-name {
+  font-family: 'Courier Prime', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+.suspect-option-photo {
+  font-size: 24px;
+}
+.solution-questions { margin-bottom: 16px; }
+.solution-q-item { margin-bottom: 12px; }
+.solution-q-label {
+  font-family: 'Special Elite', cursive;
+  font-size: 13px;
+  color: var(--pencil);
+  margin-bottom: 6px;
+}
+.solution-q-input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 9px 12px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--bg-paper);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.solution-q-input:focus { border-color: var(--ink-blue); }
+.solution-q-input::placeholder { color: var(--text-muted); }
+.solution-submit-btn {
+  width: 100%;
+  background: var(--ink-blue);
+  color: #f8f4ec;
+  border: none;
+  border-radius: 4px;
+  padding: 12px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.solution-submit-btn:hover { background: #1e3352; }
+.solution-submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.solution-wrong {
+  text-align: center;
+  padding: 20px 0;
+}
+.solution-wrong-icon {
+  font-size: 32px;
+  color: var(--stamp-red);
+  margin-bottom: 8px;
+}
+.solution-wrong-text {
+  font-family: 'Special Elite', cursive;
+  font-size: 14px;
+  color: var(--stamp-red);
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+.solution-retry-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px 20px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.solution-retry-btn:hover { border-color: var(--border-dark); color: var(--text-primary); }
+
+/* REVEAL PAGE */
+.reveal-page {
+  background: var(--bg-paper);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2rem;
+  margin-top: 1.5rem;
+  position: relative;
+}
+.reveal-stamp {
+  font-family: 'Special Elite', cursive;
+  font-size: 18px;
+  color: var(--unlocked-green);
+  border: 3px solid var(--unlocked-green);
+  display: inline-block;
+  padding: 6px 18px;
+  transform: rotate(-2deg);
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+  opacity: 0.8;
+}
+.reveal-title {
+  font-family: 'Special Elite', cursive;
+  font-size: clamp(20px, 4vw, 28px);
+  margin-bottom: 8px;
+}
+.reveal-correct-msg {
+  font-family: 'Special Elite', cursive;
+  font-size: 15px;
+  color: var(--unlocked-green);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.reveal-story {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-primary);
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px dashed var(--border);
+  white-space: pre-line;
+}
+.reveal-downloads { margin-bottom: 1.5rem; }
+.reveal-downloads-title {
+  font-family: 'Courier Prime', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.reveal-download-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.reveal-download-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.reveal-download-card:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-card-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.reveal-download-icon { font-size: 28px; margin-bottom: 8px; }
+.reveal-download-name {
+  font-family: 'Courier Prime', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.reveal-download-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.reveal-footer-note {
+  font-family: 'Special Elite', cursive;
+  font-size: 13px;
+  color: var(--pencil);
+  font-style: italic;
+  line-height: 1.6;
+  padding: 12px 16px;
+  border-left: 3px solid var(--tab-yellow);
+  background: rgba(232,216,140,0.08);
+  border-radius: 0 4px 4px 0;
 }

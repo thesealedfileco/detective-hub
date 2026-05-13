@@ -96,6 +96,64 @@
       <div class="feedback" id="feedback"></div>
     </div>
 
+    <!-- SOLUTION SECTION -->
+    <div class="solution-section" id="solutionSection">
+      <div class="solution-envelope" id="solutionEnvelope">
+        <div class="envelope-flap" id="envelopeFlap"></div>
+        <div class="envelope-body">
+          <div class="envelope-stamp">CASE RESOLUTION</div>
+          <div class="envelope-locked" id="envelopeLocked">
+            <div class="envelope-lock-icon">&#128274;</div>
+            <div class="envelope-lock-text">Complete your investigation before submitting your findings.</div>
+            <div class="envelope-progress-note" id="envelopeProgress"></div>
+          </div>
+          <div class="envelope-unlocked" id="envelopeUnlocked" style="display:none;">
+            <div class="envelope-intro">Your investigation is complete. Review the evidence one final time, then submit your findings below.</div>
+            <div class="solution-form" id="solutionForm">
+              <div class="solution-label">Who is responsible?</div>
+              <div class="suspect-select" id="suspectSelect"></div>
+              <div class="solution-questions" id="solutionQuestions"></div>
+              <button class="solution-submit-btn" id="solutionSubmitBtn" onclick="submitSolution()" disabled>Submit case resolution</button>
+            </div>
+            <div class="solution-wrong" id="solutionWrong" style="display:none;">
+              <div class="solution-wrong-icon">&#10007;</div>
+              <div class="solution-wrong-text">Your findings do not match the evidence. Review the case and try again, Detective.</div>
+              <button class="solution-retry-btn" onclick="retrySolution()">Re-examine evidence</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REVEAL PAGE (hidden until solved) -->
+    <div class="reveal-page" id="revealPage" style="display:none;">
+      <div class="reveal-stamp">CASE CLOSED</div>
+      <div class="reveal-title" id="revealTitle"></div>
+      <div class="reveal-correct-msg" id="revealCorrectMsg"></div>
+      <div class="reveal-story" id="revealStory"></div>
+      <div class="reveal-downloads">
+        <div class="reveal-downloads-title">Case closure documents</div>
+        <div class="reveal-download-grid">
+          <div class="reveal-download-card" onclick="downloadCertificate()">
+            <div class="reveal-download-icon">&#128220;</div>
+            <div class="reveal-download-name">Case closure certificate</div>
+            <div class="reveal-download-desc">Official resolution document</div>
+          </div>
+          <div class="reveal-download-card" onclick="downloadBadge()">
+            <div class="reveal-download-icon">&#127991;</div>
+            <div class="reveal-download-name">Social media badge</div>
+            <div class="reveal-download-desc">Share your achievement</div>
+          </div>
+          <div class="reveal-download-card" onclick="downloadID()">
+            <div class="reveal-download-icon">&#128179;</div>
+            <div class="reveal-download-name">Detective ID card</div>
+            <div class="reveal-download-desc">Collector's credential</div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal-footer-note" id="revealFooterNote"></div>
+    </div>
+
   </div>
 
   <div class="folder-footer" id="footerText"></div>

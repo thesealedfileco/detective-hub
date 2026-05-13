@@ -182,6 +182,20 @@
 
   "solution": {
     "correctSuspect": "webb",
-    "revealPage": "evidence/solution-reveal.pdf"
+    "unlockedByStage": "stage-4",
+    "questions": [
+      {
+        "question": "What was the motive?",
+        "placeholder": "One or two words...",
+        "acceptedAnswers": ["financial", "money", "financial dispute", "insurance", "greed", "debt"]
+      },
+      {
+        "question": "What piece of evidence proves it?",
+        "placeholder": "Name the key evidence...",
+        "acceptedAnswers": ["phone records", "phone record", "calls", "phone calls"]
+      }
+    ],
+    "revealStory": "On the night of March 14, 1997, Marcus Webb drove to the cabin on Creekside Drive — not for the first time that week, and not for the reasons he told investigators.\n\nThe phone records tell the real story. Three calls to the cabin that evening. The first at 8:17 PM, lasting four minutes. The second at 9:03 PM, lasting under a minute. The third at 10:41 PM — one minute before Diane Harlow claims she saw the car.\n\nWebb's business was failing. The Morrow Creek Real Estate Group was $340,000 in debt, and the partnership agreement included a life insurance clause neither partner had bothered to update since 1994. Webb stood to collect.\n\nThe forensic report confirmed two sets of prints at the cabin. Webb's were on the back door handle — a door he claimed he'd never used. The anonymous 911 caller? Voice analysis was inconclusive, but the call came from a payphone on Route 7, three miles from Webb's home.\n\nDiane Harlow's timeline was off by almost two hours, but not because she was lying. She simply fell asleep watching television and misjudged when she woke to the sound of tires on gravel.\n\nWebb maintained his innocence through two rounds of questioning. He was never formally charged. The case went cold in November 1997.\n\nBut the evidence doesn't lie. And now, thanks to your investigation, the truth is finally on record.",
+    "finalNote": "One detail was never explained: the forensic report mentions a third set of partial prints on the kitchen window — prints that matched no one in the investigation. The lab flagged them as 'inconclusive' and moved on. But someone else was at that cabin. Someone who was never identified. Case file CF-2003-0118 may contain related materials, but that file remains sealed."
   }
 }
