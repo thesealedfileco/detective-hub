@@ -106,6 +106,49 @@ body {
 }
 .name-gate-btn:hover { background: #1e3352; }
 .name-gate-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.name-gate-add-row {
+  text-align: center;
+  margin-bottom: 12px;
+}
+.name-gate-add-btn {
+  font-family: 'Courier Prime', monospace;
+  font-size: 12px;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color 0.15s;
+}
+.name-gate-add-btn:hover { color: var(--ink-blue); }
+.name-gate-names {
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.name-tag {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+.name-tag-remove {
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+}
+.name-tag-remove:hover { color: var(--stamp-red); }
 .name-gate-footer {
   font-family: 'Courier Prime', monospace;
   font-size: 10px;

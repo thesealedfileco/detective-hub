@@ -15,8 +15,12 @@
     <div class="name-gate-title">Case File Access</div>
     <p class="name-gate-sub">This file is restricted to assigned personnel only.<br>Please identify yourself to proceed.</p>
     <input class="name-gate-input" type="text" id="nameInput" placeholder="Enter your name, Detective" autocomplete="off" autofocus>
+    <div class="name-gate-add-row" id="addNameRow">
+      <button class="name-gate-add-btn" id="addNameBtn" onclick="addDetective()">+ Add another detective</button>
+    </div>
+    <div class="name-gate-names" id="nameList"></div>
     <button class="name-gate-btn" id="nameBtn" disabled onclick="enterCase()">Open Case File</button>
-    <div class="name-gate-footer">Unauthorized access is a violation of department policy</div>
+    <div class="name-gate-footer">Investigating solo or with a team — all are welcome</div>
   </div>
 </div>
 

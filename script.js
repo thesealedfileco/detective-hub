@@ -1,14 +1,13 @@
 let config = null;
 let gameState = {
-  detectiveName: '',
+  detectiveNames: [],
   viewedEvidence: [],
   unlockedEvidence: [],
   revealedEvidence: [],
   revealedSuspects: [],
   currentStage: 'start',
   completedStages: [],
-  hintsUsed: 0,
-  activeHints: []
+  hintsUsedPerStage: {}
 };
 
 const STORAGE_KEY = 'detective-hub-save';
@@ -23,6 +22,13 @@ function loadGame() {
     try {
       const parsed = JSON.parse(saved);
       gameState = { ...gameState, ...parsed };
+      // Migrate old single-name saves
+      if (parsed.detectiveName && !parsed.detectiveNames) {
+        gameState.detectiveNames = [parsed.detectiveName];
+      }
+      if (!gameState.hintsUsedPerStage) {
+        gameState.hintsUsedPerStage = {};
+      }
       return true;
     } catch (e) { return false; }
   }
@@ -31,8 +37,25 @@ function loadGame() {
 
 function resetGame() {
   localStorage.removeItem(STORAGE_KEY);
-  localStorage.removeItem('detective_name');
+  localStorage.removeItem('detective_names');
   location.reload();
+}
+
+// Format detective names: "Alex", "Alex & Sam", "Alex, Sam & Jordan"
+function formatNames() {
+  const names = gameState.detectiveNames;
+  if (names.length === 0) return 'Detective';
+  if (names.length === 1) return names[0];
+  if (names.length === 2) return names[0] + ' & ' + names[1];
+  return names.slice(0, -1).join(', ') + ' & ' + names[names.length - 1];
+}
+
+// "Detective X" or "Detectives X & Y"
+function formatDetectiveTitle() {
+  const names = gameState.detectiveNames;
+  if (names.length === 0) return 'Detective';
+  if (names.length === 1) return 'Detective ' + names[0];
+  return 'Detectives ' + formatNames();
 }
 
 async function init() {
@@ -45,10 +68,14 @@ async function init() {
   }
 
   const hasSave = loadGame();
-  const savedName = localStorage.getItem('detective_name');
+  const savedNames = localStorage.getItem('detective_names');
 
-  if (savedName && hasSave) {
-    gameState.detectiveName = savedName;
+  if (savedNames && hasSave) {
+    try {
+      gameState.detectiveNames = JSON.parse(savedNames);
+    } catch (e) {
+      gameState.detectiveNames = [savedNames];
+    }
     document.getElementById('nameGate').classList.add('hidden');
     document.getElementById('mainHub').style.display = 'block';
     setupHub();
@@ -59,24 +86,81 @@ async function init() {
   }
 }
 
+// ── NAME GATE (multi-detective) ──
+
+let pendingNames = [];
+
 function setupNameGate() {
   const input = document.getElementById('nameInput');
   const btn = document.getElementById('nameBtn');
 
-  input.addEventListener('input', () => {
-    btn.disabled = input.value.trim().length === 0;
+  input.addEventListener('input', function() {
+    btn.disabled = input.value.trim().length === 0 && pendingNames.length === 0;
   });
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && input.value.trim().length > 0) enterCase();
+
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      if (input.value.trim().length > 0) {
+        if (pendingNames.length > 0) {
+          addDetective();
+          enterCase();
+        } else {
+          enterCase();
+        }
+      }
+    }
   });
 }
 
-function enterCase() {
-  const name = document.getElementById('nameInput').value.trim();
+function addDetective() {
+  var input = document.getElementById('nameInput');
+  var name = input.value.trim();
   if (!name) return;
+  if (pendingNames.includes(name)) return;
 
-  gameState.detectiveName = name;
-  localStorage.setItem('detective_name', name);
+  pendingNames.push(name);
+  input.value = '';
+  input.placeholder = "Enter next detective's name";
+  renderNameList();
+  document.getElementById('nameBtn').disabled = false;
+  input.focus();
+}
+
+function removeDetective(index) {
+  pendingNames.splice(index, 1);
+  renderNameList();
+  var input = document.getElementById('nameInput');
+  if (pendingNames.length === 0) {
+    input.placeholder = 'Enter your name, Detective';
+    document.getElementById('nameBtn').disabled = input.value.trim().length === 0;
+  }
+}
+
+function renderNameList() {
+  var list = document.getElementById('nameList');
+  if (pendingNames.length === 0) {
+    list.innerHTML = '';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < pendingNames.length; i++) {
+    html += '<div class="name-tag"><span>Detective ' + pendingNames[i] + '</span><button class="name-tag-remove" onclick="removeDetective(' + i + ')">&times;</button></div>';
+  }
+  list.innerHTML = html;
+}
+
+function enterCase() {
+  var input = document.getElementById('nameInput');
+  var currentName = input.value.trim();
+
+  if (currentName && !pendingNames.includes(currentName)) {
+    pendingNames.push(currentName);
+  }
+
+  if (pendingNames.length === 0) return;
+
+  gameState.detectiveNames = pendingNames.slice();
+  localStorage.setItem('detective_names', JSON.stringify(gameState.detectiveNames));
 
   document.getElementById('nameGate').classList.add('hidden');
   document.getElementById('mainHub').style.display = 'block';
@@ -87,109 +171,96 @@ function enterCase() {
   saveGame();
 }
 
+// ── HUB SETUP ──
+
 function setupHub() {
   document.getElementById('caseTitle').textContent = config.title;
   document.getElementById('caseSubtitle').textContent = config.subtitle;
-  document.getElementById('caseTab').textContent = `Case #${config.caseId} — Active`;
+  document.getElementById('caseTab').textContent = 'Case #' + config.caseId + ' \u2014 Active';
   document.getElementById('footerText').textContent =
-    `Case file property of ${config.departmentName} · Unauthorized distribution prohibited`;
+    'Case file property of ' + config.departmentName + ' \u00b7 Unauthorized distribution prohibited';
 
-  document.getElementById('codeInput').addEventListener('keydown', (e) => {
+  document.getElementById('codeInput').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') submitCode();
   });
 }
 
+// ── STAGE PROCESSING ──
+
 function processStage(stageId) {
-  const stage = config.stages.find(s => s.id === stageId);
+  var stage = config.stages.find(function(s) { return s.id === stageId; });
   if (!stage || gameState.completedStages.includes(stageId)) return;
 
   gameState.completedStages.push(stageId);
   gameState.currentStage = stageId;
 
   if (stage.unlockedEvidence) {
-    stage.unlockedEvidence.forEach(id => {
-      if (!gameState.unlockedEvidence.includes(id)) {
-        gameState.unlockedEvidence.push(id);
-      }
+    stage.unlockedEvidence.forEach(function(id) {
+      if (!gameState.unlockedEvidence.includes(id)) gameState.unlockedEvidence.push(id);
     });
   }
-
   if (stage.revealedEvidence) {
-    stage.revealedEvidence.forEach(id => {
-      if (!gameState.revealedEvidence.includes(id)) {
-        gameState.revealedEvidence.push(id);
-      }
+    stage.revealedEvidence.forEach(function(id) {
+      if (!gameState.revealedEvidence.includes(id)) gameState.revealedEvidence.push(id);
     });
   }
-
   if (stage.revealedSuspects) {
-    stage.revealedSuspects.forEach(id => {
-      if (!gameState.revealedSuspects.includes(id)) {
-        gameState.revealedSuspects.push(id);
-      }
+    stage.revealedSuspects.forEach(function(id) {
+      if (!gameState.revealedSuspects.includes(id)) gameState.revealedSuspects.push(id);
     });
   }
-
   if (stage.unlockedAudio) {
-    stage.unlockedAudio.forEach(id => {
-      if (!gameState.unlockedEvidence.includes('audio-' + id)) {
-        gameState.unlockedEvidence.push('audio-' + id);
-      }
+    stage.unlockedAudio.forEach(function(id) {
+      if (!gameState.unlockedEvidence.includes('audio-' + id)) gameState.unlockedEvidence.push('audio-' + id);
     });
   }
-
   if (stage.unlocksOnCorrect) {
-    stage.unlocksOnCorrect.forEach(id => {
-      if (!gameState.unlockedEvidence.includes(id)) {
-        gameState.unlockedEvidence.push(id);
-      }
+    stage.unlocksOnCorrect.forEach(function(id) {
+      if (!gameState.unlockedEvidence.includes(id)) gameState.unlockedEvidence.push(id);
     });
   }
 
-  gameState.activeHints = stage.hints || [];
-  gameState.hintsUsed = 0;
+  // Initialize hint counter for this question
+  if (!gameState.hintsUsedPerStage[stageId]) {
+    gameState.hintsUsedPerStage[stageId] = 0;
+  }
 
   saveGame();
 }
 
 function processAllStages() {
-  gameState.completedStages.forEach(stageId => {
-    const stage = config.stages.find(s => s.id === stageId);
+  gameState.completedStages.forEach(function(stageId) {
+    var stage = config.stages.find(function(s) { return s.id === stageId; });
     if (!stage) return;
 
-    if (stage.unlockedEvidence) stage.unlockedEvidence.forEach(id => {
+    if (stage.unlockedEvidence) stage.unlockedEvidence.forEach(function(id) {
       if (!gameState.unlockedEvidence.includes(id)) gameState.unlockedEvidence.push(id);
     });
-    if (stage.revealedEvidence) stage.revealedEvidence.forEach(id => {
+    if (stage.revealedEvidence) stage.revealedEvidence.forEach(function(id) {
       if (!gameState.revealedEvidence.includes(id)) gameState.revealedEvidence.push(id);
     });
-    if (stage.revealedSuspects) stage.revealedSuspects.forEach(id => {
+    if (stage.revealedSuspects) stage.revealedSuspects.forEach(function(id) {
       if (!gameState.revealedSuspects.includes(id)) gameState.revealedSuspects.push(id);
     });
-    if (stage.unlockedAudio) stage.unlockedAudio.forEach(id => {
+    if (stage.unlockedAudio) stage.unlockedAudio.forEach(function(id) {
       if (!gameState.unlockedEvidence.includes('audio-' + id)) gameState.unlockedEvidence.push('audio-' + id);
     });
-    if (stage.unlocksOnCorrect) stage.unlocksOnCorrect.forEach(id => {
+    if (stage.unlocksOnCorrect) stage.unlocksOnCorrect.forEach(function(id) {
       if (!gameState.unlockedEvidence.includes(id)) gameState.unlockedEvidence.push(id);
     });
   });
-
-  const lastStage = config.stages.find(s => s.id === gameState.currentStage);
-  if (lastStage) {
-    gameState.activeHints = lastStage.hints || [];
-  }
 }
 
 function checkStageTriggers() {
-  config.stages.forEach(stage => {
+  config.stages.forEach(function(stage) {
     if (gameState.completedStages.includes(stage.id)) return;
 
-    const trigger = stage.triggeredBy;
+    var trigger = stage.triggeredBy;
     if (trigger === 'auto') return;
     if (!trigger) return;
 
     if (trigger.type === 'viewed') {
-      const allViewed = trigger.items.every(item => gameState.viewedEvidence.includes(item));
+      var allViewed = trigger.items.every(function(item) { return gameState.viewedEvidence.includes(item); });
       if (allViewed) {
         processStage(stage.id);
         renderHub();
@@ -205,6 +276,20 @@ function checkStageTriggers() {
   });
 }
 
+// Find the next unanswered question stage (for hints)
+function getActiveQuestionStage() {
+  for (var i = 0; i < config.stages.length; i++) {
+    var stage = config.stages[i];
+    if (gameState.completedStages.includes(stage.id)) continue;
+    if (stage.acceptedAnswers && stage.hints && stage.hints.length > 0) {
+      return stage;
+    }
+  }
+  return null;
+}
+
+// ── RENDERING ──
+
 function renderHub() {
   renderNotebook();
   renderProgress();
@@ -215,84 +300,67 @@ function renderHub() {
 }
 
 function renderNotebook() {
-  const container = document.getElementById('notebook');
-  const stage = config.stages.find(s => s.id === gameState.currentStage);
+  var container = document.getElementById('notebook');
+  var stage = config.stages.find(function(s) { return s.id === gameState.currentStage; });
   if (!stage) return;
 
-  let html = '';
+  var nameDisplay = formatNames();
+  var html = '';
 
   if (stage.detectiveNote) {
-    const noteText = stage.detectiveNote;
-    html += `
-      <div class="notebook-entry detective fade-in">
-        <div class="notebook-label">Detective notes</div>
-        ${noteText}
-      </div>`;
+    html += '<div class="notebook-entry detective fade-in"><div class="notebook-label">Detective notes</div>' + stage.detectiveNote + '</div>';
   }
 
   if (stage.dispatchMessage) {
-    const msgText = stage.dispatchMessage.replace(/\[NAME\]/g, gameState.detectiveName);
-    html += `
-      <div class="notebook-entry dispatch fade-in">
-        <div class="notebook-label">Dispatch</div>
-        ${msgText}
-      </div>`;
+    var msgText = stage.dispatchMessage.replace(/\[NAME\]/g, nameDisplay);
+    html += '<div class="notebook-entry dispatch fade-in"><div class="notebook-label">Dispatch</div>' + msgText + '</div>';
   }
 
   container.innerHTML = html;
-  document.getElementById('detectiveName').textContent = gameState.detectiveName;
 }
 
 function renderProgress() {
-  const totalEvidence = config.evidence.length;
-  const unlockedCount = gameState.unlockedEvidence.filter(id =>
-    config.evidence.some(e => e.id === id)
-  ).length;
-
-  const totalSuspects = config.suspects.length;
-  const revealedCount = gameState.revealedSuspects.filter(id =>
-    config.suspects.some(s => s.id === id && s.status !== 'classified')
-  ).length + gameState.revealedSuspects.filter(id => {
-    const s = config.suspects.find(sus => sus.id === id);
-    return s && s.status !== 'classified';
+  var totalEvidence = config.evidence.length;
+  var unlockedCount = gameState.unlockedEvidence.filter(function(id) {
+    return config.evidence.some(function(e) { return e.id === id; });
   }).length;
 
-  const identifiedSuspects = config.suspects.filter(s =>
-    gameState.revealedSuspects.includes(s.id) && s.status !== 'classified'
-  ).length;
+  var identifiedSuspects = config.suspects.filter(function(s) {
+    return gameState.revealedSuspects.includes(s.id) && s.status !== 'classified';
+  }).length;
+  var totalSuspects = config.suspects.length;
 
-  const questionsAnswered = gameState.completedStages.filter(stageId => {
-    const s = config.stages.find(st => st.id === stageId);
+  var questionsAnswered = gameState.completedStages.filter(function(stageId) {
+    var s = config.stages.find(function(st) { return st.id === stageId; });
     return s && (s.acceptedAnswers || s.question);
   }).length;
+  var totalQuestions = config.stages.filter(function(s) { return s.acceptedAnswers || s.question; }).length;
 
-  const totalQuestions = config.stages.filter(s => s.acceptedAnswers || s.question).length;
+  var progress = Math.round((unlockedCount / totalEvidence) * 100);
 
-  const progress = Math.round((unlockedCount / totalEvidence) * 100);
-
-  document.getElementById('evidenceCount').textContent = `${unlockedCount}/${totalEvidence}`;
-  document.getElementById('suspectCount').textContent = `${identifiedSuspects}/${totalSuspects}`;
-  document.getElementById('questionCount').textContent = `${questionsAnswered}/${totalQuestions}`;
-  document.getElementById('progressPct').textContent = `${progress}%`;
-  document.getElementById('evidenceSectionCount').textContent = `${unlockedCount} of ${totalEvidence} unlocked`;
-  document.getElementById('suspectSectionCount').textContent = `${identifiedSuspects} of ${totalSuspects} identified`;
+  document.getElementById('evidenceCount').textContent = unlockedCount + '/' + totalEvidence;
+  document.getElementById('suspectCount').textContent = identifiedSuspects + '/' + totalSuspects;
+  document.getElementById('questionCount').textContent = questionsAnswered + '/' + totalQuestions;
+  document.getElementById('progressPct').textContent = progress + '%';
+  document.getElementById('evidenceSectionCount').textContent = unlockedCount + ' of ' + totalEvidence + ' unlocked';
+  document.getElementById('suspectSectionCount').textContent = identifiedSuspects + ' of ' + totalSuspects + ' identified';
 }
 
 function renderEvidence() {
-  const grid = document.getElementById('evidenceGrid');
-  let html = '';
+  var grid = document.getElementById('evidenceGrid');
+  var html = '';
 
-  config.evidence.forEach(ev => {
-    const isUnlocked = gameState.unlockedEvidence.includes(ev.id);
-    const isRevealed = gameState.revealedEvidence.includes(ev.id);
-    const isViewed = gameState.viewedEvidence.includes(ev.id);
-    const isHidden = !isUnlocked && !isRevealed;
+  config.evidence.forEach(function(ev) {
+    var isUnlocked = gameState.unlockedEvidence.includes(ev.id);
+    var isRevealed = gameState.revealedEvidence.includes(ev.id);
+    var isViewed = gameState.viewedEvidence.includes(ev.id);
+    var isHidden = !isUnlocked && !isRevealed;
 
     if (isHidden) return;
 
-    let cardClass = 'ev-card';
-    let tagHtml = '';
-    let hintHtml = '';
+    var cardClass = 'ev-card';
+    var tagHtml = '';
+    var hintHtml = '';
 
     if (isUnlocked) {
       if (isViewed) {
@@ -304,32 +372,31 @@ function renderEvidence() {
       }
     } else {
       cardClass += ' locked';
-      hintHtml = ev.lockHint ? `<div class="ev-lock-hint">${ev.lockHint}</div>` : '';
+      hintHtml = ev.lockHint ? '<div class="ev-lock-hint">' + ev.lockHint + '</div>' : '';
     }
 
-    const icon = isUnlocked ? ev.icon : '🔒';
-    const name = isUnlocked || isRevealed ? ev.name : '???';
-    const desc = isUnlocked ? ev.description : (isRevealed ? ev.description : 'Classified');
-    const type = isUnlocked || isRevealed ? ev.type : 'unknown';
+    var icon = isUnlocked ? ev.icon : '\uD83D\uDD12';
+    var name = isUnlocked || isRevealed ? ev.name : '???';
+    var desc = isUnlocked ? ev.description : (isRevealed ? ev.description : 'Classified');
+    var type = isUnlocked || isRevealed ? ev.type : 'unknown';
 
-    const onclick = isUnlocked && ev.file ? `onclick="viewEvidence('${ev.id}')"` : '';
+    var onclick = isUnlocked && ev.file ? 'onclick="viewEvidence(\'' + ev.id + '\')"' : '';
 
-    html += `
-      <div class="${cardClass}" ${onclick} data-id="${ev.id}">
-        ${tagHtml}
-        <span class="ev-icon">${icon}</span>
-        <div class="ev-type">${type}</div>
-        <div class="ev-name">${name}</div>
-        <div class="ev-desc">${desc}</div>
-        ${hintHtml}
-      </div>`;
+    html += '<div class="' + cardClass + '" ' + onclick + ' data-id="' + ev.id + '">' +
+      tagHtml +
+      '<span class="ev-icon">' + icon + '</span>' +
+      '<div class="ev-type">' + type + '</div>' +
+      '<div class="ev-name">' + name + '</div>' +
+      '<div class="ev-desc">' + desc + '</div>' +
+      hintHtml +
+      '</div>';
   });
 
   grid.innerHTML = html;
 }
 
 function viewEvidence(id) {
-  const ev = config.evidence.find(e => e.id === id);
+  var ev = config.evidence.find(function(e) { return e.id === id; });
   if (!ev || !ev.file) return;
 
   if (!gameState.viewedEvidence.includes(id)) {
@@ -343,72 +410,65 @@ function viewEvidence(id) {
 }
 
 function renderAudio() {
-  const container = document.getElementById('audioList');
-  let html = '';
+  var container = document.getElementById('audioList');
+  var html = '';
 
-  config.audio.forEach(audio => {
-    const isUnlocked = gameState.unlockedEvidence.includes('audio-' + audio.id);
+  config.audio.forEach(function(audio) {
+    var isUnlocked = gameState.unlockedEvidence.includes('audio-' + audio.id);
 
     if (isUnlocked) {
-      const waveHtml = Array.from({length: 12}, () =>
-        `<span style="height:${Math.floor(Math.random() * 16) + 5}px"></span>`
-      ).join('');
+      var waveHtml = '';
+      for (var i = 0; i < 12; i++) {
+        waveHtml += '<span style="height:' + (Math.floor(Math.random() * 16) + 5) + 'px"></span>';
+      }
 
-      html += `
-        <div class="audio-card" data-audio-id="${audio.id}">
-          <div class="audio-play" onclick="playAudio('${audio.id}')">▶</div>
-          <div class="audio-info">
-            <div class="audio-title">${audio.title}</div>
-            <div class="audio-meta">${audio.meta}</div>
-          </div>
-          <div class="audio-wave">${waveHtml}</div>
-        </div>`;
+      html += '<div class="audio-card" data-audio-id="' + audio.id + '">' +
+        '<div class="audio-play" onclick="playAudio(\'' + audio.id + '\')">\u25B6</div>' +
+        '<div class="audio-info"><div class="audio-title">' + audio.title + '</div>' +
+        '<div class="audio-meta">' + audio.meta + '</div></div>' +
+        '<div class="audio-wave">' + waveHtml + '</div></div>';
     } else {
-      html += `
-        <div class="audio-card locked-audio">
-          <div class="audio-play" style="cursor:not-allowed;">🔒</div>
-          <div class="audio-info">
-            <div class="audio-title">${audio.title.split('—')[0]}— Locked</div>
-            <div class="audio-meta">${audio.lockHint || 'Unlock during investigation'}</div>
-          </div>
-        </div>`;
+      html += '<div class="audio-card locked-audio">' +
+        '<div class="audio-play" style="cursor:not-allowed;">\uD83D\uDD12</div>' +
+        '<div class="audio-info"><div class="audio-title">' + audio.title.split('\u2014')[0] + '\u2014 Locked</div>' +
+        '<div class="audio-meta">' + (audio.lockHint || 'Unlock during investigation') + '</div></div></div>';
     }
   });
 
   container.innerHTML = html;
 }
 
-let currentAudioEl = null;
+var currentAudioEl = null;
 
 function playAudio(id) {
-  const audio = config.audio.find(a => a.id === id);
+  var audio = config.audio.find(function(a) { return a.id === id; });
   if (!audio) return;
 
-  const btn = document.querySelector(`[data-audio-id="${id}"] .audio-play`);
+  var btn = document.querySelector('[data-audio-id="' + id + '"] .audio-play');
 
   if (currentAudioEl) {
     currentAudioEl.pause();
     currentAudioEl = null;
-    document.querySelectorAll('.audio-play.playing').forEach(el => {
+    document.querySelectorAll('.audio-play.playing').forEach(function(el) {
       el.classList.remove('playing');
-      el.textContent = '▶';
+      el.textContent = '\u25B6';
     });
   }
 
   if (audio.file) {
-    const audioEl = new Audio(audio.file);
+    var audioEl = new Audio(audio.file);
     currentAudioEl = audioEl;
     btn.classList.add('playing');
-    btn.textContent = '⏸';
+    btn.textContent = '\u23F8';
 
-    audioEl.play().catch(() => {
+    audioEl.play().catch(function() {
       btn.classList.remove('playing');
-      btn.textContent = '▶';
+      btn.textContent = '\u25B6';
     });
 
-    audioEl.addEventListener('ended', () => {
+    audioEl.addEventListener('ended', function() {
       btn.classList.remove('playing');
-      btn.textContent = '▶';
+      btn.textContent = '\u25B6';
       currentAudioEl = null;
     });
   }
@@ -421,57 +481,65 @@ function playAudio(id) {
 }
 
 function renderSuspects() {
-  const grid = document.getElementById('suspectGrid');
-  let html = '';
+  var grid = document.getElementById('suspectGrid');
+  var html = '';
 
-  config.suspects.forEach(sus => {
-    const isRevealed = gameState.revealedSuspects.includes(sus.id);
+  config.suspects.forEach(function(sus) {
+    var isRevealed = gameState.revealedSuspects.includes(sus.id);
     if (!isRevealed) return;
 
-    const isClassified = sus.status === 'classified';
-    let cardClass = 'sus-card';
+    var isClassified = sus.status === 'classified';
+    var cardClass = 'sus-card';
     if (isClassified) cardClass += ' locked-sus';
 
-    const photoContent = sus.photo
-      ? `<img src="${sus.photo}" alt="${sus.name}">`
-      : (isClassified ? '?' : '👤');
+    var photoContent = sus.photo
+      ? '<img src="' + sus.photo + '" alt="' + sus.name + '">'
+      : (isClassified ? '?' : '\uD83D\uDC64');
 
-    const pinHtml = sus.status === 'poi' ? '<div class="sus-pin"></div>' : '';
+    var pinHtml = sus.status === 'poi' ? '<div class="sus-pin"></div>' : '';
 
-    const statusLabels = {
+    var statusLabels = {
       poi: 'Person of interest',
       review: 'Under review',
       cleared: 'Cleared',
       classified: 'Classified'
     };
 
-    html += `
-      <div class="${cardClass}">
-        <div class="sus-photo">
-          ${photoContent}
-          ${pinHtml}
-        </div>
-        <div class="sus-name">${isClassified ? '[Redacted]' : sus.name}</div>
-        <div class="sus-role">${sus.role}</div>
-        <span class="sus-status ${sus.status}">${statusLabels[sus.status] || sus.status}</span>
-      </div>`;
+    html += '<div class="' + cardClass + '"><div class="sus-photo">' +
+      photoContent + pinHtml +
+      '</div><div class="sus-name">' + (isClassified ? '[Redacted]' : sus.name) + '</div>' +
+      '<div class="sus-role">' + sus.role + '</div>' +
+      '<span class="sus-status ' + sus.status + '">' + (statusLabels[sus.status] || sus.status) + '</span></div>';
   });
 
   grid.innerHTML = html;
 }
 
+// ── HINT SYSTEM (3 hints per question) ──
+
 function renderHintSystem() {
-  const hintBtn = document.getElementById('hintBtn');
-  const hintCount = document.getElementById('hintCount');
-  const maxHints = gameState.activeHints.length;
-  const remaining = maxHints - gameState.hintsUsed;
+  var hintBtn = document.getElementById('hintBtn');
+  var hintCountEl = document.getElementById('hintCount');
+  var activeStage = getActiveQuestionStage();
 
-  hintCount.textContent = remaining > 0
-    ? `${remaining} hint${remaining !== 1 ? 's' : ''} remaining`
-    : 'No hints available';
+  if (!activeStage || !activeStage.hints || activeStage.hints.length === 0) {
+    hintCountEl.textContent = '';
+    hintBtn.textContent = 'No active question right now';
+    hintBtn.classList.add('disabled');
+    return;
+  }
 
-  if (remaining <= 0 || maxHints === 0) {
-    hintBtn.textContent = maxHints === 0 ? 'No hints for this stage' : 'No more hints available';
+  var stageId = activeStage.id;
+  var used = gameState.hintsUsedPerStage[stageId] || 0;
+  var total = activeStage.hints.length;
+  var remaining = total - used;
+
+  hintCountEl.textContent = remaining > 0
+    ? remaining + ' hint' + (remaining !== 1 ? 's' : '') + ' remaining'
+    : 'No hints left for this question';
+
+  if (remaining <= 0) {
+    hintBtn.textContent = 'No more hints for this question';
     hintBtn.classList.add('disabled');
   } else {
     hintBtn.textContent = 'Stuck on the case? Request a hint...';
@@ -480,35 +548,50 @@ function renderHintSystem() {
 }
 
 function showHint() {
-  if (gameState.hintsUsed >= gameState.activeHints.length) return;
+  var activeStage = getActiveQuestionStage();
+  if (!activeStage || !activeStage.hints) return;
 
-  const hintBox = document.getElementById('hintBox');
-  hintBox.textContent = gameState.activeHints[gameState.hintsUsed];
+  var stageId = activeStage.id;
+  var used = gameState.hintsUsedPerStage[stageId] || 0;
+
+  if (used >= activeStage.hints.length) return;
+
+  var hintBox = document.getElementById('hintBox');
+  hintBox.textContent = activeStage.hints[used];
   hintBox.classList.add('visible');
-  gameState.hintsUsed++;
+
+  gameState.hintsUsedPerStage[stageId] = used + 1;
   saveGame();
   renderHintSystem();
 }
 
+// ── SUBMIT SYSTEM ──
+
 function submitCode() {
-  const input = document.getElementById('codeInput');
-  const feedback = document.getElementById('feedback');
-  const val = input.value.trim();
+  var input = document.getElementById('codeInput');
+  var feedback = document.getElementById('feedback');
+  var val = input.value.trim();
 
   if (!val) return;
 
-  const valLower = val.toLowerCase();
+  var valLower = val.toLowerCase();
+  var nameDisplay = formatDetectiveTitle();
 
   // Check phone numbers
-  const cleanNumber = val.replace(/[\s\-\(\)]/g, '');
-  for (const [number, phoneConfig] of Object.entries(config.phoneNumbers || {})) {
-    const cleanConfigNum = number.replace(/[\s\-\(\)]/g, '');
+  var cleanNumber = val.replace(/[\s\-\(\)]/g, '');
+  var phoneNumbers = config.phoneNumbers || {};
+  var phoneKeys = Object.keys(phoneNumbers);
+
+  for (var p = 0; p < phoneKeys.length; p++) {
+    var number = phoneKeys[p];
+    var phoneConfig = phoneNumbers[number];
+    var cleanConfigNum = number.replace(/[\s\-\(\)]/g, '');
     if (cleanNumber === cleanConfigNum || cleanNumber === cleanConfigNum.replace('555', '')) {
       feedback.className = 'feedback visible correct';
-      feedback.textContent = `📞 Incoming call... connecting to ${phoneConfig.description}. Check your audio evidence, Detective ${gameState.detectiveName}.`;
+      feedback.textContent = '\uD83D\uDCDE Incoming call... connecting to ' + phoneConfig.description + '. Check your audio evidence, ' + nameDisplay + '.';
 
       if (phoneConfig.playsAudio) {
-        const audioId = phoneConfig.playsAudio;
+        var audioId = phoneConfig.playsAudio;
         if (!gameState.unlockedEvidence.includes('audio-' + audioId)) {
           gameState.unlockedEvidence.push('audio-' + audioId);
           saveGame();
@@ -522,16 +605,16 @@ function submitCode() {
   }
 
   // Check all stages for matching answers
-  let matched = false;
-  config.stages.forEach(stage => {
+  var matched = false;
+  config.stages.forEach(function(stage) {
     if (gameState.completedStages.includes(stage.id)) return;
     if (!stage.acceptedAnswers) return;
 
-    const isMatch = stage.acceptedAnswers.some(ans => ans.toLowerCase() === valLower);
+    var isMatch = stage.acceptedAnswers.some(function(ans) { return ans.toLowerCase() === valLower; });
     if (isMatch) {
       matched = true;
       feedback.className = 'feedback visible correct';
-      feedback.textContent = `✓ New evidence unlocked! Check your evidence locker, Detective ${gameState.detectiveName}.`;
+      feedback.textContent = '\u2713 New evidence unlocked! Check your evidence locker, ' + nameDisplay + '.';
 
       processStage(stage.id);
       renderHub();
@@ -542,7 +625,7 @@ function submitCode() {
 
   if (!matched) {
     feedback.className = 'feedback visible wrong';
-    feedback.textContent = "✗ That doesn't match anything in the case file. Keep investigating, or request a hint.";
+    feedback.textContent = "\u2717 That doesn't match anything in the case file. Keep investigating, or request a hint.";
   }
 
   input.value = '';
