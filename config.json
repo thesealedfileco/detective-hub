@@ -1,0 +1,187 @@
+{
+  "caseId": "1997-0342",
+  "title": "The Vanishing at Morrow Creek",
+  "subtitle": "Reopened March 2026 — Assigned to you, Detective",
+  "setting": "Morrow Creek, Oregon — March 1997",
+  "departmentName": "Morrow Creek Police Department",
+
+  "stages": [
+    {
+      "id": "start",
+      "triggeredBy": "auto",
+      "detectiveNote": "New case on my desk. Woman disappeared from a cabin near Morrow Creek back in '97. Start with the case briefing — get the basics down. Then listen to that 911 call. Something about the caller's voice doesn't sit right with me...",
+      "dispatchMessage": null,
+      "unlockedEvidence": ["briefing", "photos", "911-call", "witness-diane"],
+      "revealedEvidence": ["forensic-report", "phone-records"],
+      "revealedSuspects": ["webb", "diane"],
+      "unlockedAudio": ["911-call"]
+    },
+    {
+      "id": "stage-2",
+      "triggeredBy": { "type": "viewed", "items": ["briefing", "911-call"] },
+      "detectiveNote": "Something about Diane's story doesn't sit right. She says she saw the car at 10pm, but the 911 call didn't come in until 11:42. That's almost two hours. What was she doing in that gap? Look at her statement again...",
+      "dispatchMessage": "Detective [NAME] — for the record, we need you to confirm: what time was the emergency call placed? Check the transcript and submit your answer to unlock the phone records.",
+      "question": "What time was the 911 call placed?",
+      "acceptedAnswers": ["11:42", "11:42 PM", "1142", "11:42pm", "11:42 pm"],
+      "unlocksOnCorrect": ["phone-records"],
+      "hints": [
+        "The time is mentioned in the 911 call evidence...",
+        "Listen to the recording again — the dispatcher states the exact time at the start.",
+        "The call came in late at night. The time starts with 11..."
+      ]
+    },
+    {
+      "id": "stage-3",
+      "triggeredBy": { "type": "unlock", "item": "phone-records" },
+      "detectiveNote": "The phone records show Webb called the cabin THREE times that night. But he told investigators he hadn't spoken to her in weeks. He's lying. I found what looks like an old social media profile for him — need to check it out...",
+      "dispatchMessage": "Detective [NAME] — forensic lab left results for you. The authorization code was stamped on the original evidence bag — it's visible in one of the crime scene photos. Find it and submit it to access the report.",
+      "revealedEvidence": ["confidential-source"],
+      "revealedSuspects": ["mystery-suspect"],
+      "unlockedAudio": ["voicemail"]
+    },
+    {
+      "id": "stage-4",
+      "triggeredBy": { "type": "answer", "acceptedAnswers": ["MC7734", "mc7734", "7734"] },
+      "detectiveNote": "The forensic report changes everything. There were two sets of prints at the cabin, and one of them doesn't match anyone we've interviewed yet. Who else was there that night?",
+      "dispatchMessage": null,
+      "unlocksOnCorrect": ["forensic-report"],
+      "revealedEvidence": ["secret-file"],
+      "revealedSuspects": ["suspect-3"]
+    }
+  ],
+
+  "evidence": [
+    {
+      "id": "briefing",
+      "type": "document",
+      "icon": "📋",
+      "name": "Case briefing",
+      "description": "Initial report filed by Officer Reeves, March 15",
+      "file": "evidence/case-briefing.pdf"
+    },
+    {
+      "id": "photos",
+      "type": "photograph",
+      "icon": "📸",
+      "name": "Crime scene — Cabin",
+      "description": "Interior photos, north bedroom, 14 images",
+      "file": "evidence/crime-scene-photos.pdf"
+    },
+    {
+      "id": "911-call",
+      "type": "audio",
+      "icon": "🎙️",
+      "name": "911 call transcript",
+      "description": "Anonymous male caller, 11:42 PM",
+      "file": "evidence/911-transcript.pdf"
+    },
+    {
+      "id": "witness-diane",
+      "type": "statement",
+      "icon": "📄",
+      "name": "Witness — Diane Harlow",
+      "description": "Neighbor, interviewed 03/15/97",
+      "file": "evidence/witness-diane.pdf"
+    },
+    {
+      "id": "forensic-report",
+      "type": "forensics",
+      "icon": "🔬",
+      "name": "Lab analysis report",
+      "description": "Sealed pending authorization",
+      "lockHint": "Requires authorization code"
+    },
+    {
+      "id": "phone-records",
+      "type": "records",
+      "icon": "📞",
+      "name": "Phone records — March '97",
+      "description": "Sealed pending investigation",
+      "lockHint": "Answer a case question to access",
+      "file": "evidence/phone-records.pdf"
+    },
+    {
+      "id": "confidential-source",
+      "type": "field report",
+      "icon": "🕵️",
+      "name": "Confidential source",
+      "description": "Filed by unknown officer",
+      "lockHint": "Discovered during investigation",
+      "file": "evidence/confidential-source.pdf"
+    },
+    {
+      "id": "secret-file",
+      "type": "unknown",
+      "icon": "❓",
+      "name": "???",
+      "description": "Classified evidence file",
+      "lockHint": "Keep investigating..."
+    }
+  ],
+
+  "suspects": [
+    {
+      "id": "webb",
+      "name": "Marcus Webb",
+      "role": "Victim's business partner",
+      "status": "poi",
+      "photo": null
+    },
+    {
+      "id": "diane",
+      "name": "Diane Harlow",
+      "role": "Neighbor",
+      "status": "review",
+      "photo": null
+    },
+    {
+      "id": "mystery-suspect",
+      "name": "[Redacted]",
+      "role": "Unlock more evidence",
+      "status": "classified",
+      "photo": null
+    },
+    {
+      "id": "suspect-3",
+      "name": "[Redacted]",
+      "role": "Unlock more evidence",
+      "status": "classified",
+      "photo": null
+    },
+    {
+      "id": "suspect-4",
+      "name": "[Redacted]",
+      "role": "Unlock more evidence",
+      "status": "classified",
+      "photo": null
+    }
+  ],
+
+  "audio": [
+    {
+      "id": "911-call",
+      "title": "TAPE-001 — 911 Emergency Call",
+      "meta": "2:34 · March 14, 1997 · Anonymous male",
+      "file": "audio/911-call.mp3"
+    },
+    {
+      "id": "voicemail",
+      "title": "TAPE-002 — Forensics Lab Voicemail",
+      "meta": "1:12 · March 16, 1997 · Dr. Patel",
+      "file": "audio/forensics-voicemail.mp3",
+      "lockHint": "Unlock by finding the lab's phone number"
+    }
+  ],
+
+  "phoneNumbers": {
+    "555-0147": {
+      "playsAudio": "voicemail",
+      "description": "Forensics lab — Dr. Patel"
+    }
+  },
+
+  "solution": {
+    "correctSuspect": "webb",
+    "revealPage": "evidence/solution-reveal.pdf"
+  }
+}
