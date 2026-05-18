@@ -177,12 +177,15 @@ function enterCase() {
   localStorage.setItem('detective_names', JSON.stringify(gameState.detectiveNames));
 
   document.getElementById('nameGate').classList.add('hidden');
-  document.getElementById('mainHub').style.display = 'block';
 
   setupHub();
   processStage('start');
-  renderHub();
   saveGame();
+
+  showPopup('caseBriefing', function() {
+    document.getElementById('mainHub').style.display = 'block';
+    renderHub();
+  });
 }
 
 /* ── HUB SETUP ── */
@@ -228,6 +231,14 @@ function processStage(stageId) {
 
   checkSuspectTriggers();
   saveGame();
+
+  // Fire stage popup if configured (skip on reload — only first time)
+  if (stage.popup && config.popups && config.popups[stage.popup]) {
+    setTimeout(function() {
+      showPopup(stage.popup, null);
+    }, 400);
+  }
+
 }
 
 function processAllStages() {
@@ -444,8 +455,14 @@ function checkSuspectTriggers() {
 
 function viewEvidence(id) {
   var ev = config.evidence.find(function(e) { return e.id === id; });
-  if (!ev || !ev.file) return;
+  if (!ev) return;
 
+  // Briefing type replays the popup instead of opening a file
+  if (ev.type === 'briefing') {
+    showPopup('caseBriefing', null);
+    return;
+  }
+  if (!ev.file) return;
   window.open(ev.file, '_blank');
 
   if (!gameState.viewedEvidence.includes(id)) {
@@ -1401,6 +1418,47 @@ function downloadID() {
   ctx.fillText('This credential is issued by The Sealed File Co and the associated case archive.',30,515);
   ctx.fillText('Clearance level increases with each resolved case.',30,535);
   downloadCanvas(c,'detective-id-card.png');
+}
+
+/* ── POPUP SYSTEM ── */
+
+function showPopup(popupKey, onDismiss) {
+  var popup = config.popups && config.popups[popupKey];
+  if (!popup) { if (onDismiss) onDismiss(); return; }
+
+  var name = formatNames();
+  var body = popup.body
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>');
+  // Address player by name in the case briefing
+  var greeting = popupKey === 'caseBriefing'
+    ? '<p class="popup-greeting">Detective ' + name + ',</p>'
+    : '';
+
+  var overlay = document.createElement('div');
+  overlay.className = 'popup-overlay';
+  overlay.innerHTML =
+    '<div class="popup-box">' +
+      '<div class="popup-header">' + popup.header + '</div>' +
+      '<div class="popup-body">' +
+        greeting +
+        '<p>' + body + '</p>' +
+      '</div>' +
+      '<button class="popup-dismiss" onclick="dismissPopup(this)">' +
+        popup.dismissText +
+      '</button>' +
+    '</div>';
+
+  // Store callback so dismiss can call it
+  overlay._onDismiss = onDismiss;
+  document.body.appendChild(overlay);
+}
+
+function dismissPopup(btn) {
+  var overlay = btn.closest('.popup-overlay');
+  var cb = overlay._onDismiss;
+  overlay.remove();
+  if (cb) cb();
 }
 
 /* ── DEV ── */

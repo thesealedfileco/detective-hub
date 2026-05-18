@@ -2427,3 +2427,86 @@ body {
   .char-section { padding: 1rem 1.25rem; }
   .char-folder-body::before { display: none; }
 }
+
+
+/* ═══════════════════════════════════════
+   STORY POPUPS
+   ═══════════════════════════════════════ */
+
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(28, 22, 14, 0.82);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  backdrop-filter: blur(2px);
+  animation: popupFadeIn 0.3s ease;
+}
+@keyframes popupFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.popup-box {
+  background: var(--bg-paper);
+  border: 1px solid var(--border-dark);
+  border-top: 3px solid var(--stamp-red);
+  max-width: 560px;
+  width: 100%;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+  animation: popupSlideIn 0.3s ease;
+}
+@keyframes popupSlideIn {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+.popup-header {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--stamp-red);
+  padding: 1rem 1.5rem 0;
+}
+.popup-body {
+  padding: 1rem 1.5rem;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  font-family: 'Crimson Pro', serif;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  max-height: 55vh;
+  overflow-y: auto;
+}
+.popup-body p {
+  margin-bottom: 0.85rem;
+}
+.popup-body p:last-child { margin-bottom: 0; }
+.popup-greeting {
+  font-family: 'Special Elite', cursive;
+  font-size: 15px;
+  color: var(--text-primary);
+  margin-bottom: 1rem !important;
+}
+.popup-dismiss {
+  display: block;
+  width: 100%;
+  padding: 0.9rem 1.5rem;
+  background: none;
+  border: none;
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  text-align: center;
+}
+.popup-dismiss:hover {
+  background: var(--bg-manila);
+  color: var(--text-primary);
+}

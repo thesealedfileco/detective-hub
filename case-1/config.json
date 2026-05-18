@@ -11,6 +11,7 @@
       "detectiveNote": "The files are incomplete. Some evidence appears damaged or intentionally removed. Start with the station records and Naomi Vale's original disappearance report.",
       "dispatchMessage": "Detective [NAME] — review the initial evidence package and determine the date Naomi Vale disappeared.",
       "unlockedEvidence": [
+        "ev-000",
         "ev-001",
         "ev-002",
         "ev-003",
@@ -67,6 +68,7 @@
         "type": "answered",
         "stageId": "start"
       },
+      "popup": "stage-1",
       "detectiveNote": "Evelyn says Naomi left around 10, but the emergency call wasn't placed until nearly midnight. Someone's timeline doesn't add up. And that humming in the background of the caller recording — I've heard that before somewhere.",
       "dispatchMessage": "Detective [NAME] — the witness timeline doesn't match the emergency response. What time was the 911 call placed?",
       "unlockQuestion": "What time was the 911 call placed?",
@@ -121,6 +123,7 @@
         "type": "unlock",
         "item": "au-002"
       },
+      "popup": "stage-3",
       "detectiveNote": "Lena was ahead of everyone. She wasn't just researching Naomi — she was building a case. And then she vanished too. Whatever she found, someone didn't want it found. That note on the back of her photo — check the static. What does that mean?",
       "dispatchMessage": "Detective [NAME] — Lena believed the broadcasts were intentionally designed to influence listeners. What term did she use to describe the technique?",
       "unlockQuestion": "What term did Lena use to describe the broadcast technique?",
@@ -198,6 +201,7 @@
         "type": "answered",
         "stageId": "stage-4"
       },
+      "popup": "stage-5",
       "detectiveNote": "The tower. Everything keeps coming back to the tower. And Voss keeps saying memory is easy to shape — like he's not even hiding it anymore. Like he knows no one will ever prove it. There's a code on that evidence bag in the search photos. I need to look more carefully.",
       "dispatchMessage": "Detective [NAME] — where did Naomi confront Voss the night she disappeared?",
       "unlockQuestion": "Where did Naomi confront Voss the night she disappeared?",
@@ -295,6 +299,15 @@
     }
   ],
   "evidence": [
+    {
+      "id": "ev-000",
+      "type": "briefing",
+      "icon": "📋",
+      "name": "Case Briefing — Moth Hollow Archive",
+      "description": "Initial case assignment. Sealed File Co. Archive Division.",
+      "file": null,
+      "lockedHint": null
+    },
     {
       "id": "ev-001",
       "type": "document",
@@ -564,6 +577,28 @@
     "resultLabel": "Spectrogram Analysis — DISTORTED_TRANSFER_B"
   },
   "finalNote": "This file has been archived. Case 001 — The Moth Hollow Tapes — is considered closed pending new evidence. The Sealed File Co continues to receive materials. Additional sealed files are under review.",
+  "popups": {
+    "caseBriefing": {
+      "header": "ARCHIVED CASE MATERIAL — ACCESS RESTRICTED",
+      "body": "In 2025, a private archivist recovered a collection of sealed investigative files from a decommissioned storage facility in rural West Virginia.\n\nThe files had been classified under a departmental case closure order issued in October 1998. The closure was signed before a formal investigation was completed.\n\nThe archivist has since gone quiet. The files remain.\n\nThe case assigned to you was never officially solved.\n\nNaomi Vale, 26, overnight radio host at WHLW 88.3 in Moth Hollow, West Virginia — disappeared October 14, 1998. Her vehicle was found two miles from the station. No body was recovered. The investigation was suspended eleven days later.\n\nThe evidence in this archive is incomplete. Some files appear damaged. Others appear to have been intentionally removed.\n\nWhat remains is what you have. Work with it.\n\n— SEALED FILE CO. ARCHIVE DIVISION",
+      "dismissText": "I HAVE READ AND UNDERSTOOD — BEGIN INVESTIGATION"
+    },
+    "stage-1": {
+      "header": "NEW EVIDENCE RECOVERED",
+      "body": "Three additional files have been located in the archive.\n\nThe original detective's notes indicate these were part of the initial evidence package but were catalogued separately from the primary case briefing. The reason for the separation is not noted.\n\nReview all materials before proceeding.",
+      "dismissText": "CONTINUE INVESTIGATION"
+    },
+    "stage-3": {
+      "header": "SUPPLEMENTARY MATERIALS RECOVERED",
+      "body": "The archivist who originally recovered these files included supplementary materials gathered during research into the Moth Hollow case.\n\nThese materials are not part of the original 1998 evidence package. They were collected between 2002 and 2007 by a secondary researcher who independently investigated the case.\n\nThat researcher's name was Lena Hart.",
+      "dismissText": "CONTINUE INVESTIGATION"
+    },
+    "stage-5": {
+      "header": "SECONDARY MATERIALS LOCATED",
+      "body": "The original search of the area surrounding the WHLW relay tower was conducted over three days in October 1998. Initial search results were logged but not included in the primary case file.\n\nThe following materials were recovered from a secondary storage box associated with this case. They appear to have been separated from the main file at some point between 1998 and 2003.",
+      "dismissText": "CONTINUE INVESTIGATION"
+    }
+  },
   "revealCharacters": [
     {
       "icon": "🧠",
