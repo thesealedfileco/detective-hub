@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,6 +25,96 @@
   </div>
 </div>
 
+<!-- STEP 1: CINEMATIC OVERLAY -->
+<div class="cinematic-overlay" id="cinematicOverlay" style="display:none;">
+  <canvas id="cinematicCanvas"></canvas>
+  <div class="cinematic-stamp" id="cinematicStamp">CASE CLOSED</div>
+</div>
+
+<!-- STEP 2: FULL REVEAL PAGE -->
+<div class="reveal-fullpage" id="revealFullpage" style="display:none;">
+  <div class="reveal-fp-inner">
+    <div class="reveal-fp-header">
+      <div class="reveal-fp-archive-label">THE SEALED FILE CO — RECOVERED FILES ARCHIVE</div>
+      <div class="reveal-fp-stamp-wrap">
+        <div class="reveal-fp-stamp">CASE CLOSED</div>
+      </div>
+      <h1 class="reveal-fp-title" id="revealFpTitle"></h1>
+      <div class="reveal-fp-case-id" id="revealFpCaseId"></div>
+      <div class="reveal-fp-solved-by" id="revealFpSolvedBy"></div>
+    </div>
+    <div class="reveal-fp-divider"></div>
+    <div class="reveal-fp-section">
+      <div class="reveal-fp-section-label">Case resolution — what happened</div>
+      <div class="reveal-fp-story" id="revealFpStory"></div>
+    </div>
+    <div class="reveal-fp-section">
+      <div class="reveal-fp-section-label">Key evidence recovered</div>
+      <div class="reveal-fp-evidence-grid">
+        <div class="reveal-fp-evidence-slot"><div class="reveal-fp-evidence-placeholder">📋</div><div class="reveal-fp-evidence-label">Missing Person Report</div></div>
+        <div class="reveal-fp-evidence-slot"><div class="reveal-fp-evidence-placeholder">📼</div><div class="reveal-fp-evidence-label">The Fourth Tape</div></div>
+        <div class="reveal-fp-evidence-slot"><div class="reveal-fp-evidence-placeholder">📷</div><div class="reveal-fp-evidence-label">Relay Tower Photos</div></div>
+        <div class="reveal-fp-evidence-slot"><div class="reveal-fp-evidence-placeholder">🔒</div><div class="reveal-fp-evidence-label">Incident Report</div></div>
+      </div>
+    </div>
+    <div class="reveal-fp-section">
+      <div class="reveal-fp-section-label">Case subjects — final status</div>
+      <div class="reveal-fp-characters" id="revealFpCharacters"></div>
+    </div>
+    <div class="reveal-fp-divider"></div>
+    <div class="reveal-fp-section">
+      <div class="reveal-fp-section-label">Case closure documents</div>
+      <div class="reveal-fp-download-grid">
+        <div class="reveal-fp-download-card" onclick="downloadCertificate()">
+          <div class="reveal-fp-download-icon">📜</div>
+          <div class="reveal-fp-download-name">Case closure certificate</div>
+          <div class="reveal-fp-download-desc">Official resolution document</div>
+        </div>
+        <div class="reveal-fp-download-card" onclick="downloadBadge()">
+          <div class="reveal-fp-download-icon">🏷️</div>
+          <div class="reveal-fp-download-name">Social media badge</div>
+          <div class="reveal-fp-download-desc">Share your achievement</div>
+        </div>
+        <div class="reveal-fp-download-card" onclick="downloadID()">
+          <div class="reveal-fp-download-icon">🪪</div>
+          <div class="reveal-fp-download-name">Detective ID card</div>
+          <div class="reveal-fp-download-desc">Collector's credential</div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal-fp-final-note" id="revealFpFinalNote"></div>
+    <div class="reveal-fp-return">
+      <button class="reveal-fp-return-btn" onclick="returnToHub()">Return to Archive</button>
+    </div>
+    <div class="reveal-fp-footer">
+      The Sealed File Co — Recovered Files Archive &nbsp;·&nbsp; thesealedfileco.com
+    </div>
+  </div>
+</div>
+
+<!-- SPECTROGRAM NOTIFICATION -->
+<div class="spectro-notification" id="spectroNotification" style="display:none;">
+  <div class="spectro-notification-inner">
+    <div class="spectro-notif-icon">📡</div>
+    <div class="spectro-notif-text" id="spectroNotifText"></div>
+    <button class="spectro-notif-dismiss" onclick="dismissSpectroNotification()">Understood</button>
+  </div>
+</div>
+
+<!-- SPECTROGRAM RESULT MODAL -->
+<div class="spectro-modal-bg" id="spectroModalBg" style="display:none;" onclick="closeSpectroModal()">
+  <div class="spectro-modal" onclick="event.stopPropagation()">
+    <div class="spectro-modal-header">
+      <div class="spectro-modal-label" id="spectroModalLabel"></div>
+      <button class="spectro-modal-close" onclick="closeSpectroModal()">&times;</button>
+    </div>
+    <div class="spectro-modal-body">
+      <iframe id="spectroModalImg" src="" style="width:100%;height:500px;border:none;background:#0a120e;"></iframe>
+    </div>
+    <div class="spectro-modal-footer">Visual analysis complete — anomalies detected in waveform</div>
+  </div>
+</div>
+
 <!-- MAIN HUB -->
 <div class="container" id="mainHub" style="display:none;">
 
@@ -32,55 +123,36 @@
     <div class="coffee-stain" style="bottom:30px;right:40px;"></div>
     <div class="coffee-stain" style="bottom:60px;right:50px;width:45px;height:45px;border-width:3px;"></div>
 
-    <!-- HEADER -->
     <div class="header">
-      <div class="stamp">COLD CASE — REOPENED</div>
+      <div class="stamp" id="headerStamp">COLD CASE — REOPENED</div>
       <h1 class="case-title" id="caseTitle"></h1>
       <div class="case-meta" id="caseSubtitle"></div>
     </div>
 
-    <!-- NOTEBOOK -->
     <div class="notebook" id="notebook"></div>
 
-    <!-- PROGRESS -->
     <div class="progress-section">
-      <div class="progress-item">
-        <div class="progress-num" id="evidenceCount">0/0</div>
-        <div class="progress-label">Evidence</div>
-      </div>
-      <div class="progress-item">
-        <div class="progress-num" id="suspectCount">0/0</div>
-        <div class="progress-label">Suspects</div>
-      </div>
-      <div class="progress-item">
-        <div class="progress-num" id="questionCount">0/0</div>
-        <div class="progress-label">Questions</div>
-      </div>
-      <div class="progress-item">
-        <div class="progress-num" id="progressPct">0%</div>
-        <div class="progress-label">Complete</div>
-      </div>
+      <div class="progress-item"><div class="progress-num" id="evidenceCount">0/0</div><div class="progress-label">Evidence</div></div>
+      <div class="progress-item"><div class="progress-num" id="suspectCount">0/0</div><div class="progress-label">Suspects</div></div>
+      <div class="progress-item"><div class="progress-num" id="questionCount">0/0</div><div class="progress-label">Questions</div></div>
+      <div class="progress-item"><div class="progress-num" id="progressPct">0%</div><div class="progress-label">Complete</div></div>
     </div>
 
-    <!-- EVIDENCE -->
     <div class="section-divider">
       <span>Evidence locker</span>
       <span class="section-count" id="evidenceSectionCount" style="margin-left:auto"></span>
     </div>
     <div class="evidence-grid" id="evidenceGrid"></div>
 
-    <!-- AUDIO -->
     <div class="section-divider"><span>Audio evidence</span></div>
     <div class="audio-list" id="audioList"></div>
 
-    <!-- SUSPECTS -->
     <div class="section-divider">
       <span>Suspect board</span>
       <span class="section-count" id="suspectSectionCount" style="margin-left:auto"></span>
     </div>
     <div class="suspect-grid" id="suspectGrid"></div>
 
-    <!-- INPUT -->
     <div class="input-area">
       <div class="input-title">Submit evidence</div>
       <div class="input-subtitle">Found a code in the evidence? A phone number on a document? An answer to the case? Enter it here.</div>
@@ -96,7 +168,6 @@
       <div class="feedback" id="feedback"></div>
     </div>
 
-    <!-- SOLUTION SECTION -->
     <div class="solution-section" id="solutionSection">
       <div class="solution-envelope" id="solutionEnvelope">
         <div class="envelope-flap" id="envelopeFlap"></div>
@@ -125,46 +196,29 @@
       </div>
     </div>
 
-    <!-- REVEAL PAGE (hidden until solved) -->
-    <div class="reveal-page" id="revealPage" style="display:none;">
-      <div class="reveal-stamp">CASE CLOSED</div>
-      <div class="reveal-title" id="revealTitle"></div>
-      <div class="reveal-correct-msg" id="revealCorrectMsg"></div>
-      <div class="reveal-story" id="revealStory"></div>
-      <div class="reveal-downloads">
-        <div class="reveal-downloads-title">Case closure documents</div>
-        <div class="reveal-download-grid">
-          <div class="reveal-download-card" onclick="downloadCertificate()">
-            <div class="reveal-download-icon">&#128220;</div>
-            <div class="reveal-download-name">Case closure certificate</div>
-            <div class="reveal-download-desc">Official resolution document</div>
-          </div>
-          <div class="reveal-download-card" onclick="downloadBadge()">
-            <div class="reveal-download-icon">&#127991;</div>
-            <div class="reveal-download-name">Social media badge</div>
-            <div class="reveal-download-desc">Share your achievement</div>
-          </div>
-          <div class="reveal-download-card" onclick="downloadID()">
-            <div class="reveal-download-icon">&#128179;</div>
-            <div class="reveal-download-name">Detective ID card</div>
-            <div class="reveal-download-desc">Collector's credential</div>
-          </div>
-        </div>
-      </div>
-      <div class="reveal-footer-note" id="revealFooterNote"></div>
-    </div>
+    <!-- legacy reveal placeholder — hidden, new fullpage used instead -->
+    <div id="revealPage" style="display:none;"></div>
 
   </div>
 
   <div class="folder-footer" id="footerText"></div>
 
-  <!-- RESET (hidden, for testing) -->
   <div style="text-align:center;margin-bottom:2rem;">
     <button onclick="resetGame()" style="background:none;border:1px dashed var(--border);padding:6px 14px;font-family:'Courier Prime',monospace;font-size:10px;color:var(--text-muted);cursor:pointer;border-radius:4px;">Reset case progress</button>
   </div>
 
 </div>
 
+<!-- DEV ONLY — REMOVE BEFORE LAUNCH -->
+<div id="devTools" style="position:fixed;bottom:20px;right:20px;background:#ffeb3b;border:2px solid #f57f17;padding:10px 16px;font-family:monospace;font-size:13px;z-index:9999;border-radius:4px;">
+  🛠 DEV
+  <button onclick="devSkipStage()" style="margin-left:8px;cursor:pointer;padding:4px 10px;">Skip Stage →</button>
+  <button onclick="resetGame()" style="margin-left:8px;cursor:pointer;padding:4px 10px;">Reset</button>
+  <button onclick="devTriggerCinematic()" style="margin-left:8px;cursor:pointer;padding:4px 10px;background:#ff5722;color:white;border:none;">▶ End Seq</button>
+</div>
+<!-- END DEV ONLY -->
+
+<!-- script -->
 <script src="script.js"></script>
 </body>
 </html>

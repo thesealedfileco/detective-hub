@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personnel File — The Sealed File Co</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="char-page" id="charPage">
+  <!-- Rendered by JS -->
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   character.html — Reusable character profile page
+   Usage: character.html?id=dr-voss
+   Reads config.json + localStorage game state.
+   No edits needed for new cases — all content from config.
+   ═══════════════════════════════════════════════════════ */
+
+var STORAGE_KEY = 'detective-hub-save';
+
+var config    = null;
+var gameState = null;
+var suspectId = null;
+
+/* ── BOOT ── */
+document.addEventListener('DOMContentLoaded', function() {
+  var params = new URLSearchParams(window.location.search);
+  suspectId  = params.get('id');
+
+  if (!suspectId) { renderError('No personnel file specified.'); return; }
+
+  fetch('config.json')
+    .then(function(r) { return r.json(); })
+    .then(function(cfg) {
+      config = cfg;
+      console.log('config loaded, characterProfiles:', config.characterProfiles);
+      console.log('looking for:', suspectId);
+      console.log('found:', config.characterProfiles && config.characterProfiles[suspectId]);
+      loadState();
+      render();
+    })
+    .catch(function() {
+      renderError('Unable to load case file. Return to the investigation hub.');
+    });
+});
+
+/* ── LOAD GAME STATE ── */
+function loadState() {
+  var raw = localStorage.getItem(STORAGE_KEY);
+  gameState = {
+    unlockedEvidence: [],
+    viewedEvidence:   [],
+    revealedSuspects: [],
+    detectiveNames:   []
+  };
+  if (raw) {
+    try {
+      var parsed = JSON.parse(raw);
+      gameState = Object.assign(gameState, parsed);
+      // legacy single name migration
+      if (parsed.detectiveName && !parsed.detectiveNames) {
+        gameState.detectiveNames = [parsed.detectiveName];
+      }
+    } catch(e) {}
+  }
+}
+
+/* ── HELPERS ── */
+function isUnlocked(evidenceId) {
+  return gameState.unlockedEvidence.includes(evidenceId);
+}
+
+function isStatementVisible(requiresEvidence) {
+  if (!requiresEvidence) return true;
+  if (Array.isArray(requiresEvidence)) {
+    return requiresEvidence.every(function(id) { return isUnlocked(id); });
+  }
+  return isUnlocked(requiresEvidence);
+}
+
+function makeSectionHtml(label, contentHtml) {
+  return '<div class="char-section">' +
+    '<div class="char-section-label">' + label + '</div>' +
+    contentHtml +
+  '</div>';
+}
+
+function badgeClass(badge) {
+  var map = { doc:'char-badge-doc', audio:'char-badge-audio', image:'char-badge-image', web:'char-badge-web', social:'char-badge-social' };
+  return map[badge] || 'char-badge-doc';
+}
+
+/* ── MAIN RENDER ── */
+function render() {
+  var sus     = config.suspects.find(function(s) { return s.id === suspectId; });
+  var profile = config.characterProfiles && config.characterProfiles[suspectId];
+
+  if (!sus || !profile) {
+    renderError('Personnel file not found: ' + suspectId);
+    return;
+  }
+
+  // Guard: character must be revealed to the player
+  if (!gameState.revealedSuspects.includes(suspectId)) {
+    renderNoAccess();
+    return;
+  }
+
+  document.title = sus.name + ' — Personnel File';
+
+  var statusLabels = { victim:'Victim', missing:'Missing', review:'Under review' };
+  var statusLabel  = statusLabels[sus.status] || 'Under review';
+
+  // Photo
+  var photoHtml = sus.photo
+    ? '<img src="' + sus.photo + '" alt="' + sus.name + '">'
+    : '\uD83D\uDC64';
+
+  // ── Build body sections ──
+  var body = '';
+
+  // 1. Basic info — always shown
+  if (profile.basicInfo && profile.basicInfo.length) {
+    var rows = profile.basicInfo.map(function(r) {
+      return '<div class="char-info-row">' +
+        '<span class="char-info-label">' + r.label + '</span>' +
+        '<span class="char-info-value">' + r.value + '</span>' +
+      '</div>';
+    }).join('');
+    body += makeSectionHtml('Basic Information',
+      '<div class="char-info-grid">' + rows + '</div>');
+  }
+
+  // 2. Case file summary — always shown
+  if (profile.summary) {
+    body += makeSectionHtml('Case File Summary',
+      '<p class="char-summary">' + profile.summary + '</p>');
+  }
+
+  // 3. Statement on record — only when source evidence is unlocked
+  if (profile.statement && isStatementVisible(profile.statement.requiresEvidence)) {
+    body += makeSectionHtml('Statement on Record',
+      '<div class="char-quote">' +
+        profile.statement.quote.replace(/\n/g, '<br>') +
+        '<span class="char-quote-source">' + profile.statement.source + '</span>' +
+      '</div>');
+  }
+
+  // 4. Associated evidence — only unlocked items
+  var visibleEv = (profile.evidenceLinks || []).filter(function(link) {
+    return isUnlocked(link.evidenceId);
+  });
+  if (visibleEv.length) {
+    var evHtml = visibleEv.map(function(link) {
+      var ev    = config.evidence.find(function(e) { return e.id === link.evidenceId; });
+      var href  = (ev && ev.file) ? ev.file : '#';
+      var icon  = link.icon  || (ev ? ev.icon        : '📋');
+      var name  = link.name  || (ev ? ev.name        : link.evidenceId);
+      var desc  = link.desc  || (ev ? ev.description : '');
+      var badge = link.badge || 'doc';
+      return '<a class="char-ev-link" href="' + href + '" target="_blank"' +
+             ' onclick="markViewed(\'' + link.evidenceId + '\')">' +
+        '<span class="char-ev-icon">' + icon + '</span>' +
+        '<span class="char-ev-content">' +
+          '<span class="char-ev-id">' + link.evidenceId.toUpperCase() + '</span>' +
+          '<span class="char-ev-name">' + name + '</span>' +
+          '<span class="char-ev-desc">' + desc + '</span>' +
+        '</span>' +
+        '<span class="char-ev-badge ' + badgeClass(badge) + '">' + badge.toUpperCase() + '</span>' +
+      '</a>';
+    }).join('');
+    body += makeSectionHtml('Associated Evidence',
+      '<div class="char-ev-list">' + evHtml + '</div>');
+  }
+
+  // 5. Online profiles & social links — always shown if defined
+  if (profile.socialLinks && profile.socialLinks.length) {
+    var socialHtml = profile.socialLinks.map(function(link) {
+      return '<a class="char-social-btn" href="' + link.url + '" target="_blank">' +
+        '<span class="char-social-icon">' + link.icon + '</span>' +
+        '<span>' +
+          '<span class="char-social-label">' + link.label + '</span>' +
+          '<span class="char-social-sub">' + link.sublabel + '</span>' +
+        '</span>' +
+        '<span class="char-social-arrow">OPEN \u2192</span>' +
+      '</a>';
+    }).join('');
+    body += makeSectionHtml('Online Profiles &amp; Records',
+      '<div class="char-social-list">' + socialHtml + '</div>');
+  }
+
+  // ── Assemble full page ──
+  var html =
+    '<a class="char-back" href="/case-1/index.html">' +
+      '<span class="char-back-arrow">&#8592;</span> Return to case file' +
+    '</a>' +
+
+    '<div class="char-folder-tab">Personnel File</div>' +
+    '<div class="char-folder-body">' +
+
+      '<div class="char-header">' +
+        '<div class="char-photo">' + photoHtml + '</div>' +
+        '<div class="char-header-meta">' +
+          '<span class="char-status-tag ' + sus.status + '">' + statusLabel + '</span>' +
+          '<div class="char-name">' + sus.name + '</div>' +
+          '<div class="char-role">' + sus.role + '</div>' +
+          '<div class="char-file-id">' +
+            (profile.fileId || sus.id.toUpperCase()) +
+            ' &nbsp;&middot;&nbsp; CASE ' + config.caseId +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+
+      body +
+
+      '<div class="char-folder-footer">' +
+        '<span>' + (profile.footerRef || 'FILE: ' + sus.id.toUpperCase()) + '</span>' +
+        '<span>THE SEALED FILE CO</span>' +
+      '</div>' +
+
+    '</div>';
+
+  document.getElementById('charPage').innerHTML = html;
+}
+
+/* ── Mark evidence viewed (carries back to hub via localStorage) ── */
+function markViewed(evidenceId) {
+  if (!gameState.viewedEvidence.includes(evidenceId)) {
+    gameState.viewedEvidence.push(evidenceId);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(gameState)); } catch(e) {}
+  }
+}
+
+/* ── Error / no-access states ── */
+function renderNoAccess() {
+  document.getElementById('charPage').innerHTML =
+    '<a class="char-back" href="index.html">' +
+      '<span class="char-back-arrow">&#8592;</span> Return to case file' +
+    '</a>' +
+    '<div class="char-folder-tab">Personnel File</div>' +
+    '<div class="char-folder-body">' +
+      '<div class="char-no-access">' +
+        '<div class="char-no-access-stamp">CLASSIFIED</div>' +
+        '<p>This personnel file has not been cleared for your investigation level.<br>' +
+        'Continue gathering evidence to access this record.</p>' +
+      '</div>' +
+    '</div>';
+}
+
+function renderError(msg) {
+  document.getElementById('charPage').innerHTML =
+    '<a class="char-back" href="index.html">' +
+      '<span class="char-back-arrow">&#8592;</span> Return to case file' +
+    '</a>' +
+    '<div class="char-folder-tab">Personnel File</div>' +
+    '<div class="char-folder-body">' +
+      '<div class="char-no-access">' +
+        '<div class="char-no-access-stamp">FILE NOT FOUND</div>' +
+        '<p>' + msg + '</p>' +
+      '</div>' +
+    '</div>';
+}
+</script>
+
+</body>
+</html>

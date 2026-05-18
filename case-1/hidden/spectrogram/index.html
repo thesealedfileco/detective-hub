@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spectrogram — AU-004</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0a120e;
+      font-family: 'Courier New', monospace;
+      color: #3a6a4a;
+      overflow-x: hidden;
+    }
+
+    .wrap {
+      width: 100%;
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    /* ── HEADER ── */
+    .hdr {
+      background: #0d1f15;
+      border-bottom: 1px solid #1e4a2a;
+      padding: 7px 10px;
+      font-size: 8px;
+      color: #5a8a6a;
+      display: flex;
+      justify-content: space-between;
+    }
+    .sub-hdr {
+      background: #080f08;
+      border-bottom: 1px solid #102a18;
+      padding: 3px 10px;
+      font-size: 7px;
+      color: #2a4a3a;
+    }
+
+    /* ── SPECTROGRAM BODY ── */
+    .spectro {
+      display: flex;
+      width: 100%;
+    }
+
+    /* Y axis */
+    .y-axis {
+      width: 44px;
+      flex-shrink: 0;
+      background: #080f0a;
+      border-right: 1px solid #102a18;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 8px 4px 8px 0;
+    }
+    .y-label {
+      font-size: 7px;
+      color: #2a5a3a;
+      text-align: right;
+      padding-right: 4px;
+    }
+
+    /* Main canvas */
+    .canvas {
+      flex: 1;
+      background: #040c06;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Frequency bands */
+    .band {
+      width: 100%;
+      position: relative;
+    }
+
+    /* ── HIDDEN TEXT — blends in, reveals on hover ── */
+    .hidden-text {
+      position: absolute;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      letter-spacing: 3px;
+      color: #1c3c22;        /* almost identical to band behind it */
+      cursor: crosshair;
+      transition: color 0.1s ease;
+      white-space: nowrap;
+      user-select: none;
+      pointer-events: all;
+      z-index: 10;
+    }
+    .hidden-text:hover { color: #c8ddb0; }
+
+    .hidden-fragment {
+      position: absolute;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: #163018;        /* blends into its band */
+      cursor: crosshair;
+      transition: color 0.1s ease;
+      white-space: nowrap;
+      user-select: none;
+      pointer-events: all;
+      z-index: 10;
+    }
+    .hidden-fragment:hover { color: #a8c898; }
+
+    .hidden-order {
+      position: absolute;
+      font-family: 'Courier New', monospace;
+      font-size: 7px;
+      color: #0e1a10;        /* extremely dim */
+      cursor: crosshair;
+      transition: color 0.1s ease;
+      user-select: none;
+      pointer-events: all;
+      z-index: 10;
+    }
+    .hidden-order:hover { color: #5a8a6a; }
+
+    /* Decoy noise text — slightly more visible than hidden text */
+    .decoy {
+      position: absolute;
+      font-size: 7px;
+      color: #1e3a2a;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    /* ── X AXIS ── */
+    .x-axis {
+      border-top: 1px solid #1e4a2a;
+      background: #040c06;
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 10px 3px 44px;
+      font-size: 7px;
+      color: #2a5a3a;
+    }
+
+    /* ── FOOTER ── */
+    .ftr {
+      background: #080f08;
+      border-top: 1px solid #1e4a2a;
+      padding: 5px 10px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 7px;
+    }
+    .ftr-left { color: #2a4a3a; }
+    .ftr-left strong { color: #4a7a5a; font-size: 7.5px; }
+    .ftr-right { color: #2a4a3a; text-align: right; }
+
+    /* SVG waveform layer — pure noise rects drawn in SVG for crispness */
+    svg.noise {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <span>SPECTROGRAM ANALYSIS — DISTORTED_TRANSFER_B.wav</span>
+    <span>AU-004 // SEALED FILE CO FORENSIC SUITE</span>
+  </div>
+  <div class="sub-hdr">
+    SAMPLE RATE: 44100 Hz &nbsp;|&nbsp; BIT DEPTH: 16 &nbsp;|&nbsp; DURATION: 1:12 &nbsp;|&nbsp; ANOMALIES DETECTED: YES &nbsp;|&nbsp; AUTHENTICATION: FAILED
+  </div>
+
+  <!-- SPECTROGRAM -->
+  <div class="spectro">
+
+    <!-- Y AXIS -->
+    <div class="y-axis">
+      <div class="y-label">16kHz</div>
+      <div class="y-label">12kHz</div>
+      <div class="y-label">8kHz</div>
+      <div class="y-label">6kHz</div>
+      <div class="y-label">4kHz</div>
+      <div class="y-label">2kHz</div>
+      <div class="y-label">1kHz</div>
+      <div class="y-label">500Hz</div>
+      <div class="y-label">200Hz</div>
+    </div>
+
+    <!-- MAIN CANVAS -->
+    <div class="canvas" id="mainCanvas">
+
+      <!-- SVG noise bands -->
+      <svg class="noise" id="noiseSvg" preserveAspectRatio="none"></svg>
+
+      <!-- ── HIDDEN TEXT ELEMENTS ── -->
+
+      <!-- LOOK UNDER THE STATIC — center of bright mid band -->
+      <span class="hidden-text" style="font-size:11px;top:37%;left:50%;transform:translateX(-50%);">LOOK UNDER THE STATIC</span>
+
+      <!-- Fragment 1 — detective-hub — left, upper area -->
+      <span class="hidden-fragment" style="font-size:9px;top:49%;left:8%;">detective-hub</span>
+      <span class="hidden-order" style="top:52%;left:8%;">[1]</span>
+
+      <!-- Fragment 2 — .pages.dev/ — right center -->
+      <span class="hidden-fragment" style="font-size:9px;top:57%;left:55%;">.pages.dev/</span>
+      <span class="hidden-order" style="top:60%;left:55%;">[2]</span>
+
+      <!-- Fragment 3 — hidden/ — center left -->
+      <span class="hidden-fragment" style="font-size:9px;top:65%;left:30%;">hidden/</span>
+      <span class="hidden-order" style="top:68%;left:30%;">[3]</span>
+
+      <!-- Fragment 4 — archive-copy/ — far right -->
+      <span class="hidden-fragment" style="font-size:9px;top:73%;left:70%;">archive-copy/</span>
+      <span class="hidden-order" style="top:76%;left:70%;">[4]</span>
+
+      <!-- DECOY noise labels -->
+      <span class="decoy" style="top:44%;left:10%;">FRQMOD_ERR</span>
+      <span class="decoy" style="top:44%;left:42%;">STATICBLEED_04</span>
+      <span class="decoy" style="top:44%;left:72%;">CHANNELDRIFT</span>
+      <span class="decoy" style="top:53%;left:46%;">_WHLW_CARRIER</span>
+      <span class="decoy" style="top:53%;left:76%;">ERR_SYNC</span>
+      <span class="decoy" style="top:61%;left:10%;">NULL_BLOCK_07</span>
+      <span class="decoy" style="top:61%;left:78%;">TAPEHEAD_ERR</span>
+      <span class="decoy" style="top:69%;left:54%;">FREQSHIFT_NEG</span>
+      <span class="decoy" style="top:69%;left:82%;">LOOP_B</span>
+      <span class="decoy" style="top:69%;left:3%;">0x4F</span>
+      <span class="decoy" style="top:77%;left:10%;">CH_BLEED_09</span>
+      <span class="decoy" style="top:77%;left:36%;">MH_CARRIER_02</span>
+
+    </div>
+    <!-- /canvas -->
+  </div>
+  <!-- /spectro -->
+
+  <!-- X AXIS -->
+  <div class="x-axis">
+    <span>0:00</span>
+    <span>0:12</span>
+    <span>0:24</span>
+    <span>0:36</span>
+    <span>0:48</span>
+    <span>1:12</span>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="ftr">
+    <div class="ftr-left">
+      <strong>ANOMALY REPORT</strong><br>
+      Unexpected signal persistence at 3.8kHz — inconsistent with tape degradation patterns.<br>
+      Embedded linguistic structure identified. Origin: non-acoustic. Authentication: UNVERIFIED.
+    </div>
+    <div class="ftr-right">
+      ANALYSIS COMPLETE<br>
+      SEALED FILE CO // FORENSIC<br>
+      REF: AU-004 // MH-1998
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+  // Generate realistic waveform bands as SVG rects
+  (function() {
+    var svg = document.getElementById('noiseSvg');
+    var canvas = document.getElementById('mainCanvas');
+
+    function makeBands() {
+      var h = canvas.offsetHeight || 400;
+      var w = canvas.offsetWidth  || 800;
+
+      var rects = '';
+      var seed  = 42;
+
+      function rand() {
+        seed = (seed * 1664525 + 1013904223) & 0xffffffff;
+        return (seed >>> 0) / 0xffffffff;
+      }
+
+      // Define band zones as % of height
+      // Each: [yPct, heightPct, baseColor, segments]
+      var zones = [
+        // High freq — sparse, thin
+        [0.02,  0.008, [0.039, 0.118, 0.055], 3],
+        [0.04,  0.006, [0.055, 0.165, 0.063], 4],
+        [0.06,  0.010, [0.031, 0.078, 0.047], 2],
+        [0.09,  0.008, [0.059, 0.188, 0.071], 4],
+        // Upper-mid
+        [0.12,  0.014, [0.047, 0.118, 0.055], 2],
+        [0.15,  0.012, [0.086, 0.227, 0.094], 4],
+        [0.18,  0.010, [0.039, 0.102, 0.047], 2],
+        [0.21,  0.014, [0.102, 0.251, 0.118], 5],
+        // Mid energy
+        [0.25,  0.018, [0.055, 0.125, 0.063], 2],
+        [0.28,  0.020, [0.118, 0.282, 0.133], 5],
+        [0.31,  0.022, [0.141, 0.322, 0.157], 6],
+        [0.34,  0.018, [0.047, 0.118, 0.055], 2],
+        // Anomaly band — slightly brighter
+        [0.36,  0.030, [0.086, 0.196, 0.106], 1],
+        [0.40,  0.018, [0.047, 0.110, 0.055], 2],
+        [0.43,  0.022, [0.118, 0.267, 0.133], 5],
+        // Fragment bands
+        [0.47,  0.024, [0.078, 0.157, 0.090], 2],
+        [0.50,  0.020, [0.106, 0.235, 0.118], 4],
+        [0.54,  0.022, [0.047, 0.118, 0.055], 2],
+        [0.57,  0.024, [0.082, 0.165, 0.094], 2],
+        [0.60,  0.020, [0.110, 0.243, 0.122], 4],
+        [0.64,  0.022, [0.055, 0.125, 0.063], 2],
+        [0.67,  0.024, [0.078, 0.157, 0.090], 2],
+        [0.70,  0.020, [0.106, 0.235, 0.118], 4],
+        [0.74,  0.024, [0.082, 0.165, 0.094], 2],
+        [0.77,  0.020, [0.114, 0.255, 0.129], 4],
+        // Low bass — dense
+        [0.81,  0.030, [0.071, 0.149, 0.082], 2],
+        [0.85,  0.035, [0.149, 0.361, 0.165], 1],
+        [0.90,  0.030, [0.102, 0.243, 0.118], 2],
+        [0.94,  0.040, [0.118, 0.282, 0.133], 1],
+      ];
+
+      zones.forEach(function(zone) {
+        var yPct = zone[0], hPct = zone[1], color = zone[2], segs = zone[3];
+        var y  = yPct * h;
+        var bh = hPct * h;
+        var r  = color[0], g = color[1], b = color[2];
+
+        // Full-width base
+        rects += '<rect x="0" y="' + y + '" width="' + w + '" height="' + bh + '" fill="rgb(' +
+          Math.round(r*255) + ',' + Math.round(g*255) + ',' + Math.round(b*255) + ')" opacity="0.9"/>';
+
+        // Segment variations
+        for (var s = 0; s < segs; s++) {
+          var sx = rand() * w * 0.6;
+          var sw = rand() * w * 0.4 + w * 0.1;
+          var sr = Math.min(r * (1 + rand() * 0.4), 1);
+          var sg = Math.min(g * (1 + rand() * 0.4), 1);
+          var sb = Math.min(b * (1 + rand() * 0.4), 1);
+          rects += '<rect x="' + sx + '" y="' + (y + rand() * bh * 0.3) + '" width="' + sw +
+            '" height="' + (bh * (0.5 + rand() * 0.5)) + '" fill="rgb(' +
+            Math.round(sr*255) + ',' + Math.round(sg*255) + ',' + Math.round(sb*255) + ')" opacity="0.7"/>';
+        }
+      });
+
+      svg.innerHTML = rects;
+    }
+
+    makeBands();
+    window.addEventListener('resize', makeBands);
+  })();
+</script>
+
+</body>
+</html>

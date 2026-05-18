@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="windows-1252">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>WHLW 88.3 — Station Archive (Offline)</title>
+  <style>
+
+    /* ── INTENTIONALLY RETRO / BROKEN ── */
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #c8c8c8;
+      background-image: url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='0' width='2' height='2' fill='%23b8b8b8' /%3E%3Crect x='2' y='2' width='2' height='2' fill='%23b8b8b8' /%3E%3C/svg%3E");
+      font-family: "Times New Roman", Times, serif;
+      color: #000;
+      min-height: 100vh;
+    }
+
+    /* ── SITE WRAPPER ── */
+    .site-wrapper {
+      max-width: 780px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-left: 2px solid #808080;
+      border-right: 2px solid #808080;
+      min-height: 100vh;
+    }
+
+    /* ── TOP BANNER ── */
+    .banner {
+      background: #1a1a6e;
+      color: #ffff00;
+      text-align: center;
+      padding: 0;
+      border-bottom: 3px solid #ff0000;
+    }
+    .banner-inner {
+      padding: 14px 20px 10px;
+    }
+    .banner h1 {
+      font-family: "Arial Black", Arial, sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-shadow: 2px 2px 0 #000066;
+      line-height: 1.1;
+    }
+    .banner-freq {
+      font-family: "Arial Black", Arial, sans-serif;
+      font-size: 13px;
+      color: #aaaaff;
+      letter-spacing: 2px;
+      margin-top: 3px;
+    }
+    .banner-tagline {
+      font-style: italic;
+      color: #ccccff;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    /* ── NAV BAR ── */
+    .navbar {
+      background: #000066;
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid #ffff00;
+    }
+    .navbar a {
+      color: #ffffff;
+      text-decoration: none;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 6px 12px;
+      display: block;
+      border-right: 1px solid #3333aa;
+    }
+    .navbar a:hover { background: #3333cc; }
+    .navbar a.active { background: #cc0000; color: #ffff00; }
+
+    /* ── OFFLINE NOTICE ── */
+    .offline-notice {
+      background: #ffff99;
+      border: 2px solid #ff6600;
+      border-left: 6px solid #ff0000;
+      padding: 8px 14px;
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      color: #660000;
+    }
+    .offline-notice strong { color: #cc0000; }
+
+    /* ── MARQUEE ── */
+    .marquee-bar {
+      background: #000000;
+      color: #00ff00;
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      padding: 3px 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .marquee-inner {
+      display: inline-block;
+      animation: scroll-left 40s linear infinite;
+      padding-left: 100%;
+    }
+    @keyframes scroll-left {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* ── TWO-COLUMN LAYOUT ── */
+    .layout {
+      display: flex;
+      gap: 0;
+    }
+    .sidebar {
+      width: 180px;
+      flex-shrink: 0;
+      background: #e8e8e8;
+      border-right: 2px solid #808080;
+      padding: 10px;
+    }
+    .main-col {
+      flex: 1;
+      padding: 14px 16px;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar-section {
+      margin-bottom: 14px;
+      border: 2px inset #808080;
+      background: #d0d0d0;
+      padding: 6px 8px;
+    }
+    .sidebar-section h3 {
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      font-weight: bold;
+      background: #000066;
+      color: #ffffff;
+      margin: -6px -8px 6px;
+      padding: 3px 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .sidebar-section ul {
+      list-style: none;
+      padding: 0;
+    }
+    .sidebar-section ul li {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      padding: 2px 0;
+      border-bottom: 1px dotted #999;
+    }
+    .sidebar-section ul li a {
+      color: #0000cc;
+      text-decoration: underline;
+      font-size: 11px;
+    }
+    .sidebar-section ul li a:hover { color: #cc0000; }
+    .sidebar-section ul li a.broken {
+      color: #999999;
+      text-decoration: line-through;
+      cursor: not-allowed;
+    }
+
+    .hit-counter {
+      text-align: center;
+      font-family: "Courier New", monospace;
+      font-size: 10px;
+      color: #333;
+      margin-top: 8px;
+    }
+    .hit-counter-num {
+      font-size: 16px;
+      font-weight: bold;
+      color: #cc0000;
+      letter-spacing: 2px;
+      display: block;
+      margin: 2px 0;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main-col h2 {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      font-weight: bold;
+      background: #1a1a6e;
+      color: #ffff00;
+      padding: 4px 8px;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+
+    /* ── NOTICE BOX ── */
+    .notice-box {
+      border: 2px solid #cc0000;
+      background: #fff0f0;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+    }
+    .notice-box strong { color: #cc0000; display: block; margin-bottom: 4px; font-size: 13px; }
+    .notice-box p { line-height: 1.5; color: #333; }
+
+    /* ── LOG TABLE ── */
+    .log-section { margin-bottom: 18px; }
+    .log-section h3 {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      font-weight: bold;
+      color: #000066;
+      border-bottom: 1px solid #000066;
+      padding-bottom: 3px;
+      margin-bottom: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+    }
+    th {
+      background: #000066;
+      color: #ffffff;
+      padding: 4px 8px;
+      text-align: left;
+      font-size: 10px;
+      letter-spacing: 1px;
+    }
+    tr:nth-child(even) td { background: #f0f0f0; }
+    td {
+      padding: 5px 8px;
+      border-bottom: 1px solid #cccccc;
+      vertical-align: top;
+    }
+    td.status-ok { color: #006600; font-weight: bold; }
+    td.status-err { color: #cc0000; font-weight: bold; }
+    td.status-removed { color: #666666; font-style: italic; }
+    td.mono { font-family: "Courier New", monospace; font-size: 10px; }
+
+    /* ── CORRUPTED IMAGE BOX ── */
+    .img-broken {
+      width: 100%;
+      height: 90px;
+      background: #888;
+      border: 2px inset #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      color: #fff;
+      margin-bottom: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    .img-broken::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+      );
+    }
+    .img-broken span { position: relative; z-index: 1; }
+
+    /* ── AUDIO PLAYER (retro) ── */
+    .retro-player {
+      border: 2px inset #808080;
+      background: #d0d0d0;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      font-family: Arial, sans-serif;
+    }
+    .retro-player-label {
+      font-size: 10px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #333;
+      margin-bottom: 6px;
+    }
+    .retro-player-title {
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      color: #000066;
+      background: #a8c8a8;
+      padding: 4px 8px;
+      margin-bottom: 8px;
+      border: 1px inset #808080;
+      letter-spacing: 1px;
+    }
+    .retro-player audio {
+      width: 100%;
+      height: 28px;
+      accent-color: #000066;
+    }
+    .retro-player-note {
+      font-size: 10px;
+      color: #666;
+      font-style: italic;
+      margin-top: 5px;
+    }
+
+    /* ── DOWNLOAD BOX ── */
+    .download-box {
+      border: 2px solid #006600;
+      background: #f0fff0;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .download-box .dl-icon { font-size: 20px; }
+    .download-box .dl-info { flex: 1; }
+    .download-box .dl-name { font-weight: bold; color: #000; }
+    .download-box .dl-meta { color: #666; font-size: 10px; margin-top: 2px; }
+    .download-box .dl-btn {
+      background: #006600;
+      color: #fff;
+      border: 2px outset #008800;
+      padding: 4px 10px;
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .download-box .dl-btn:hover { background: #004400; }
+    .download-box .dl-btn.unavailable {
+      background: #999;
+      border-color: #aaa;
+      cursor: not-allowed;
+    }
+
+    /* ── REDACTED / CORRUPTED TEXT ── */
+    .redacted {
+      background: #222;
+      color: #222;
+      border-radius: 1px;
+      padding: 0 2px;
+      user-select: none;
+      cursor: default;
+    }
+    .corrupted {
+      font-family: "Courier New", monospace;
+      color: #cc0000;
+      font-size: 10px;
+    }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      background: #1a1a6e;
+      color: #aaaaff;
+      text-align: center;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      border-top: 2px solid #ffff00;
+    }
+    .site-footer a { color: #ffff00; }
+
+    /* ── LAST UPDATED FLASH ── */
+    .last-updated {
+      font-family: "Courier New", monospace;
+      font-size: 10px;
+      color: #666;
+      text-align: right;
+      margin-bottom: 8px;
+    }
+
+    /* ── GUESTBOOK TEASER ── */
+    .guestbook-entry {
+      border: 1px solid #ccc;
+      background: #fafafa;
+      padding: 6px 10px;
+      margin-bottom: 6px;
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+    }
+    .guestbook-entry .gb-author {
+      font-weight: bold;
+      color: #000066;
+      font-size: 10px;
+    }
+    .guestbook-entry .gb-date {
+      color: #999;
+      font-size: 9px;
+      margin-left: 8px;
+    }
+    .guestbook-entry p { color: #333; margin-top: 3px; line-height: 1.4; }
+
+    /* ── URL fragment anchor ── */
+    #logs { scroll-margin-top: 0; }
+
+    /* ── Mobile fallback ── */
+    @media (max-width: 600px) {
+      .layout { flex-direction: column; }
+      .sidebar { width: 100%; border-right: none; border-bottom: 2px solid #808080; }
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="site-wrapper">
+
+  <!-- BANNER -->
+  <div class="banner">
+    <div class="banner-inner">
+      <h1>WHLW 88.3 FM</h1>
+      <div class="banner-freq">MOTH HOLLOW, WEST VIRGINIA &nbsp;·&nbsp; EST. 1971</div>
+      <div class="banner-tagline">"Your Voice in the Hollow"</div>
+    </div>
+    <div class="navbar">
+      <a href="index.html">Home</a>
+      <a href="#" onclick="brokenLink(event)">On Air</a>
+      <a href="#" onclick="brokenLink(event)">Schedule</a>
+      <a href="#" onclick="brokenLink(event)">Staff</a>
+      <a href="#logs" class="active">Station Logs</a>
+      <a href="#" onclick="brokenLink(event)">Contact</a>
+      <a href="#" onclick="brokenLink(event)">Guestbook</a>
+    </div>
+  </div>
+
+  <!-- OFFLINE NOTICE -->
+  <div class="offline-notice">
+    <strong>NOTICE:</strong> This site is no longer actively maintained. WHLW 88.3 ceased operations in March 2002. This archive is preserved for historical purposes. Some links and media files may no longer function. &mdash; <em>Moth Hollow County Historical Archive</em>
+  </div>
+
+  <!-- MARQUEE -->
+  <div class="marquee-bar">
+    <div class="marquee-inner">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      NOW PLAYING: [SIGNAL LOST] &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+      WHLW 88.3 FM — MOTH HOLLOW WV &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+      PHONE REQUESTS: (304) 555-0176 &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+      LATE NIGHT PROGRAMMING: 10PM–4AM WEEKDAYS &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+      WHLW HOLDS NO RESPONSIBILITY FOR LISTENER EXPERIENCES &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+      [ARCHIVE MODE — BROADCAST OFFLINE SINCE 03/2002] &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+  </div>
+
+  <!-- TWO-COLUMN LAYOUT -->
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+      <div class="sidebar-section">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="#logs">Station Log Archive</a></li>
+          <li><a href="#audio">Audio Files</a></li>
+          <li><a href="#downloads">Downloads</a></li>
+          <li><a href="#guestbook">Guestbook</a></li>
+          <li><a href="#" onclick="brokenLink(event)" class="broken">Live Schedule</a></li>
+          <li><a href="#" onclick="brokenLink(event)" class="broken">Staff Photos</a></li>
+          <li><a href="#" onclick="brokenLink(event)" class="broken">Community Board</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>Station Info</h3>
+        <ul>
+          <li><strong>Freq:</strong> 88.3 FM</li>
+          <li><strong>Founded:</strong> 1971</li>
+          <li><strong>Format:</strong> Community / Talk</li>
+          <li><strong>Closed:</strong> March 2002</li>
+          <li><strong>County:</strong> Hollow Creek</li>
+          <li><strong>License:</strong> Expired</li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>Archive Status</h3>
+        <ul>
+          <li>Tapes 001–003: <span style="color:#006600;font-weight:bold;">Logged</span></li>
+          <li>Tape 004: <span style="color:#cc0000;font-weight:bold;">Not found</span></li>
+          <li>Staff Records: <span style="color:#cc0000;font-weight:bold;">Sealed</span></li>
+          <li>Phone Logs: <span style="color:#006600;font-weight:bold;">Partial</span></li>
+          <li>Incident File: <span style="color:#cc0000;font-weight:bold;">Removed</span></li>
+        </ul>
+      </div>
+
+      <div class="hit-counter">
+        <span>Site Visitors</span>
+        <span class="hit-counter-num" id="hitCount">004,891</span>
+        <span>since Aug 1999</span>
+      </div>
+
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-col">
+
+      <div class="last-updated">Last updated: <strong>11/14/1999</strong> &nbsp;[Archive copy — read only]</div>
+
+      <!-- MAIN NOTICE -->
+      <div class="notice-box">
+        <strong>Station Archive — Moth Hollow Historical Preservation Society</strong>
+        <p>
+          WHLW 88.3 operated in Moth Hollow from 1971 until its license lapse in early 2002. This site
+          was preserved following a request from county archives. Tape recordings, broadcast logs, and
+          staff documents have been partially digitized. Some materials remain inaccessible due to
+          physical damage or administrative restriction.
+        </p>
+        <p style="margin-top:6px;">
+          For inquiries regarding station records, contact the Hollow Creek County Clerk's office.
+          Note: certain incident materials from October 1998 are not available through this archive.
+        </p>
+      </div>
+
+      <!-- BROKEN STATION PHOTO -->
+      <div class="img-broken">
+        <span>&#9632; Image unavailable — file corrupted (whlw_front_1998.jpg)</span>
+      </div>
+
+      <!-- STATION LOG ARCHIVE -->
+      <div id="logs" class="log-section">
+        <h2>Station Broadcast Logs — October 1998</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Time Slot</th>
+              <th>Host / Program</th>
+              <th>Notes</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono">10/09/98</td>
+              <td class="mono">10:00PM–2:00AM</td>
+              <td>N. Vale — Late Night Open</td>
+              <td>Routine. Three call-ins logged.</td>
+              <td class="status-ok">Complete</td>
+            </tr>
+            <tr>
+              <td class="mono">10/10/98</td>
+              <td class="mono">10:00PM–2:00AM</td>
+              <td>N. Vale — Late Night Open</td>
+              <td>Caller complaint on file. Forwarded to management.</td>
+              <td class="status-ok">Complete</td>
+            </tr>
+            <tr>
+              <td class="mono">10/11/98</td>
+              <td class="mono">10:00PM–2:00AM</td>
+              <td>N. Vale — Late Night Open</td>
+              <td>Unscheduled maintenance block 11:15–11:55PM. Reason: <span class="corrupted">[CORRUPTED]</span></td>
+              <td class="status-err">Incomplete</td>
+            </tr>
+            <tr>
+              <td class="mono">10/12/98</td>
+              <td class="mono">10:00PM–2:00AM</td>
+              <td>E. Pike (sub) — Late Night Open</td>
+              <td>N. Vale out sick. Pike substituted. No incidents.</td>
+              <td class="status-ok">Complete</td>
+            </tr>
+            <tr>
+              <td class="mono">10/13/98</td>
+              <td class="mono">10:00PM–2:00AM</td>
+              <td>N. Vale — Late Night Open</td>
+              <td>Final logged broadcast. Tape 003 pulled for review.</td>
+              <td class="status-ok">Complete</td>
+            </tr>
+            <tr>
+              <td class="mono">10/14/98</td>
+              <td class="mono">10:00PM–??</td>
+              <td>N. Vale — Late Night Open</td>
+              <td>Host did not complete shift. Log entry incomplete. See incident file.</td>
+              <td class="status-err">INCOMPLETE</td>
+            </tr>
+            <tr>
+              <td class="mono">10/15/98</td>
+              <td class="mono">—</td>
+              <td>Station closed</td>
+              <td>Closed by order of Sheriff's Department. Duration: <span class="corrupted">[REMOVED]</span></td>
+              <td class="status-removed">Closed</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p style="font-family:Arial,sans-serif;font-size:10px;color:#666;margin-top:6px;">
+          * Logs for 10/15 through 10/31 have been removed from this archive. Contact county clerk for inquiry.
+          Tape 004 was logged into evidence October 15, 1998. Current location: <span class="redacted">MOTH HOLLOW P</span>
+        </p>
+      </div>
+
+      <!-- AUDIO FILES -->
+      <div id="audio" class="log-section">
+        <h2>Digitized Audio — Station Archive</h2>
+
+        <div class="retro-player">
+          <div class="retro-player-label">Audio File 01</div>
+          <div class="retro-player-title">TAPE-001_BROADCAST_OCT09.wav &nbsp;[3:41]</div>
+          <audio controls>
+            <source src="../audio/au-001-broadcast.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
+          <div class="retro-player-note">Digitized from original cassette. Some tape degradation present. Caller voices have not been edited.</div>
+        </div>
+
+        <div class="retro-player">
+          <div class="retro-player-label">Audio File 02</div>
+          <div class="retro-player-title">TAPE-002_VOICEMAIL_UNKNOWN.wav &nbsp;[0:38]</div>
+          <audio controls>
+            <source src="../audio/au-002-voicemail.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
+          <div class="retro-player-note">Retrieved from station answering system. Caller unidentified. Date of recording unclear — log entry absent.</div>
+        </div>
+
+        <div class="retro-player" style="border-color:#cc0000;background:#f5d0d0;">
+          <div class="retro-player-label" style="color:#cc0000;">Audio File 03 — EXTERNAL UPLOAD</div>
+          <div class="retro-player-title" style="background:#c0a0a0;color:#660000;">MH_TAPE4_FINAL_SNIPPET.wav &nbsp;[1:12]</div>
+          <audio controls>
+            <source src="audio/au-004-distorted-transfer.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
+          <div class="retro-player-note" style="color:#993333;">
+            <strong>NOTE:</strong> This file was uploaded anonymously to this server on <strong>03/14/2025</strong>. It does not appear in the original station archive. No username, IP address, or upload context was retained. Content appears consistent with station recording equipment from the late 1990s. This file has not been authenticated.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- DOWNLOADS -->
+      <div id="downloads" class="log-section">
+        <h2>Downloads — Station Documents</h2>
+
+        <div class="download-box">
+          <div class="dl-icon">📄</div>
+          <div class="dl-info">
+            <div class="dl-name">WHLW Staff Directory — 1997–1998</div>
+            <div class="dl-meta">PDF · 142 KB · Last modified 11/1999</div>
+          </div>
+          <a class="dl-btn unavailable" onclick="unavailableFile(event)">Unavailable</a>
+        </div>
+
+        <div class="download-box">
+          <div class="dl-icon">📄</div>
+          <div class="dl-info">
+            <div class="dl-name">Broadcast Schedule — October 1998</div>
+            <div class="dl-meta">PDF · 88 KB · Last modified 10/1998</div>
+          </div>
+          <a class="dl-btn unavailable" onclick="unavailableFile(event)">Unavailable</a>
+        </div>
+
+        <div class="download-box" style="border-color:#ff6600;background:#fff8ee;">
+          <div class="dl-icon">📦</div>
+          <div class="dl-info">
+            <div class="dl-name">Archive Copy — October 1998 Incident Materials</div>
+            <div class="dl-meta" style="color:#cc6600;font-weight:bold;">PDF · 1.2 MB · Uploaded 03/14/2007 · ARCHIVE COPY 01</div>
+          </div>
+          <a class="dl-btn unavailable" onclick="unavailableFile(event)">Unavailable</a>
+        </div>
+
+        <p style="font-family:Arial,sans-serif;font-size:10px;color:#cc0000;margin-top:4px;">
+          &#9888; The incident materials archive was flagged for administrative review and is not available for download. Contact: <span style="color:#999;">mhcounty-clerk@<span class="redacted">MHCOUNTY.GOV</span></span>
+        </p>
+      </div>
+
+      <!-- GUESTBOOK -->
+      <div id="guestbook" class="log-section">
+        <h2>Station Guestbook</h2>
+
+        <div class="guestbook-entry">
+          <span class="gb-author">RadioFan_WV</span>
+          <span class="gb-date">August 14, 1999</span>
+          <p>Miss listening to Naomi on late nights. Nobody else had her voice. Hope whoever is maintaining this site keeps it up. The hollow isn't the same without that station.</p>
+        </div>
+
+        <div class="guestbook-entry">
+          <span class="gb-author">E. Pike</span>
+          <span class="gb-date">September 2, 1999</span>
+          <p>This is a nice thing for the community. Thank you to whoever put it together. Some of us miss those days more than we can say.</p>
+        </div>
+
+        <div class="guestbook-entry">
+          <span class="gb-author">anonymous</span>
+          <span class="gb-date">November 30, 1999</span>
+          <p>Does anyone know what happened to Naomi? The official story never made sense to me. I heard things those last few nights that I can't explain. The broadcasts were different. Something was off. I know I wasn't the only one who noticed.</p>
+        </div>
+
+        <div class="guestbook-entry">
+          <span class="gb-author">Notredones</span>
+          <span class="gb-date">March 14, 2025</span>
+          <p>Still looking. Found something. Uploading what I have. If you're reading this and you know what happened that October — you know where to reach me. Don't let them tell you it was just a signal. Signals don't make people disappear.</p>
+        </div>
+
+        <p style="font-family:Arial,sans-serif;font-size:10px;color:#999;margin-top:8px;font-style:italic;">
+          Guestbook closed. No new entries accepted. Existing entries preserved.
+        </p>
+      </div>
+
+    </div>
+    <!-- /main-col -->
+  </div>
+  <!-- /layout -->
+
+  <!-- FOOTER -->
+  <div class="site-footer">
+    WHLW 88.3 FM &mdash; Moth Hollow, West Virginia &mdash; Est. 1971 &mdash; Closed March 2002<br>
+    Archive maintained by Hollow Creek County Historical Society &nbsp;&bull;&nbsp;
+    <a href="#">Privacy</a> &nbsp;&bull;&nbsp; <a href="#">Sitemap</a><br>
+    <span style="color:#555;font-size:9px;margin-top:4px;display:block;">
+      This site was designed for Internet Explorer 5.0 &mdash; best viewed at 800x600
+    </span>
+  </div>
+
+</div><!-- /site-wrapper -->
+
+<script>
+  function brokenLink(e) { e.preventDefault(); }
+  function unavailableFile(e) { e.preventDefault(); }
+
+  // Hit counter
+  (function() {
+    var base = 4891;
+    var display = document.getElementById('hitCount');
+    if (!display) return;
+    var stored = parseInt(sessionStorage.getItem('whlw_hits') || base);
+    stored += Math.floor(Math.random() * 2);
+    sessionStorage.setItem('whlw_hits', stored);
+    var formatted = stored.toString().padStart(7, '0');
+    display.textContent = formatted.slice(0,3) + ',' + formatted.slice(3);
+  })();
+
+  // Overlay after tape snippet plays
+  document.addEventListener('DOMContentLoaded', function() {
+    var audios = document.querySelectorAll('audio');
+    // Attach to the third audio player (index 2)
+    if (audios[2]) {
+      audios[2].addEventListener('ended', showArchiveCode);
+    }
+  });
+
+  function showArchiveCode() {
+    // Don't show twice
+    if (document.getElementById('archiveOverlay')) return;
+
+    var overlay = document.createElement('div');
+    overlay.id = 'archiveOverlay';
+    overlay.style.cssText = [
+      'position:fixed',
+      'inset:0',
+      'background:rgba(0,0,0,0.92)',
+      'z-index:9999',
+      'display:flex',
+      'flex-direction:column',
+      'align-items:center',
+      'justify-content:center',
+      'font-family:"Courier New",monospace',
+      'cursor:pointer'
+    ].join(';');
+
+    overlay.innerHTML = [
+      '<div style="color:#cc0000;font-size:11px;letter-spacing:4px;text-transform:uppercase;margin-bottom:24px;">',
+        'File Transfer Complete',
+      '</div>',
+      '<div style="color:#00ff00;font-size:11px;letter-spacing:2px;margin-bottom:32px;">',
+        'MH_TAPE4_FINAL_SNIPPET.wav &mdash; uploaded 2025',
+      '</div>',
+      '<div style="border:2px solid #cc0000;padding:24px 40px;text-align:center;margin-bottom:32px;">',
+        '<div style="color:#888;font-size:10px;letter-spacing:3px;margin-bottom:12px;">ARCHIVE ACCESS CODE</div>',
+        '<div style="color:#ffffff;font-size:32px;font-weight:bold;letter-spacing:8px;">ARCHIVE-COPY-01</div>',
+        '<div style="color:#555;font-size:10px;margin-top:12px;letter-spacing:1px;">',
+          'Enter this code in your case file hub to unlock restricted materials.',
+        '</div>',
+      '</div>',
+      '<div style="color:#444;font-size:10px;letter-spacing:2px;">',
+        'Click anywhere to dismiss',
+      '</div>'
+    ].join('');
+
+    overlay.addEventListener('click', function() {
+      overlay.style.opacity = '0';
+      overlay.style.transition = 'opacity 0.4s';
+      setTimeout(function() { overlay.remove(); }, 400);
+    });
+
+    document.body.appendChild(overlay);
+  }
+</script>
+
+</body>
+</html>
