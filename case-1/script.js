@@ -424,8 +424,7 @@ function renderEvidence() {
     var name = isUnlocked || isRevealed ? ev.name : '???';
     var desc = isUnlocked ? ev.description : (isRevealed ? ev.description : 'Classified');
     var type = isUnlocked || isRevealed ? ev.type : 'unknown';
-    var onclick = isUnlocked && ev.file ? 'onclick="viewEvidence(\'' + ev.id + '\')"' : '';
-
+    var onclick = isUnlocked && (ev.file || ev.type === 'briefing') ? 'onclick="viewEvidence(\'' + ev.id + '\')"' : '';
     html += '<div class="' + cardClass + '" ' + onclick + ' data-id="' + ev.id + '">' +
       tagHtml +
       '<span class="ev-icon">' + icon + '</span>' +
