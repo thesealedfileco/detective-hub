@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Missing Person Report — Naomi Elise Vale — EV-001</title>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper:     #f5f0e4;
+      --paper-dark:#ede8d8;
+      --ink:       #1a1510;
+      --ink-faded: #3a3028;
+      --ink-light: #6a5f50;
+      --stamp-red: #9a2a1c;
+      --ink-blue:  #1e3355;
+      --border:    #c8bfa8;
+      --pencil:    #7a6b50;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #2a2318;
+      font-family: 'Courier Prime', 'Courier New', monospace;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    /* ── DOCUMENT WRAPPER ── */
+    .document {
+      width: 760px;
+      max-width: 100%;
+      background: var(--paper);
+      position: relative;
+      /* Subtle scan skew */
+      transform: rotate(-0.3deg);
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,0.3),
+        4px 6px 20px rgba(0,0,0,0.6),
+        8px 12px 40px rgba(0,0,0,0.4);
+    }
+
+    /* Photocopy grain overlay */
+    .document::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 200px;
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0.6;
+    }
+
+    /* Slight darkening at edges — photocopy shadow */
+    .document::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.12) 100%);
+      pointer-events: none;
+      z-index: 9;
+    }
+
+    /* ── PAGE 1 ── */
+    .page {
+      padding: 2.4rem 2.6rem 2.2rem;
+      position: relative;
+      min-height: 1040px;
+    }
+
+    .page + .page {
+      border-top: 2px dashed var(--border);
+    }
+
+    /* ── DEPARTMENT HEADER ── */
+    .dept-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.2rem;
+      margin-bottom: 0.7rem;
+      padding-bottom: 0.7rem;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .dept-seal {
+      width: 58px;
+      height: 58px;
+      border: 2.5px solid var(--ink);
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      position: relative;
+    }
+    .dept-seal::before {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border: 1px solid var(--ink);
+      border-radius: 50%;
+    }
+    .dept-seal-inner {
+      font-size: 8px;
+      font-family: 'Courier Prime', monospace;
+      letter-spacing: 0.5px;
+      line-height: 1.1;
+      text-align: center;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .dept-text {
+      flex: 1;
+    }
+    .dept-name {
+      font-family: 'Special Elite', serif;
+      font-size: 15px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+    .dept-sub {
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-top: 2px;
+    }
+    .dept-address {
+      font-size: 8.5px;
+      color: var(--ink-light);
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    .dept-ref {
+      text-align: right;
+      font-size: 8.5px;
+      color: var(--ink-light);
+      line-height: 1.7;
+    }
+    .dept-ref strong {
+      color: var(--ink);
+      font-size: 9px;
+    }
+
+    /* ── DOCUMENT TITLE ── */
+    .doc-title-block {
+      text-align: center;
+      margin: 0.9rem 0 0.8rem;
+      padding: 0.5rem;
+      border-top: 1px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+      background: var(--paper-dark);
+    }
+    .doc-title {
+      font-family: 'Special Elite', serif;
+      font-size: 14px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .doc-form-num {
+      font-size: 8px;
+      color: var(--ink-light);
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+
+    /* ── FORM SECTIONS ── */
+    .form-section {
+      margin-bottom: 1rem;
+    }
+
+    .section-label {
+      font-size: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ink-blue);
+      font-weight: 700;
+      border-bottom: 1px solid var(--ink-blue);
+      padding-bottom: 2px;
+      margin-bottom: 0.5rem;
+    }
+
+    .field-grid {
+      display: grid;
+      gap: 0;
+    }
+    .field-grid-2 { grid-template-columns: 1fr 1fr; }
+    .field-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .field-grid-auto { grid-template-columns: auto 1fr; }
+
+    .field {
+      border: 1px solid var(--border);
+      padding: 4px 7px 3px;
+      margin: -1px -1px 0 0;
+      position: relative;
+    }
+    .field-label {
+      font-size: 7px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+    .field-value {
+      font-size: 11px;
+      color: var(--ink);
+      line-height: 1.3;
+      font-family: 'Courier Prime', monospace;
+    }
+    .field-value.typed {
+      font-size: 10.5px;
+      font-weight: 700;
+    }
+    .field-value.blank {
+      border-bottom: 1px solid var(--ink-light);
+      min-height: 18px;
+      display: block;
+    }
+
+    /* handwritten fill-in style */
+    .hand {
+      font-family: 'Special Elite', serif;
+      color: var(--ink);
+      font-size: 11px;
+    }
+
+    /* ── NARRATIVE TEXT BLOCK ── */
+    .narrative {
+      font-family: 'Crimson Pro', serif;
+      font-size: 11.5px;
+      color: var(--ink-faded);
+      line-height: 1.7;
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* ── WITNESS TABLE ── */
+    .witness-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5px;
+    }
+    .witness-table th {
+      background: var(--paper-dark);
+      border: 1px solid var(--border);
+      padding: 4px 6px;
+      text-align: left;
+      font-size: 7.5px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      font-weight: 700;
+    }
+    .witness-table td {
+      border: 1px solid var(--border);
+      padding: 5px 6px;
+      color: var(--ink-faded);
+      vertical-align: top;
+      line-height: 1.4;
+    }
+    .witness-table tr:nth-child(even) td {
+      background: rgba(0,0,0,0.02);
+    }
+
+    /* ── TIMELINE / CHECKBOX LIST ── */
+    .checklist {
+      font-size: 10px;
+      color: var(--ink-faded);
+      line-height: 1;
+    }
+    .check-item {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      padding: 3px 0;
+      border-bottom: 1px dotted var(--border);
+    }
+    .check-box {
+      width: 10px;
+      height: 10px;
+      border: 1.5px solid var(--ink-light);
+      flex-shrink: 0;
+      display: inline-block;
+      position: relative;
+      top: 1px;
+    }
+    .check-box.checked::after {
+      content: '✓';
+      position: absolute;
+      top: -3px;
+      left: 0;
+      font-size: 11px;
+      color: var(--ink);
+    }
+    .check-date {
+      font-size: 8.5px;
+      color: var(--ink-light);
+      min-width: 80px;
+      font-style: italic;
+    }
+    .check-text {
+      flex: 1;
+    }
+
+    /* ── STAMPS ── */
+    .stamp-cold-case {
+      position: absolute;
+      top: 2.6rem;
+      right: 2rem;
+      font-family: 'Special Elite', serif;
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--stamp-red);
+      border: 3px solid var(--stamp-red);
+      padding: 5px 10px;
+      opacity: 0.75;
+      transform: rotate(8deg);
+      line-height: 1.3;
+      text-align: center;
+    }
+
+    .stamp-page2 {
+      position: absolute;
+      top: 1.6rem;
+      right: 2rem;
+      font-family: 'Special Elite', serif;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--stamp-red);
+      border: 2px solid var(--stamp-red);
+      padding: 3px 8px;
+      opacity: 0.6;
+      transform: rotate(5deg);
+    }
+
+    /* ── ANNOTATIONS ── */
+    .annotation {
+      font-family: 'Special Elite', serif;
+      font-size: 10px;
+      color: var(--pencil);
+      transform: rotate(-1.5deg);
+      display: inline-block;
+    }
+    .annotation.margin {
+      position: absolute;
+      left: -0.2rem;
+      font-size: 9px;
+    }
+
+    /* ── SIGNATURE BLOCK ── */
+    .sig-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0;
+    }
+    .sig-field {
+      border: 1px solid var(--border);
+      padding: 4px 7px;
+      margin: -1px -1px 0 0;
+    }
+    .sig-label {
+      font-size: 7px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--ink-light);
+    }
+    .sig-line {
+      border-bottom: 1px solid var(--ink);
+      min-height: 22px;
+      margin-top: 4px;
+      position: relative;
+    }
+    .sig-name {
+      font-family: 'Special Elite', serif;
+      font-size: 10.5px;
+      color: var(--ink);
+      position: absolute;
+      bottom: 1px;
+      left: 0;
+    }
+
+    /* ── COFFEE STAIN ── */
+    .coffee {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px solid rgba(120, 85, 40, 0.18);
+      background: radial-gradient(circle, rgba(140,95,45,0.06) 0%, rgba(120,80,35,0.03) 60%, transparent 80%);
+      pointer-events: none;
+      z-index: 8;
+    }
+    .coffee::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(120,85,40,0.08);
+      inset: 4px;
+    }
+
+    /* ── STAPLE HOLE ── */
+    .staple-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 0.3rem;
+      padding-left: 0.4rem;
+    }
+    .staple {
+      width: 8px;
+      height: 3px;
+      background: rgba(80,70,60,0.3);
+      border-radius: 1px;
+      position: relative;
+    }
+
+    /* ── FOOTER ── */
+    .doc-footer {
+      margin-top: 1.2rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      font-size: 7.5px;
+      color: var(--ink-light);
+    }
+
+    /* ── PAGE 2 specific ── */
+    .continuation-header {
+      font-size: 8px;
+      letter-spacing: 1px;
+      color: var(--ink-light);
+      margin-bottom: 0.8rem;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── REDACTED ── */
+    .redacted {
+      background: var(--ink);
+      color: var(--ink);
+      border-radius: 1px;
+      padding: 0 2px;
+      display: inline-block;
+      user-select: none;
+    }
+
+    /* subtle inconsistency — different officer initials */
+    .officer-initial {
+      font-family: 'Special Elite', serif;
+      font-size: 9px;
+      color: var(--pencil);
+    }
+
+    /* ── SMALL TEXT utility ── */
+    .text-xs { font-size: 8.5px; }
+    .text-sm { font-size: 10px; }
+    .mt-half { margin-top: 0.5rem; }
+    .mt-1 { margin-top: 1rem; }
+    .italic { font-style: italic; }
+    .bold { font-weight: 700; }
+
+    /* Print hint */
+    @media print {
+      body { background: white; padding: 0; }
+      .document { transform: none; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="document">
+
+  <!-- COFFEE STAIN — lower right -->
+  <div class="coffee" style="width:68px;height:62px;bottom:80px;right:60px;"></div>
+  <div class="coffee" style="width:40px;height:36px;bottom:90px;right:72px;transform:rotate(20deg);opacity:0.7;"></div>
+
+  <!-- PAGE 1 -->
+  <div class="page">
+
+    <!-- COLD CASE STAMP -->
+    <div class="stamp-cold-case">COLD CASE<br>REOPENED</div>
+
+    <!-- STAPLE HOLES -->
+    <div class="staple-row">
+      <div class="staple"></div>
+    </div>
+
+    <!-- DEPARTMENT HEADER -->
+    <div class="dept-header">
+      <div class="dept-seal">
+        <div class="dept-seal-inner">
+          RALEIGH<br>CO.<br>★<br>S.O.
+        </div>
+      </div>
+      <div class="dept-text">
+        <div class="dept-name">Raleigh County Sheriff's Office</div>
+        <div class="dept-sub">Missing Persons Division — Investigative Records</div>
+        <div class="dept-address">
+          200 Main Street, Beckley, WV 25801 &nbsp;·&nbsp; (304) 255-9300<br>
+          Field Jurisdiction: Moth Hollow District
+        </div>
+      </div>
+      <div class="dept-ref">
+        <strong>CASE NO.</strong><br>MH-1998-0074<br><br>
+        <strong>DATE FILED</strong><br>October 15, 1998<br><br>
+        <strong>CLASSIF.</strong><br>OPEN / COLD
+      </div>
+    </div>
+
+    <!-- DOCUMENT TITLE -->
+    <div class="doc-title-block">
+      <div class="doc-title">Missing Person Report</div>
+      <div class="doc-form-num">FORM RC-MPR-12 &nbsp;·&nbsp; Rev. 09/1996 &nbsp;·&nbsp; RETAIN IN FILE — DO NOT DESTROY</div>
+    </div>
+
+    <!-- SECTION A: SUBJECT IDENTITY -->
+    <div class="form-section">
+      <div class="section-label">Section A — Subject Identity</div>
+      <div class="field-grid field-grid-2">
+        <div class="field">
+          <div class="field-label">Full Legal Name</div>
+          <div class="field-value typed bold">VALE, Naomi Elise</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Date of Birth</div>
+          <div class="field-value typed">March 8, 1972</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Age at Time of Disappearance</div>
+          <div class="field-value typed">26</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Social Security No.</div>
+          <div class="field-value typed"><span class="redacted">XXX-XX-</span>4417</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Sex</div>
+          <div class="field-value typed">Female</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Race / Ethnicity</div>
+          <div class="field-value typed">White / Non-Hispanic</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Height</div>
+          <div class="field-value typed">5'6"</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Weight (est.)</div>
+          <div class="field-value typed">130 lbs</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Hair Color</div>
+          <div class="field-value typed">Dark Brown</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Eye Color</div>
+          <div class="field-value typed">Brown</div>
+        </div>
+      </div>
+      <div class="field-grid" style="grid-template-columns: 1fr 1fr;">
+        <div class="field">
+          <div class="field-label">Last Known Residential Address</div>
+          <div class="field-value typed">114 Sycamore Run, Moth Hollow, WV 25813</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Occupation / Employer</div>
+          <div class="field-value typed">Radio Host — WHLW 88.3 FM, Overnight Shift</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION B: DISAPPEARANCE CIRCUMSTANCES -->
+    <div class="form-section" style="position:relative;">
+      <div class="section-label">Section B — Circumstances of Disappearance</div>
+
+      <!-- margin annotation -->
+      <div class="annotation" style="position:absolute;right:-0.4rem;top:3.2rem;transform:rotate(90deg);font-size:8px;color:var(--pencil);opacity:0.7;">tower?</div>
+
+      <div class="field-grid field-grid-2">
+        <div class="field">
+          <div class="field-label">Date of Disappearance</div>
+          <div class="field-value typed bold">October 14, 1998</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Time of Disappearance (est.)</div>
+          <div class="field-value typed">Between 01:00 AM – 02:30 AM</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Last Confirmed Location</div>
+          <div class="field-value typed">WHLW Station Parking Lot, Route 7, Moth Hollow</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Date/Time Last Seen by Witness</div>
+          <div class="field-value">
+            <span class="hand">approx. 10:00 PM, Oct 13</span>
+            <br><span class="text-xs italic" style="color:var(--ink-light);">(see witness conflict — Sec. D)</span>
+          </div>
+        </div>
+        <div class="field" style="grid-column: 1 / -1;">
+          <div class="field-label">Last Known Vehicle</div>
+          <div class="field-value typed">1993 Ford Escort, Blue — WV Plate <span class="redacted">B</span>XK-447 — Found abandoned: Tower Road, Oct 16 1998 &nbsp;<span class="officer-initial">[R.M.]</span></div>
+        </div>
+      </div>
+
+      <div class="field mt-half">
+        <div class="field-label">Narrative — Circumstances as Reported by Initial Officer</div>
+        <div class="narrative">
+          Subject Naomi Elise Vale was reported missing on October 15, 1998 at approximately 9:14 AM by her employer, WHLW Station Manager Kenneth Pruitt, after she failed to appear for a scheduled programming review. Subject was last confirmed on station premises by technician Evelyn Pike, who stated Vale was present in the broadcast booth at approximately 10:00 PM on October 13, 1998. Vale's scheduled broadcast ran until 1:00 AM. Station logs indicate broadcast continued until 1:07 AM on October 14, after which the station shifted to automated programming. Subject's vehicle was subsequently recovered on Tower Road approximately two miles from the station on October 16, 1998. No evidence of collision or mechanical failure was observed. Personal effects — including a canvas bag, notebook, and cassette player — were not recovered with the vehicle. No body has been recovered.
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION C: REPORTING PARTY -->
+    <div class="form-section">
+      <div class="section-label">Section C — Reporting Party</div>
+      <div class="field-grid field-grid-3">
+        <div class="field">
+          <div class="field-label">Name</div>
+          <div class="field-value typed">PRUITT, Kenneth W.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Relationship to Subject</div>
+          <div class="field-value typed">Employer (Station Manager)</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Phone</div>
+          <div class="field-value typed">(304) 555-0183</div>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">Address</div>
+        <div class="field-value typed">WHLW Radio, 88 Tower Road, Moth Hollow, WV 25813</div>
+      </div>
+    </div>
+
+    <!-- FOOTER PAGE 1 -->
+    <div class="doc-footer">
+      <span>RC-MPR-12 &nbsp;·&nbsp; Page 1 of 2 &nbsp;·&nbsp; Case MH-1998-0074</span>
+      <span>OFFICER INITIALS: <span class="officer-initial">R.M.</span> &nbsp;·&nbsp; DATE: 10/15/98</span>
+    </div>
+
+  </div><!-- /page 1 -->
+
+  <!-- PAGE 2 -->
+  <div class="page">
+
+    <div class="stamp-page2">CONTINUED — MH-1998-0074</div>
+
+    <!-- different officer initials — subtle inconsistency -->
+    <div class="continuation-header">
+      CONTINUATION — FORM RC-MPR-12 &nbsp;·&nbsp; Case No. MH-1998-0074 &nbsp;·&nbsp;
+      Naomi Elise Vale &nbsp;·&nbsp;
+      Officer: <span class="officer-initial">D.L.</span> &nbsp;·&nbsp; Oct 15, 1998
+    </div>
+
+    <!-- SECTION D: KNOWN ASSOCIATES / FAMILY CONTACT -->
+    <div class="form-section">
+      <div class="section-label">Section D — Known Associates &amp; Family Contact Attempts</div>
+      <table class="witness-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Relationship</th>
+            <th>Contact Date</th>
+            <th>Contact Result / Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>HART, Lena M.</strong></td>
+            <td>Sister (half)</td>
+            <td>Oct 15, 1998</td>
+            <td><em>Contact attempted — no response. Last known address: Morgantown, WV. Forwarding address not on file.</em> <span class="officer-initial">[D.L.]</span></td>
+          </tr>
+          <tr>
+            <td><strong>HART, Gabriel J.</strong></td>
+            <td>Brother (half)</td>
+            <td>Oct 22, 1998</td>
+            <td>Interviewed Oct 22, 1998. Stated no contact with subject since September 1998. No knowledge of planned travel or concerns expressed. <span class="officer-initial">[R.M.]</span></td>
+          </tr>
+          <tr>
+            <td>VALE, Donald R.</td>
+            <td>Father (estranged)</td>
+            <td>Oct 16, 1998</td>
+            <td>Reached by telephone. No recent contact — stated last spoke with subject in 1995. Cooperative. No further information. <span class="officer-initial">[D.L.]</span></td>
+          </tr>
+          <tr>
+            <td>PRUITT, Kenneth W.</td>
+            <td>Employer</td>
+            <td>Oct 15, 1998</td>
+            <td>Initial reporting party. Interviewed at station. Stated subject had been "distracted recently" but gave no specific reason. Broadcast logs reviewed at scene.</td>
+          </tr>
+          <tr>
+            <td>PIKE, Evelyn R.</td>
+            <td>Colleague (Technician)</td>
+            <td>Oct 15, 1998</td>
+            <td>States she last saw subject at approximately 10:00 PM, Oct 13. Notes that subject appeared "agitated." Contradicts station log departure record. <strong>See supplemental statement EV-005.</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- SECTION E: INVESTIGATIVE ACTIONS -->
+    <div class="form-section mt-1">
+      <div class="section-label">Section E — Investigative Actions Taken</div>
+      <div class="checklist">
+        <div class="check-item">
+          <div class="check-box checked"></div>
+          <span class="check-date">Oct 15, 1998</span>
+          <span class="check-text">Missing persons report filed. NCIC entry created. State law enforcement notified.</span>
+        </div>
+        <div class="check-item">
+          <div class="check-box checked"></div>
+          <span class="check-date">Oct 15, 1998</span>
+          <span class="check-text">WHLW station visited. Broadcast logs, employee records reviewed. Station manager and technician interviewed.</span>
+        </div>
+        <div class="check-item">
+          <div class="check-box checked"></div>
+          <span class="check-date">Oct 16, 1998</span>
+          <span class="check-text">Subject's vehicle located — Tower Road, approx. 2.1 miles from WHLW. Photographed, processed for prints. No collision damage. No blood. <span class="annotation" style="font-size:9px;">prints inconclusive</span></span>
+        </div>
+        <div class="check-item">
+          <div class="check-box checked"></div>
+          <span class="check-date">Oct 17–24, 1998</span>
+          <span class="check-text">Ground search conducted in Moth Hollow Forest / Tower Road area. 38 personnel. K-9 unit. No remains located.</span>
+        </div>
+        <div class="check-item">
+          <div class="check-box checked"></div>
+          <span class="check-date">Oct 22, 1998</span>
+          <span class="check-text">Brother Gabriel Hart interviewed at Beckley field office. No further leads developed from interview.</span>
+        </div>
+        <div class="check-item">
+          <div class="check-box checked"></div>
+          <span class="check-date">Oct 25, 1998</span>
+          <span class="check-text">Active search suspended pending new information. Case transferred to cold case records.</span>
+        </div>
+        <div class="check-item">
+          <div class="check-box"></div>
+          <span class="check-date">—</span>
+          <span class="check-text italic" style="color:var(--ink-light);">Formal investigation never completed prior to closure. See departmental case closure order, Oct 1998. <span class="annotation" style="font-size:9px;color:#9a2a1c;">signed before inv. complete??</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION F: STATUS / DISPOSITION -->
+    <div class="form-section mt-1">
+      <div class="section-label">Section F — Case Status &amp; Disposition</div>
+      <div class="field-grid field-grid-2">
+        <div class="field">
+          <div class="field-label">Current Status</div>
+          <div class="field-value typed bold" style="color:var(--stamp-red);">OPEN — COLD CASE</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Date Closed / Suspended</div>
+          <div class="field-value typed">October 25, 1998</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Closing Authority</div>
+          <div class="field-value typed">Sheriff Dale R. Mercer &nbsp;<span class="officer-initial">[D.M.]</span></div>
+        </div>
+        <div class="field">
+          <div class="field-label">Case Re-assigned</div>
+          <div class="field-value typed italic" style="font-size:9px;">
+            Sealed File Co. Archive — recovered 2025<br>
+            <span style="color:var(--ink-light);font-size:8px;">Pursuant to departmental records release order</span>
+          </div>
+        </div>
+      </div>
+      <div class="field" style="margin-top:-1px;">
+        <div class="field-label">Witness Conflict Note — Officer Addendum</div>
+        <div class="narrative text-sm">
+          Witness statements conflict regarding Ms. Vale's departure time from WHLW. Technician Pike places Vale at the station at 10:00 PM. Station automation logs indicate broadcast ran until 1:07 AM, consistent with Vale's scheduled shift. No explanation has been established for the discrepancy. <span class="annotation">timeline doesn't add up</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIGNATURE BLOCK -->
+    <div class="form-section mt-1">
+      <div class="section-label">Section G — Signatures</div>
+      <div class="sig-grid">
+        <div class="sig-field">
+          <div class="sig-label">Reporting Officer</div>
+          <div class="sig-line">
+            <span class="sig-name" style="font-size:9.5px;opacity:0.75;">R. Maddox &nbsp;·&nbsp; Deputy</span>
+          </div>
+          <div class="text-xs" style="margin-top:3px;color:var(--ink-light);">Oct 15, 1998</div>
+        </div>
+        <div class="sig-field">
+          <div class="sig-label">Supervising Officer</div>
+          <div class="sig-line">
+            <span class="sig-name" style="font-size:9.5px;font-style:italic;opacity:0.55;color:var(--ink-light);">[signature illegible]</span>
+          </div>
+          <div class="text-xs" style="margin-top:3px;color:var(--ink-light);">Oct 15, 1998</div>
+        </div>
+        <div class="sig-field">
+          <div class="sig-label">Reviewing Commander</div>
+          <div class="sig-line">
+            <!-- intentionally left blank — no date received stamp -->
+          </div>
+          <div class="text-xs" style="margin-top:3px;color:var(--ink-light);font-style:italic;">Date received: <span style="color:var(--stamp-red);">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOC FOOTER PAGE 2 -->
+    <div class="doc-footer">
+      <span>RC-MPR-12 &nbsp;·&nbsp; Page 2 of 2 &nbsp;·&nbsp; Case MH-1998-0074</span>
+      <span>Filed: Moth Hollow District &nbsp;·&nbsp; COLD CASE ARCHIVE</span>
+    </div>
+
+  </div><!-- /page 2 -->
+
+</div><!-- /document -->
+
+</body>
+</html>
