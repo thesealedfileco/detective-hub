@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHLW 88.3 — Weekly Broadcast Schedule — October 1998</title>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --paper: #f0e8d8;
+    --paper-dark: #e4d8c0;
+    --paper-aged: #d8ccb4;
+    --ink: #1c1610;
+    --ink-faded: #3a3028;
+    --ink-blue: #2a4066;
+    --ink-blue-faded: #3d5580;
+    --stamp-red: #b83a2a;
+    --pencil: #7a6b50;
+    --pencil-light: #9a8b70;
+    --gold: #9a7b2e;
+    --highlight-yellow: rgba(255, 220, 80, 0.35);
+    --highlight-red: rgba(184, 58, 42, 0.12);
+  }
+
+  @page {
+    size: letter;
+    margin: 0;
+  }
+
+  body {
+    background: #c0b89a;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 20px;
+    font-family: 'Courier Prime', monospace;
+  }
+
+  .page {
+    width: 850px;
+    min-height: 1100px;
+    background: var(--paper);
+    position: relative;
+    padding: 60px 70px;
+    box-shadow:
+      2px 2px 0 rgba(0,0,0,0.04),
+      4px 4px 0 rgba(0,0,0,0.03),
+      8px 8px 20px rgba(0,0,0,0.18),
+      0 0 0 1px rgba(0,0,0,0.06);
+    overflow: hidden;
+  }
+
+  /* Paper texture overlays */
+  .page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 27px,
+        rgba(120,80,30,0.04) 27px,
+        rgba(120,80,30,0.04) 28px
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Coffee stain top-right */
+  .stain-tr {
+    position: absolute;
+    top: 30px;
+    right: 60px;
+    width: 90px;
+    height: 85px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center,
+      rgba(100,65,20,0.0) 55%,
+      rgba(100,65,20,0.07) 65%,
+      rgba(100,65,20,0.11) 72%,
+      rgba(100,65,20,0.06) 80%,
+      transparent 90%
+    );
+    transform: rotate(-15deg) scaleX(1.2);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Coffee stain bottom-left */
+  .stain-bl {
+    position: absolute;
+    bottom: 120px;
+    left: 40px;
+    width: 55px;
+    height: 50px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center,
+      rgba(100,65,20,0.0) 50%,
+      rgba(100,65,20,0.06) 65%,
+      rgba(100,65,20,0.09) 74%,
+      rgba(100,65,20,0.04) 82%,
+      transparent 92%
+    );
+    transform: rotate(22deg) scaleX(0.85);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Tape residue marks */
+  .tape-mark {
+    position: absolute;
+    height: 22px;
+    background: rgba(200,180,130,0.25);
+    border-top: 1px solid rgba(160,140,100,0.2);
+    border-bottom: 1px solid rgba(160,140,100,0.2);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .tape-tl { top: 0; left: 80px; width: 70px; transform: rotate(-2deg); }
+  .tape-tr { top: 0; right: 100px; width: 60px; transform: rotate(1deg); }
+  .tape-bl { bottom: 0; left: 120px; width: 65px; transform: rotate(1.5deg); }
+  .tape-br { bottom: 0; right: 80px; width: 80px; transform: rotate(-1deg); }
+
+  .page-inner {
+    position: relative;
+    z-index: 3;
+  }
+
+  /* ============ HEADER ============ */
+  .doc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 10px;
+  }
+
+  .station-id {
+    font-family: 'Special Elite', cursive;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+    line-height: 1.6;
+  }
+
+  .doc-title-block {
+    text-align: center;
+    flex: 1;
+    padding: 0 20px;
+  }
+
+  .doc-title-block .whlw {
+    font-family: 'Special Elite', cursive;
+    font-size: 22px;
+    letter-spacing: 4px;
+    color: var(--ink);
+    display: block;
+  }
+
+  .doc-title-block .frequency {
+    font-size: 10px;
+    color: var(--pencil);
+    letter-spacing: 2px;
+    display: block;
+    margin-top: 1px;
+  }
+
+  .doc-title-block .doc-name {
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--ink);
+    text-transform: uppercase;
+    margin-top: 6px;
+    display: block;
+    border-top: 1px solid var(--ink-faded);
+    padding-top: 4px;
+  }
+
+  .doc-meta-right {
+    text-align: right;
+    font-size: 9px;
+    color: var(--pencil);
+    line-height: 1.7;
+    letter-spacing: 0.5px;
+  }
+
+  /* ============ SUBTITLE BAR ============ */
+  .subtitle-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0 18px;
+    padding: 5px 8px;
+    background: var(--paper-dark);
+    border: 1px solid var(--paper-aged);
+  }
+
+  .subtitle-bar span {
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+  }
+
+  .subtitle-bar .ref {
+    font-weight: 700;
+    color: var(--ink-blue-faded);
+  }
+
+  /* ============ WEEK BLOCK ============ */
+  .week-header {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--pencil);
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  /* ============ TABLE ============ */
+  .schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5px;
+    margin-bottom: 20px;
+  }
+
+  .schedule-table th {
+    font-family: 'Courier Prime', monospace;
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--paper-dark);
+    border: 1px solid var(--paper-aged);
+    padding: 5px 8px;
+    text-align: left;
+    background-image: radial-gradient(rgba(0,0,0,0.04) 1px, transparent 1px);
+    background-size: 3px 3px;
+  }
+
+  .schedule-table th.center { text-align: center; }
+
+  .schedule-table td {
+    border: 1px solid var(--paper-aged);
+    padding: 5px 8px;
+    color: var(--ink-faded);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  .schedule-table tr:nth-child(even) td {
+    background: rgba(200,185,155,0.12);
+  }
+
+  .time-col { width: 105px; font-weight: 700; color: var(--ink); white-space: nowrap; }
+  .host-col { width: 135px; }
+  .prog-col { }
+  .eng-col { width: 55px; text-align: center; }
+  .note-col { width: 110px; font-style: italic; color: var(--pencil); font-size: 8.5px; }
+
+  .row-highlight-yellow td { background: var(--highlight-yellow) !important; }
+  .row-highlight-red td { background: var(--highlight-red) !important; }
+
+  .struck {
+    text-decoration: line-through;
+    color: var(--pencil-light);
+  }
+
+  .handwritten {
+    font-family: 'Special Elite', cursive;
+    font-size: 9px;
+    color: var(--pencil);
+    display: inline;
+  }
+
+  .pencil-note {
+    font-family: 'Special Elite', cursive;
+    font-size: 8.5px;
+    color: var(--pencil);
+    font-style: italic;
+  }
+
+  .corrected {
+    position: relative;
+    display: inline-block;
+  }
+  .corrected::after {
+    content: '';
+    position: absolute;
+    left: -2px; top: 50%;
+    width: calc(100% + 4px);
+    height: 1px;
+    background: var(--ink);
+    transform: translateY(-50%);
+  }
+
+  .missing {
+    color: var(--paper-aged);
+    font-style: italic;
+    font-size: 8px;
+    text-align: center;
+  }
+
+  .section-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--pencil);
+    margin: 16px 0 6px;
+    border-bottom: 1px solid var(--paper-aged);
+    padding-bottom: 3px;
+  }
+
+  .notes-box {
+    border: 1px solid var(--paper-aged);
+    padding: 10px 12px;
+    margin-top: 10px;
+    background: rgba(200,185,155,0.1);
+    position: relative;
+  }
+
+  .notes-box-label {
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--pencil);
+    margin-bottom: 7px;
+    font-weight: 700;
+  }
+
+  .notes-entry {
+    font-size: 9.5px;
+    color: var(--ink-faded);
+    line-height: 1.6;
+    margin-bottom: 5px;
+    display: flex;
+    gap: 10px;
+  }
+
+  .notes-entry .bullet {
+    color: var(--pencil);
+    flex-shrink: 0;
+  }
+
+  .signature-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 28px;
+    padding-top: 12px;
+    border-top: 1px solid var(--paper-aged);
+  }
+
+  .sig-block {
+    font-size: 8.5px;
+    color: var(--pencil);
+    line-height: 1.8;
+  }
+
+  .sig-line {
+    border-bottom: 1px solid var(--ink-faded);
+    width: 140px;
+    margin-bottom: 3px;
+    height: 18px;
+  }
+
+  .sig-name-written {
+    font-family: 'Special Elite', cursive;
+    font-size: 12px;
+    color: var(--ink);
+    position: relative;
+    top: -4px;
+    left: 4px;
+    letter-spacing: 1px;
+  }
+
+  /* ============ EVIDENCE STAMP ============ */
+  .stamp-area {
+    position: absolute;
+    bottom: 55px;
+    right: 65px;
+    z-index: 5;
+    transform: rotate(-6deg);
+    opacity: 0.82;
+  }
+
+  .stamp-box {
+    border: 2.5px solid var(--stamp-red);
+    padding: 6px 12px;
+    color: var(--stamp-red);
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* ============ MARGIN NOTES ============ */
+  .margin-note {
+    position: absolute;
+    font-family: 'Special Elite', cursive;
+    font-size: 10px;
+    color: var(--pencil);
+    line-height: 1.4;
+    transform: rotate(-88deg);
+    transform-origin: top left;
+    left: 18px;
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0.75;
+  }
+
+  .margin-note-2 {
+    position: absolute;
+    font-family: 'Special Elite', cursive;
+    font-size: 9px;
+    color: var(--ink-blue-faded);
+    line-height: 1.4;
+    right: 18px;
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0.65;
+    transform: rotate(90deg);
+    transform-origin: top right;
+  }
+
+  .row-special td { background: rgba(184, 58, 42, 0.07) !important; }
+  .row-special .prog-col { font-weight: 700; color: var(--ink); letter-spacing: 0.5px; }
+
+  /* Fold crease */
+  .fold-crease {
+    position: absolute;
+    left: 0; right: 0;
+    top: 520px;
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent 5%,
+      rgba(100,80,40,0.12) 15%,
+      rgba(100,80,40,0.18) 50%,
+      rgba(100,80,40,0.12) 85%,
+      transparent 95%
+    );
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .watermark {
+    position: absolute;
+    bottom: 250px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Special Elite', cursive;
+    font-size: 60px;
+    color: rgba(0,0,0,0.025);
+    letter-spacing: 8px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 1;
+    user-select: none;
+  }
+
+  .eng-missing {
+    font-family: 'Special Elite', cursive;
+    color: var(--stamp-red);
+    font-size: 13px;
+    text-align: center;
+    display: block;
+    opacity: 0.55;
+  }
+
+  .small-arrow { font-size: 9px; color: var(--pencil); }
+
+  .initialblock {
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-align: center;
+    color: var(--ink-faded);
+  }
+
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="stain-tr"></div>
+  <div class="stain-bl"></div>
+  <div class="tape-mark tape-tl"></div>
+  <div class="tape-mark tape-tr"></div>
+  <div class="tape-mark tape-bl"></div>
+  <div class="tape-mark tape-br"></div>
+  <div class="fold-crease"></div>
+  <div class="watermark">WHLW</div>
+
+  <!-- Margin notes — written by a reviewer, vague enough not to spoil -->
+  <div class="margin-note" style="top: 345px;">gap unaccounted</div>
+  <div class="margin-note-2" style="top: 295px;">no authorization form</div>
+
+  <!-- Stamp — no evidence ID, just archival -->
+  <div class="stamp-area">
+    <div class="stamp-box">
+      ARCHIVE<br>
+      COPY<br>
+      1998-MH
+    </div>
+  </div>
+
+  <div class="page-inner">
+
+    <!-- ===== HEADER ===== -->
+    <div class="doc-header">
+      <div class="station-id">
+        WHLW 88.3 FM<br>
+        Moth Hollow, WV<br>
+        Internal Operations
+      </div>
+      <div class="doc-title-block">
+        <span class="whlw">WHLW 88.3</span>
+        <span class="frequency">moth hollow community radio · est. 1974</span>
+        <span class="doc-name">Weekly Broadcast Schedule</span>
+      </div>
+      <div class="doc-meta-right">
+        Form: OPS-7 (Rev. 1996)<br>
+        Week of: Oct 10–16, 1998<br>
+        Prepared: E. Pike<br>
+        Approved: <span class="handwritten">D.M.</span>
+      </div>
+    </div>
+
+    <!-- ===== SUBTITLE BAR ===== -->
+    <div class="subtitle-bar">
+      <span>Programming Operations Division</span>
+      <span class="ref">REF: WK-42 / OCT 1998 / OVERNIGHTS</span>
+      <span>Retain for 90 days</span>
+    </div>
+
+    <!-- ===== TABLE ===== -->
+    <div class="week-header">
+      Tuesday, October 13, 1998 &nbsp;—&nbsp; Wednesday, October 14, 1998 &nbsp;·&nbsp; Overnight Block
+    </div>
+
+    <table class="schedule-table">
+      <thead>
+        <tr>
+          <th class="time-col">Time Slot</th>
+          <th class="host-col">Host / On-Air</th>
+          <th class="prog-col">Program / Segment</th>
+          <th class="eng-col center">Eng. Init.</th>
+          <th class="note-col">Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td class="time-col">6:00 PM – 8:00 PM</td>
+          <td class="host-col">R. Landis</td>
+          <td class="prog-col">Evening Drive · Top 40 Countdown</td>
+          <td class="eng-col initialblock">E.P.</td>
+          <td class="note-col"></td>
+        </tr>
+
+        <tr class="row-highlight-yellow">
+          <td class="time-col">8:00 PM – 1:00 AM</td>
+          <td class="host-col">
+            <strong>N. Vale</strong><br>
+            <span class="pencil-note">Overnight Host</span>
+          </td>
+          <td class="prog-col">
+            Night Signal · Freeform<br>
+            <span class="pencil-note">Call-in program, Ext. 108</span>
+          </td>
+          <td class="eng-col initialblock">E.P.</td>
+          <td class="note-col">
+            <span class="pencil-note">Standard overnight block. Caller logs filed separately.</span>
+          </td>
+        </tr>
+
+        <!-- THE MISSING MAINTENANCE BLOCK -->
+        <tr class="row-highlight-red">
+          <td class="time-col">10:45 PM – 11:30 PM</td>
+          <td class="host-col">
+            <span class="struck">N. Vale</span><br>
+            <span class="pencil-note">—</span>
+          </td>
+          <td class="prog-col">
+            <span class="struck">Maintenance Window</span>
+            &nbsp;<span class="handwritten small-arrow">↗</span><br>
+            <span class="handwritten" style="font-size:10px; color: var(--pencil);">cancelled? see eng. notes</span>
+          </td>
+          <td class="eng-col">
+            <span class="eng-missing">—</span>
+          </td>
+          <td class="note-col">
+            <span class="handwritten" style="color: var(--pencil); font-size:9px;">
+              No initials on file.
+            </span>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="time-col">11:30 PM – 12:00 AM</td>
+          <td class="host-col">N. Vale</td>
+          <td class="prog-col">Night Signal · Continued</td>
+          <td class="eng-col initialblock">E.P.</td>
+          <td class="note-col"></td>
+        </tr>
+
+        <!-- SPECIAL PROGRAMMING — "Dr. V" replaced with plain initials, no circle -->
+        <tr class="row-special">
+          <td class="time-col">12:00 AM – 1:00 AM</td>
+          <td class="host-col">
+            <span style="font-style:italic; color: var(--pencil-light);">[No host listed]</span>
+          </td>
+          <td class="prog-col">
+            <strong>Special Programming</strong><br>
+            <span class="pencil-note">Pre-recorded segment. Auth. initials: E.V.</span>
+          </td>
+          <td class="eng-col">
+            <span class="eng-missing">—</span>
+          </td>
+          <td class="note-col">
+            <span class="handwritten" style="color: var(--pencil);">
+              Not in standard rotation log.
+            </span>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="time-col">1:00 AM – 6:00 AM</td>
+          <td class="host-col"><span style="font-style:italic; color: var(--pencil-light);">Auto / Syndicated</span></td>
+          <td class="prog-col">Overnight Relay Feed — WVRF Network</td>
+          <td class="eng-col initialblock">—</td>
+          <td class="note-col"><span class="pencil-note">Automated. No staff required.</span></td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <!-- ===== ENGINEERING LOG NOTES ===== -->
+    <p class="section-label">Engineering Log Notes — Week 42</p>
+
+    <div class="notes-box">
+      <div class="notes-box-label">Maintenance &amp; Interruption Record</div>
+
+      <div class="notes-entry">
+        <span class="bullet">·</span>
+        <span>Scheduled transmitter inspection (Oct 13, 10:45 PM) <strong class="corrected">completed</strong>&nbsp; <span class="handwritten">— VOID. Not carried out. Rescheduled to Oct 21.</span></span>
+      </div>
+      <div class="notes-entry">
+        <span class="bullet">·</span>
+        <span>Engineer initials absent from 10:45–11:30 PM block. No supplemental report submitted.</span>
+      </div>
+      <div class="notes-entry">
+        <span class="bullet">·</span>
+        <span>12:00 AM segment: authorization form <span style="text-decoration: underline;">not located</span> in operations file. Segment confirmed aired per tape log.</span>
+      </div>
+      <div class="notes-entry">
+        <span class="bullet">·</span>
+        <span>Overnight tape carousel for Oct 13–14: one cassette <span class="handwritten" style="color: var(--stamp-red);">unaccounted for</span>. Discrepancy noted in archive inventory.</span>
+      </div>
+    </div>
+
+    <!-- ===== SIGNATURE ROW ===== -->
+    <div class="signature-row">
+      <div class="sig-block">
+        <div class="sig-line"><span class="sig-name-written">Evelyn Pike</span></div>
+        <div>Station Technician — Ext. 112</div>
+        <div>Prepared: October 9, 1998</div>
+      </div>
+
+      <div class="sig-block" style="text-align:center;">
+        <div class="sig-line"></div>
+        <div>Program Director Signature</div>
+        <div style="font-style:italic; color:var(--pencil-light); font-size:8px;">[Not on file — filed without review]</div>
+      </div>
+
+      <div class="sig-block" style="text-align:right;">
+        <div style="margin-bottom:4px; font-size:8px; letter-spacing:1px; text-transform:uppercase; color:var(--pencil);">Archive Copy</div>
+        <div style="font-size:8px; color:var(--ink-faded);">Moth Hollow Sheriff's Department<br>Cold Case Review — Reopened 2026</div>
+      </div>
+    </div>
+
+  </div><!-- /page-inner -->
+</div>
+
+</body>
+</html>

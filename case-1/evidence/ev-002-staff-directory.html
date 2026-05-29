@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHLW 88.3 — Internal Staff Directory</title>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --paper:     #f0e9d6;
+    --paper-dark:#e4d9c0;
+    --ink:       #1a1510;
+    --ink-faded: #3a3020;
+    --ink-light: #6b5d48;
+    --red:       #b83a2a;
+    --blue:      #2a4066;
+    --rule:      #c8bda0;
+    --shadow:    rgba(30,20,10,0.18);
+    --stain:     rgba(140,100,50,0.07);
+  }
+
+  html, body {
+    background: #2a2520;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 20px 80px;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+  }
+
+  /* ── Paper ── */
+  .page {
+    position: relative;
+    width: 760px;
+    max-width: 100%;
+    background: var(--paper);
+    padding: 54px 64px 64px;
+    box-shadow:
+      0 2px 0 #bdb09a,
+      0 4px 0 #b0a38a,
+      4px 8px 32px rgba(0,0,0,0.55),
+      inset 0 0 80px var(--stain);
+    filter: url(#grain);
+  }
+
+  /* subtle paper texture via pseudo */
+  .page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 27px,
+        rgba(140,120,80,0.06) 27px,
+        rgba(140,120,80,0.06) 28px
+      );
+    pointer-events: none;
+  }
+
+  /* yellowing around edges */
+  .page::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(120,90,40,0.12) 100%);
+    pointer-events: none;
+  }
+
+  /* ── Coffee stain ── */
+  .stain {
+    position: absolute;
+    top: 38px;
+    right: 52px;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: transparent;
+    border: 3px solid rgba(110,75,30,0.15);
+    box-shadow:
+      inset 0 0 0 6px rgba(110,75,30,0.07),
+      0 0 0 1px rgba(110,75,30,0.09);
+  }
+  .stain::after {
+    content: '';
+    position: absolute;
+    top: 8px; left: 10px;
+    width: 38px; height: 32px;
+    border-radius: 50%;
+    background: rgba(110,75,30,0.05);
+    border: 2px solid rgba(110,75,30,0.10);
+  }
+
+  /* ── Punch holes ── */
+  .holes {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 80px 0;
+    pointer-events: none;
+  }
+  .hole {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #2a2520;
+    margin-left: 11px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.6);
+    position: relative;
+  }
+  .hole::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(160,140,110,0.4);
+  }
+
+  /* ── SVG filter for grain ── */
+  svg.filters { position: absolute; width: 0; height: 0; }
+
+  /* ── Header ── */
+  .doc-header {
+    border-bottom: 2.5px solid var(--ink);
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .station-logo-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .station-id {
+    font-family: 'Special Elite', serif;
+    font-size: 28px;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .station-id span {
+    font-size: 13px;
+    display: block;
+    letter-spacing: 0.18em;
+    color: var(--ink-light);
+    margin-top: 4px;
+    font-family: 'Courier Prime', monospace;
+  }
+
+  .doc-meta {
+    text-align: right;
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    color: var(--ink-light);
+    line-height: 1.9;
+    text-transform: uppercase;
+  }
+
+  .doc-title {
+    font-family: 'Special Elite', serif;
+    font-size: 15px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-top: 4px;
+  }
+
+  .doc-subtitle {
+    font-size: 9.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-top: 3px;
+  }
+
+  /* ── CONFIDENTIAL stamp ── */
+  .stamp-confidential {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-2.5deg);
+    font-family: 'Special Elite', serif;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    color: var(--red);
+    border: 2px solid var(--red);
+    padding: 3px 12px;
+    opacity: 0.55;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  /* ── Section headings ── */
+  .section-head {
+    font-size: 8.5px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--blue);
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 5px;
+    margin-bottom: 0;
+    margin-top: 28px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Column headers ── */
+  .col-headers {
+    display: grid;
+    grid-template-columns: 2fr 2.2fr 0.9fr;
+    gap: 0 16px;
+    padding: 8px 0 5px;
+    border-bottom: 1px solid var(--rule);
+    font-size: 8px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Staff rows ── */
+  .staff-row {
+    display: grid;
+    grid-template-columns: 2fr 2.2fr 0.9fr;
+    gap: 0 16px;
+    padding: 9px 0 8px;
+    border-bottom: 1px solid rgba(180,160,120,0.3);
+    align-items: baseline;
+    position: relative;
+    z-index: 1;
+  }
+
+  .staff-row:last-child {
+    border-bottom: none;
+  }
+
+  .name-cell {
+    font-size: 11.5px;
+    color: var(--ink);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .role-cell {
+    font-size: 11px;
+    color: var(--ink-faded);
+    letter-spacing: 0.02em;
+  }
+  .ext-cell {
+    font-size: 11px;
+    color: var(--ink-faded);
+    text-align: right;
+    padding-right: 4px;
+  }
+
+  /* ── Handwritten annotations ── */
+
+  /* Naomi's extension crossed out */
+  .strikethrough-pen {
+    position: relative;
+    display: inline-block;
+  }
+  .strikethrough-pen::after {
+    content: '';
+    position: absolute;
+    left: -2px; right: -2px;
+    top: 48%;
+    height: 2px;
+    background: #1a3a6e;
+    transform: rotate(-3deg);
+  }
+
+  /* Voss row — slightly darker, slightly different weight = "added later" feel */
+  .voss-row .name-cell,
+  .voss-row .role-cell,
+  .voss-row .ext-cell {
+    color: #0e0c09;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  /* Marginal note near Voss */
+  .margin-note {
+    position: absolute;
+    right: -52px;
+    top: 2px;
+    width: 130px;
+    font-family: 'Special Elite', serif;
+    font-size: 7.8px;
+    color: #1a3a6e;
+    line-height: 1.4;
+    transform: rotate(1.5deg);
+    pointer-events: none;
+  }
+  /* partial strikethrough on the margin note */
+  .margin-note .partial-strike {
+    position: relative;
+    display: inline;
+  }
+  .margin-note .partial-strike::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 15%;
+    top: 50%;
+    height: 1.2px;
+    background: #1a3a6e;
+    opacity: 0.7;
+  }
+
+  /* Engineer name scratch-out (heavy black scribble) */
+  .scratched {
+    position: relative;
+    display: inline-block;
+    color: var(--ink);
+  }
+  .scratched::before {
+    content: '';
+    position: absolute;
+    left: -2px; right: -2px;
+    top: 20%;
+    height: 60%;
+    background: repeating-linear-gradient(
+      -5deg,
+      var(--ink) 0px, var(--ink) 1.2px,
+      transparent 1.2px, transparent 3px
+    );
+    opacity: 0.85;
+  }
+
+  /* Handwritten circle around a name row — via outline on name cell */
+  .circled-name {
+    position: relative;
+  }
+  .circled-name::before {
+    content: '';
+    position: absolute;
+    top: -4px; bottom: -4px;
+    left: -6px; right: -2px;
+    border: 1.8px solid rgba(26, 58, 110, 0.55);
+    border-radius: 40% 45% 42% 48% / 38% 40% 44% 42%;
+    transform: rotate(-0.8deg);
+    pointer-events: none;
+  }
+
+  /* ── Emergency Contacts section ── */
+  .ec-row {
+    display: grid;
+    grid-template-columns: 2fr 2.2fr 0.9fr;
+    gap: 0 16px;
+    padding: 9px 0 8px;
+    border-bottom: 1px solid rgba(180,160,120,0.3);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Footer ── */
+  .doc-footer {
+    margin-top: 36px;
+    padding-top: 14px;
+    border-top: 1.5px solid var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-left {
+    font-size: 8.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    line-height: 1.8;
+  }
+
+  .footer-right {
+    font-size: 8.5px;
+    text-align: right;
+    color: var(--ink-light);
+    letter-spacing: 0.1em;
+    line-height: 1.8;
+  }
+
+  /* ── Internal use band ── */
+  .internal-band {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+  .internal-band span {
+    font-size: 7.5px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    border: 1px solid var(--rule);
+    padding: 3px 16px;
+  }
+
+  /* ── NOTE box at bottom ── */
+  .note-box {
+    margin-top: 28px;
+    border: 1px solid var(--rule);
+    padding: 12px 16px;
+    font-size: 9px;
+    line-height: 1.7;
+    color: var(--ink-light);
+    letter-spacing: 0.06em;
+    position: relative;
+    z-index: 1;
+  }
+  .note-box strong {
+    display: block;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-size: 8px;
+    margin-bottom: 5px;
+    color: var(--ink);
+  }
+
+  /* ── Print / screen sizing ── */
+  @media print {
+    html, body { background: white; padding: 0; }
+    .page {
+      box-shadow: none;
+      padding: 36px 48px;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .page { padding: 36px 28px 48px 44px; }
+    .margin-note { display: none; }
+    .stain { width: 44px; height: 44px; right: 28px; top: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SVG grain filter -->
+<svg class="filters" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise"/>
+      <feBlend in="SourceGraphic" in2="grayNoise" mode="multiply" result="blend"/>
+      <feComposite in="blend" in2="SourceGraphic" operator="in"/>
+    </filter>
+  </defs>
+</svg>
+
+<div class="page">
+
+  <!-- Coffee stain -->
+  <div class="stain"></div>
+
+  <!-- Punch holes on left margin -->
+  <div class="holes">
+    <div class="hole"></div>
+    <div class="hole"></div>
+    <div class="hole"></div>
+  </div>
+
+  <!-- CONFIDENTIAL stamp (faded, slightly rotated) -->
+  <div class="stamp-confidential">INTERNAL USE ONLY</div>
+
+  <!-- ══ HEADER ══ -->
+  <div class="doc-header">
+    <div class="station-logo-row">
+      <div class="station-id">
+        WHLW 88.3
+        <span>Moth Hollow Community Radio · Moth Hollow, WV</span>
+      </div>
+      <div class="doc-meta">
+        Document No.&nbsp;&nbsp;DIR-1998-04<br>
+        Distribution:&nbsp;&nbsp;Station Staff<br>
+        Supersedes:&nbsp;&nbsp;DIR-1997-11
+      </div>
+    </div>
+    <div class="doc-title">Staff &amp; Personnel Directory</div>
+    <div class="doc-subtitle">Administrative Reference — Station Operations</div>
+  </div>
+
+  <!-- ══ INTERNAL USE BAND ══ -->
+  <div class="internal-band">
+    <span>Not for external distribution — retain at station</span>
+  </div>
+
+  <!-- ══════════════════════════════
+       SECTION 1 — ON-AIR STAFF
+  ════════════════════════════════ -->
+  <div class="section-head">On-Air Personnel</div>
+  <div class="col-headers">
+    <div>Name</div>
+    <div>Role / Program</div>
+    <div style="text-align:right;">Ext.</div>
+  </div>
+
+  <!-- Morning Drive -->
+  <div class="staff-row">
+    <div class="name-cell">Hargrove, Dennis R.</div>
+    <div class="role-cell">Morning Drive Host · 6–10 AM</div>
+    <div class="ext-cell">101</div>
+  </div>
+
+  <!-- Midday -->
+  <div class="staff-row">
+    <div class="name-cell">Calloway, Patricia</div>
+    <div class="role-cell">Midday Presenter · 10 AM–2 PM</div>
+    <div class="ext-cell">103</div>
+  </div>
+
+  <!-- Afternoon -->
+  <div class="staff-row">
+    <div class="name-cell">Briggs, Warren T.</div>
+    <div class="role-cell">Afternoon Drive · 2–6 PM</div>
+    <div class="ext-cell">105</div>
+  </div>
+
+  <!-- Evening -->
+  <div class="staff-row">
+    <div class="name-cell">Morrow, Susan</div>
+    <div class="role-cell">Evening Programming · 6–10 PM</div>
+    <div class="ext-cell">107</div>
+  </div>
+
+  <!-- NAOMI — Ext crossed out -->
+  <div class="staff-row" style="background: rgba(0,0,0,0.015);">
+    <div class="name-cell circled-name">Vale, Naomi L.</div>
+    <div class="role-cell">Overnight Host · <em>Into the Dark</em> · 10 PM–2 AM</div>
+    <div class="ext-cell">
+      <span class="strikethrough-pen">108</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       SECTION 2 — TECHNICAL / OPERATIONS
+  ════════════════════════════════ -->
+  <div class="section-head">Technical &amp; Operations</div>
+  <div class="col-headers">
+    <div>Name</div>
+    <div>Role</div>
+    <div style="text-align:right;">Ext.</div>
+  </div>
+
+  <!-- Station Manager -->
+  <div class="staff-row">
+    <div class="name-cell">Alderman, George F.</div>
+    <div class="role-cell">Station Manager</div>
+    <div class="ext-cell">100</div>
+  </div>
+
+  <!-- Program Director -->
+  <div class="staff-row">
+    <div class="name-cell">Pryce, Donna</div>
+    <div class="role-cell">Program Director</div>
+    <div class="ext-cell">102</div>
+  </div>
+
+  <!-- EVELYN PIKE — circled in another ink -->
+  <div class="staff-row">
+    <div class="name-cell circled-name">Pike, Evelyn M.</div>
+    <div class="role-cell">Station Technician / Broadcast Engineer</div>
+    <div class="ext-cell">112</div>
+  </div>
+
+  <!-- Engineer — name scratched out -->
+  <div class="staff-row">
+    <div class="name-cell">
+      <span class="scratched">Kowalski, Ray&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    </div>
+    <div class="role-cell">Broadcast Engineer (overnight rotation)</div>
+    <div class="ext-cell">114</div>
+  </div>
+
+  <!-- Transmitter tech -->
+  <div class="staff-row">
+    <div class="name-cell">Dunmore, A.</div>
+    <div class="role-cell">Transmitter Maintenance</div>
+    <div class="ext-cell">116</div>
+  </div>
+
+  <!-- ══════════════════════════════
+       SECTION 3 — ADMINISTRATION
+  ════════════════════════════════ -->
+  <div class="section-head">Administration &amp; Support</div>
+  <div class="col-headers">
+    <div>Name</div>
+    <div>Role</div>
+    <div style="text-align:right;">Ext.</div>
+  </div>
+
+  <div class="staff-row">
+    <div class="name-cell">Fielding, Ruth</div>
+    <div class="role-cell">Administrative Assistant</div>
+    <div class="ext-cell">110</div>
+  </div>
+
+  <div class="staff-row">
+    <div class="name-cell">Hartwell, Craig</div>
+    <div class="role-cell">Promotions Coordinator</div>
+    <div class="ext-cell">111</div>
+  </div>
+
+  <div class="staff-row">
+    <div class="name-cell">Ibáñez, Carla</div>
+    <div class="role-cell">Underwriting / Advertising</div>
+    <div class="ext-cell">118</div>
+  </div>
+
+  <!-- ══════════════════════════════
+       SECTION 4 — COMMUNITY PROGRAMS / CONSULTANTS
+  ════════════════════════════════ -->
+  <div class="section-head">Community Programs &amp; External Consultants</div>
+  <div class="col-headers">
+    <div>Name</div>
+    <div>Role / Affiliation</div>
+    <div style="text-align:right;">Ext.</div>
+  </div>
+
+  <div class="staff-row">
+    <div class="name-cell">Okafor, James</div>
+    <div class="role-cell">Community Outreach Liaison</div>
+    <div class="ext-cell">120</div>
+  </div>
+
+  <!-- VOSS — added later, slightly heavier ink, margin note -->
+  <div class="staff-row voss-row" style="position: relative; padding-right: 140px;">
+    <div class="name-cell">Voss, Elias R., Ph.D.</div>
+    <div class="role-cell">Consulting Psychologist — Community Outreach Program</div>
+    <div class="ext-cell">—</div>
+    <!-- Handwritten margin note -->
+    <div class="margin-note">
+      <span class="partial-strike">Do not give archive key access without approval</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       SECTION 5 — EMERGENCY CONTACTS
+  ════════════════════════════════ -->
+  <div class="section-head">Emergency Contacts (Non-Staff)</div>
+  <div class="col-headers">
+    <div>Contact</div>
+    <div>Organization / Role</div>
+    <div style="text-align:right;">Phone</div>
+  </div>
+
+  <div class="ec-row">
+    <div class="name-cell">Mercer, Dale (Sheriff)</div>
+    <div class="role-cell">Moth Hollow County Sheriff's Dept. — Station Emergency Contact</div>
+    <div class="ext-cell" style="font-size:10px; white-space:nowrap;">(304) 555-0141</div>
+  </div>
+
+  <div class="ec-row" style="border-bottom: none;">
+    <div class="name-cell">Moth Hollow Fire &amp; Rescue</div>
+    <div class="role-cell">Emergency services</div>
+    <div class="ext-cell" style="font-size:10px;">911</div>
+  </div>
+
+  <!-- ══ NOTE BOX ══ -->
+  <div class="note-box">
+    <strong>Notice — Directory Updates</strong>
+    Extensions and assignments are subject to change. Contact the administrative office (Ext. 110) to report corrections.
+    This directory is for internal station use only. Do not distribute to callers, advertisers, or external parties.
+    Previous version (DIR-1997-11) should be discarded.
+  </div>
+
+  <!-- ══ FOOTER ══ -->
+  <div class="doc-footer">
+    <div class="footer-left">
+      WHLW 88.3 FM — Moth Hollow Community Radio<br>
+      14 Relay Road, Moth Hollow, WV 26241<br>
+      Main Line: (304) 555-0100
+    </div>
+    <div class="footer-right">
+      DIR-1998-04 · Station Administration<br>
+      Printed: Internal Distribution<br>
+      Page 1 of 1
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

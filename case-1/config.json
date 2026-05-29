@@ -323,7 +323,7 @@
       "icon": "📋",
       "name": "WHLW Staff Directory",
       "description": "Internal station personnel directory, circa 1998",
-      "file": "evidence/ev-002-staff-directory.pdf",
+      "file": "evidence/ev-002-staff-directory.html",
       "lockedHint": null
     },
     {
@@ -332,7 +332,7 @@
       "icon": "📋",
       "name": "Broadcast Schedule",
       "description": "WHLW weekly schedule — October 1998",
-      "file": "evidence/ev-003-broadcast-schedule.pdf",
+      "file": "evidence/ev-003_broadcast-schedule.html",
       "lockedHint": null
     },
     {
