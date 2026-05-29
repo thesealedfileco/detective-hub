@@ -458,6 +458,11 @@ function viewEvidence(id) {
 
   // Briefing type replays the popup instead of opening a file
   if (ev.type === 'briefing') {
+    if (!gameState.viewedEvidence.includes(id)) {
+        gameState.viewedEvidence.push(id);
+        saveGame();
+        renderHub();
+    }
     showPopup('caseBriefing', null);
     return;
   }
