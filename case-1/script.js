@@ -183,6 +183,10 @@ function enterCase() {
   saveGame();
 
   showPopup('caseBriefing', function() {
+    if (!gameState.viewedEvidence.includes('ev-000')) {
+      gameState.viewedEvidence.push('ev-000');
+      saveGame();
+    }
     document.getElementById('mainHub').style.display = 'block';
     renderHub();
   });
