@@ -20,8 +20,6 @@
     --pencil: #7a6b50;
     --pencil-light: #9a8b70;
     --gold: #9a7b2e;
-    --highlight-yellow: rgba(255, 220, 80, 0.35);
-    --highlight-red: rgba(184, 58, 42, 0.12);
   }
 
   @page {
@@ -268,9 +266,7 @@
   .eng-col { width: 55px; text-align: center; }
   .note-col { width: 110px; font-style: italic; color: var(--pencil); font-size: 8.5px; }
 
-  .row-highlight-yellow td { background: var(--highlight-yellow) !important; }
-  .row-highlight-red td { background: var(--highlight-red) !important; }
-
+  
   .struck {
     text-decoration: line-through;
     color: var(--pencil-light);
@@ -436,8 +432,7 @@
     transform-origin: top right;
   }
 
-  .row-special td { background: rgba(184, 58, 42, 0.07) !important; }
-  .row-special .prog-col { font-weight: 700; color: var(--ink); letter-spacing: 0.5px; }
+
 
   /* Fold crease */
   .fold-crease {
@@ -571,7 +566,7 @@
           <td class="note-col"></td>
         </tr>
 
-        <tr class="row-highlight-yellow">
+        <tr>
           <td class="time-col">8:00 PM – 1:00 AM</td>
           <td class="host-col">
             <strong>N. Vale</strong><br>
@@ -588,7 +583,7 @@
         </tr>
 
         <!-- THE MISSING MAINTENANCE BLOCK -->
-        <tr class="row-highlight-red">
+        <tr>
           <td class="time-col">10:45 PM – 11:30 PM</td>
           <td class="host-col">
             <span class="struck">N. Vale</span><br>
@@ -618,7 +613,7 @@
         </tr>
 
         <!-- SPECIAL PROGRAMMING — "Dr. V" replaced with plain initials, no circle -->
-        <tr class="row-special">
+        <tr>
           <td class="time-col">12:00 AM – 1:00 AM</td>
           <td class="host-col">
             <span style="font-style:italic; color: var(--pencil-light);">[No host listed]</span>

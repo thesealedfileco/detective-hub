@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EV-NEW1 — Case Closure Memo — MHSD-98-0041</title>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper:     #f5f0e4;
+    --paper-dark:#ede8d8;
+    --ink:       #1a1510;
+    --ink-faded: #3a3028;
+    --ink-light: #6a5f50;
+    --stamp-red: #9a2a1c;
+    --ink-blue:  #1e3355;
+    --border:    #c8bfa8;
+    --pencil:    #7a6b50;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #2a2318;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  .document {
+    width: 720px;
+    max-width: 100%;
+    background: var(--paper);
+    position: relative;
+    transform: rotate(0.2deg);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.3),
+      4px 6px 20px rgba(0,0,0,0.6),
+      8px 12px 40px rgba(0,0,0,0.4);
+  }
+
+  .document::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 200px;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0.6;
+  }
+
+  .document::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.1) 100%);
+    pointer-events: none;
+    z-index: 9;
+  }
+
+  /* fold crease — this was filed, folded */
+  .fold {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(160,135,95,0.15) 8%,
+      rgba(160,135,95,0.25) 20%,
+      rgba(160,135,95,0.2) 50%,
+      rgba(160,135,95,0.25) 80%,
+      rgba(160,135,95,0.15) 92%,
+      transparent 100%
+    );
+    pointer-events: none;
+    z-index: 11;
+  }
+
+  .page {
+    padding: 2.8rem 3rem 2.6rem;
+    position: relative;
+    min-height: 960px;
+  }
+
+  /* ── LETTERHEAD ── */
+  .letterhead {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 14px;
+    margin-bottom: 24px;
+  }
+
+  .letterhead-left {}
+
+  .dept-name {
+    font-family: 'Special Elite', serif;
+    font-size: 15px;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .dept-sub {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    color: var(--ink-light);
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  .letterhead-right {
+    text-align: right;
+  }
+
+  .doc-ref {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--ink-light);
+    text-transform: uppercase;
+    line-height: 2;
+  }
+
+  /* ── MEMO HEADER ── */
+  .memo-header {
+    margin-bottom: 28px;
+  }
+
+  .memo-title {
+    font-family: 'Special Elite', serif;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 0.75px solid var(--border);
+  }
+
+  .memo-fields {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 6px 12px;
+    font-size: 11px;
+    color: var(--ink-faded);
+    line-height: 1.7;
+  }
+
+  .memo-field-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-light);
+    font-size: 10px;
+  }
+
+  .memo-field-value {
+    color: var(--ink);
+  }
+
+  /* ── BODY ── */
+  .memo-body {
+    font-size: 12.5px;
+    line-height: 1.9;
+    color: var(--ink-faded);
+    position: relative;
+    z-index: 1;
+  }
+
+  .memo-body p {
+    margin-bottom: 16px;
+  }
+
+  .memo-body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .section-head {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 10px;
+    color: var(--ink-light);
+    margin-bottom: 8px;
+    margin-top: 22px;
+  }
+
+  /* ── FINDINGS TABLE ── */
+  .findings-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+    margin: 12px 0 20px;
+    color: var(--ink-faded);
+  }
+
+  .findings-table th {
+    text-align: left;
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    border-bottom: 0.75px solid var(--border);
+    padding: 4px 8px 6px 0;
+    font-weight: 700;
+  }
+
+  .findings-table td {
+    padding: 5px 8px 5px 0;
+    border-bottom: 0.5px solid rgba(200,191,168,0.4);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  .findings-table td:first-child {
+    width: 180px;
+    color: var(--ink-light);
+    font-size: 10.5px;
+  }
+
+  .status-complete {
+    color: #2a5a2a;
+    font-weight: 700;
+  }
+
+  .status-incomplete {
+    color: #8a2a1a;
+    font-weight: 700;
+  }
+
+  .status-na {
+    color: var(--ink-light);
+  }
+
+  /* ── SIGNATURE BLOCK ── */
+  .sig-block {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .sig-field {
+    border-top: 0.75px solid var(--ink);
+    padding-top: 6px;
+    font-size: 10px;
+    color: var(--ink-light);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .sig-name {
+    font-family: 'Crimson Pro', serif;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--ink-blue);
+    margin-bottom: 2px;
+    margin-top: 4px;
+    line-height: 1;
+  }
+
+  .sig-name.blank {
+    color: var(--border);
+    font-style: normal;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── STAMPS ── */
+  .stamp-closed {
+    position: absolute;
+    top: 3.2rem;
+    right: 3rem;
+    font-family: 'Special Elite', serif;
+    font-size: 20px;
+    letter-spacing: 0.18em;
+    color: var(--stamp-red);
+    border: 3px solid var(--stamp-red);
+    padding: 5px 12px;
+    text-transform: uppercase;
+    transform: rotate(-8deg);
+    opacity: 0.75;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  /* ── HANDWRITTEN ANNOTATION ── */
+  .annotation {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--pencil);
+    position: absolute;
+    z-index: 6;
+    pointer-events: none;
+    line-height: 1.5;
+  }
+
+  .annotation-1 {
+    bottom: 3.8rem;
+    left: 3rem;
+    transform: rotate(-1.5deg);
+  }
+
+  .annotation-2 {
+    top: 14.5rem;
+    right: 2.8rem;
+    transform: rotate(1deg);
+    font-size: 12px;
+    text-align: right;
+  }
+
+  /* ── FOOTER ── */
+  .doc-footer {
+    position: absolute;
+    bottom: 1.4rem;
+    left: 3rem;
+    right: 3rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 8px;
+    color: var(--ink-light);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-top: 0.5px solid var(--border);
+    padding-top: 8px;
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+
+<div class="document">
+  <div class="fold"></div>
+
+  <div class="page">
+
+    <div class="stamp-closed">Case Closed</div>
+
+    <!-- ANNOTATION 1 — pencil query -->
+    <div class="annotation annotation-2">
+      no playback auth?<br>— D.C.
+    </div>
+
+    <!-- LETTERHEAD -->
+    <div class="letterhead">
+      <div class="letterhead-left">
+        <div class="dept-name">Moth Hollow Sheriff's Department<br>County of Raleigh — State of West Virginia</div>
+        <div class="dept-sub">Law Enforcement Division &nbsp;·&nbsp; Records & Filing</div>
+      </div>
+      <div class="letterhead-right">
+        <div class="doc-ref">
+          Form MHSD-7 (Rev. 1994)<br>
+          Case No. MHSD-98-0041<br>
+          File: VALE, Naomi E.<br>
+          Date: October 25, 1998
+        </div>
+      </div>
+    </div>
+
+    <!-- MEMO TITLE -->
+    <div class="memo-header">
+      <div class="memo-title">Internal Memorandum — Case Disposition & Closure</div>
+      <div class="memo-fields">
+        <span class="memo-field-label">To:</span>
+        <span class="memo-field-value">Records Division, Raleigh County Courthouse</span>
+        <span class="memo-field-label">From:</span>
+        <span class="memo-field-value">Sheriff Dale R. Mercer, Badge No. 0017</span>
+        <span class="memo-field-label">Re:</span>
+        <span class="memo-field-value">Disposition of Missing Persons Case No. MHSD-98-0041 — Vale, Naomi Elise</span>
+        <span class="memo-field-label">Date:</span>
+        <span class="memo-field-value">October 25, 1998</span>
+        <span class="memo-field-label">Copies:</span>
+        <span class="memo-field-value">Deputy T. Caulfield &nbsp;·&nbsp; Raleigh County DA Office (for record)</span>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="memo-body">
+
+      <div class="section-head">I. Purpose of this Memorandum</div>
+      <p>This memorandum serves as the official notice of disposition for missing persons case MHSD-98-0041, filed October 15, 1998, regarding the disappearance of Naomi Elise Vale (DOB: March 3, 1972), last known address 114 Ridgeline Road, Moth Hollow, WV 26250. This office hereby moves to close and archive the above-referenced case effective the date of this memorandum.</p>
+
+      <div class="section-head">II. Summary of Investigation Conducted</div>
+      <p>The investigation was opened following a missing persons report filed by station manager R. Greer on October 15, 1998. The department conducted the following actions during the period October 15–25, 1998:</p>
+
+      <table class="findings-table">
+        <tr>
+          <th>Action Item</th>
+          <th>Status</th>
+          <th>Notes</th>
+        </tr>
+        <tr>
+          <td>Initial scene walkthrough — WHLW station</td>
+          <td class="status-complete">Complete</td>
+          <td>No evidence of struggle. One unlisted archive item flagged. Playback review pending authorization — not completed.</td>
+        </tr>
+        <tr>
+          <td>Witness interview — E. Pike</td>
+          <td class="status-complete">Complete</td>
+          <td>Statement obtained Oct 16. Account accepted as filed.</td>
+        </tr>
+        <tr>
+          <td>Witness interview — R. Greer</td>
+          <td class="status-complete">Complete</td>
+          <td>Statement obtained Oct 17.</td>
+        </tr>
+        <tr>
+          <td>Relay tower perimeter search</td>
+          <td class="status-complete">Complete</td>
+          <td>Physical evidence recovered and logged. Referred to WVSP CID per protocol. CID report not yet received at time of closure.</td>
+        </tr>
+        <tr>
+          <td>Family notification & interview</td>
+          <td class="status-complete">Complete</td>
+          <td>G. Hart (brother) interviewed Oct 22. Next of kin notified.</td>
+        </tr>
+        <tr>
+          <td>Formal suspect interviews</td>
+          <td class="status-incomplete">Incomplete</td>
+          <td>Consulting station personnel not formally interviewed prior to closure. Voluntary interview conducted Oct 21 — notes filed separately.</td>
+        </tr>
+        <tr>
+          <td>Formal inquest / coroner referral</td>
+          <td class="status-na">N/A</td>
+          <td>No remains recovered. Coroner referral not applicable at this time.</td>
+        </tr>
+        <tr>
+          <td>Reviewing commander sign-off</td>
+          <td class="status-incomplete">Incomplete</td>
+          <td>See Section IV.</td>
+        </tr>
+      </table>
+
+      <div class="section-head">III. Basis for Closure</div>
+      <p>After eleven days of active investigation, this office has determined that no evidence currently in our possession establishes the commission of a crime. The physical evidence recovered at the tower perimeter remains inconclusive pending the WVSP CID report, which has not been received. In the absence of a body, a crime scene determination, or a named suspect supported by material evidence, continued allocation of departmental resources to this case is not warranted at this time.</p>
+      <p>The case is closed as: <strong>OPEN/UNRESOLVED — INACTIVE.</strong> It may be reopened upon receipt of new material evidence or at the discretion of this office.</p>
+
+      <div class="section-head">IV. Reviewing Commander</div>
+      <p>This memorandum has been prepared for review and countersignature by the Raleigh County Sheriff's Office reviewing commander per standard procedure. Signature block below.</p>
+
+    </div>
+
+    <!-- SIGNATURE BLOCK -->
+    <div class="sig-block">
+      <div class="sig-field">
+        <div class="sig-name">Dale R. Mercer</div>
+        Sheriff, Moth Hollow S.D.<br>
+        Badge No. 0017 &nbsp;·&nbsp; October 25, 1998
+      </div>
+      <div class="sig-field">
+        <div class="sig-name blank">[ signature required ]</div>
+        Reviewing Commander<br>
+        Raleigh County Sheriff's Office
+      </div>
+    </div>
+
+    <!-- ANNOTATION — handwritten at bottom -->
+    <div class="annotation annotation-1">
+      Reviewing cmdr never signed. Filed as-is. — T.C.
+    </div>
+
+    <!-- FOOTER -->
+    <div class="doc-footer">
+      <span>MHSD Form 7 &nbsp;·&nbsp; Case Closure Memorandum</span>
+      <span>MHSD-98-0041 &nbsp;·&nbsp; Vale, N.E.</span>
+      <span>Page 1 of 1</span>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

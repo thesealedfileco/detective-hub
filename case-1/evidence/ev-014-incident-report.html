@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EV-014 — Incident Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1e1b18;
+    min-height: 100vh;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    font-family: 'Courier Prime', monospace;
+  }
+
+  .document {
+    width: 680px;
+    max-width: 100%;
+  }
+
+  /* ── PAGE BASE ── */
+  .page {
+    background: #ece6d8;
+    position: relative;
+    margin-bottom: 24px;
+    box-shadow:
+      0 1px 3px rgba(0,0,0,0.3),
+      0 8px 28px rgba(0,0,0,0.5);
+    transform: rotate(-0.3deg);
+  }
+
+  .page.page-2 {
+    transform: rotate(0.2deg);
+    /* no bottom padding — torn edge is the bottom */
+    margin-bottom: 0;
+  }
+
+  /* photocopy wash */
+  .page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 40%, rgba(180,170,150,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse at 85% 70%, rgba(160,150,130,0.1) 0%, transparent 50%),
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 11px,
+        rgba(0,0,0,0.008) 11px,
+        rgba(0,0,0,0.008) 12px
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page-inner {
+    padding: 44px 52px 56px;
+    position: relative;
+    z-index: 1;
+    min-height: 860px;
+  }
+
+  /* page 2 inner — no bottom padding, content ends naturally */
+  .page-2 .page-inner {
+    padding-bottom: 32px;
+    min-height: 0;
+  }
+
+  .stain {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* ── STAMPS ── */
+  .stamp {
+    position: absolute;
+    font-family: 'Special Elite', serif;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    pointer-events: none;
+    z-index: 5;
+    line-height: 1;
+  }
+
+  .stamp-restricted {
+    top: 28px;
+    right: 38px;
+    font-size: 13px;
+    color: #b83a2a;
+    border: 2px solid #b83a2a;
+    padding: 5px 12px;
+    opacity: 0.7;
+    transform: rotate(8deg);
+  }
+
+  .stamp-confidential {
+    top: 72px;
+    left: 38px;
+    font-size: 10px;
+    color: #b83a2a;
+    border: 1.5px solid #b83a2a;
+    padding: 4px 10px;
+    opacity: 0.45;
+    transform: rotate(-4deg);
+  }
+
+  .stamp-internal {
+    top: 48px;
+    right: 44px;
+    font-size: 9px;
+    color: #2a4066;
+    border: 1px solid #2a4066;
+    padding: 3px 9px;
+    opacity: 0.4;
+    transform: rotate(-7deg);
+  }
+
+  .stamp-copy {
+    top: 88px;
+    left: 42px;
+    font-size: 9px;
+    color: #6a5840;
+    border: 1px solid #6a5840;
+    padding: 3px 8px;
+    opacity: 0.35;
+    transform: rotate(3deg);
+  }
+
+  /* ── HEADER ── */
+  .doc-header {
+    border-bottom: 2px solid #2a2015;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .agency-block {
+    font-size: 8.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #5a4a32;
+    line-height: 1.9;
+  }
+
+  .agency-block b {
+    font-size: 13px;
+    color: #1a1208;
+    letter-spacing: 0.04em;
+    display: block;
+    margin-bottom: 3px;
+    text-transform: none;
+  }
+
+  .report-title {
+    text-align: right;
+    font-family: 'Special Elite', serif;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: #1a1208;
+    text-transform: uppercase;
+    line-height: 1.6;
+  }
+
+  .report-title .case-num {
+    font-size: 10px;
+    color: #6a5840;
+    letter-spacing: 0.1em;
+    display: block;
+    margin-top: 4px;
+  }
+
+  /* ── FIELDS ── */
+  .fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 0.75px solid #a89870;
+    margin-bottom: 20px;
+  }
+
+  .field {
+    padding: 7px 10px 6px;
+    border-right: 0.75px solid #a89870;
+    border-bottom: 0.75px solid #a89870;
+    min-height: 36px;
+  }
+
+  .field:nth-child(even) { border-right: none; }
+  .field.full { grid-column: 1 / -1; border-right: none; }
+  .field.no-bottom { border-bottom: none; }
+
+  .fl {
+    font-size: 7.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #8a7558;
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  .fv {
+    font-size: 11px;
+    color: #1a1208;
+    letter-spacing: 0.02em;
+    line-height: 1.4;
+  }
+
+  .fv.blurred { filter: blur(0.4px); opacity: 0.85; }
+
+  /* ── SECTION LABEL ── */
+  .sec {
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #7a6a50;
+    border-bottom: 0.5px solid #b8a880;
+    padding-bottom: 4px;
+    margin-bottom: 14px;
+    margin-top: 22px;
+  }
+
+  /* ── BODY TEXT ── */
+  .body {
+    font-size: 11.5px;
+    color: #1a1208;
+    line-height: 1.85;
+    letter-spacing: 0.015em;
+  }
+
+  .body p { margin-bottom: 11px; }
+  .body p:last-child { margin-bottom: 0; }
+  .body p:nth-child(3n) { filter: blur(0.3px); opacity: 0.9; }
+
+  /* ── EVIDENCE LIST ── */
+  .ev-list { margin: 0; padding: 0; list-style: none; }
+
+  .ev-list li {
+    font-size: 11px;
+    color: #1a1208;
+    line-height: 1.75;
+    padding: 5px 0 5px 20px;
+    border-bottom: 0.5px solid #d0c4a8;
+    position: relative;
+    letter-spacing: 0.01em;
+  }
+
+  .ev-list li:last-child { border-bottom: none; }
+  .ev-list li::before { content: '—'; position: absolute; left: 0; color: #8a7558; }
+  .ev-list li.subtle { color: #3a3020; }
+
+  /* ── REDACTION ── */
+  .r {
+    background: #181210;
+    color: transparent;
+    user-select: none;
+    padding: 0 1px;
+    display: inline;
+  }
+
+  /* ── PAGE FOOTER ── */
+  .page-footer {
+    position: absolute;
+    bottom: 20px;
+    left: 52px;
+    right: 52px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 7.5px;
+    color: #9a8870;
+    letter-spacing: 0.1em;
+    border-top: 0.5px solid #c0ae88;
+    padding-top: 7px;
+    z-index: 1;
+  }
+
+  /* ── NOTE ── */
+  .note {
+    font-style: italic;
+    font-size: 10.5px;
+    color: #5a4a32;
+    line-height: 1.7;
+    margin-top: 8px;
+    padding-left: 12px;
+    border-left: 1px solid #c0ae88;
+  }
+
+  /* page 2 overflow visible so torn image shadow spreads naturally */
+  .page-2 {
+    overflow: visible;
+  }
+
+  /* classification bar */
+  .class-bar {
+    background: #2a2015;
+    padding: 5px 52px;
+    font-size: 8px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c0ae88;
+    text-align: center;
+  }
+
+  /* page break label */
+  .break-label {
+    text-align: center;
+    font-size: 8.5px;
+    letter-spacing: 0.15em;
+    color: #6a5840;
+    text-transform: uppercase;
+    margin: 6px 0 24px;
+  }
+</style>
+</head>
+<body>
+<div class="document">
+
+  <div class="class-bar">Restricted — authorized personnel only — case MH-1998-0014</div>
+
+  <!-- ══════════════ PAGE 1 ══════════════ -->
+  <div class="page">
+    <div class="stain" style="width:95px;height:75px;top:130px;right:28px;background:radial-gradient(ellipse,rgba(120,90,40,0.06),transparent 70%);"></div>
+    <div class="stain" style="width:55px;height:44px;top:380px;left:36px;background:radial-gradient(ellipse,rgba(120,90,40,0.05),transparent 70%);"></div>
+    <div class="stain" style="width:70px;height:58px;bottom:150px;right:40px;background:radial-gradient(ellipse,rgba(120,90,40,0.045),transparent 70%);"></div>
+
+    <div class="stamp stamp-restricted">Restricted</div>
+    <div class="stamp stamp-confidential">Confidential</div>
+    <div class="stamp stamp-copy">Copy — archive</div>
+
+    <div class="page-inner">
+
+      <div class="doc-header">
+        <div class="header-top">
+          <div class="agency-block">
+            <b>West Virginia State Police</b>
+            Troop 3 — Fairmont Detachment<br>
+            Criminal Investigation Division<br>
+            Incident Report — Restricted Distribution
+          </div>
+          <div class="report-title">
+            Incident Report
+            <span class="case-num">Case: MH-1998-0014<br>Classification: Restricted</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fields">
+        <div class="field">
+          <span class="fl">Date of incident</span>
+          <span class="fv">October 14, 1998</span>
+        </div>
+        <div class="field">
+          <span class="fl">Date of report</span>
+          <span class="fv">October 18, 1998</span>
+        </div>
+        <div class="field">
+          <span class="fl">Location</span>
+          <span class="fv">Relay tower — Route 7 access road, Moth Hollow</span>
+        </div>
+        <div class="field">
+          <span class="fl">Reporting officer</span>
+          <span class="fv blurred">Cpl. <span class="r">████████</span> — CID</span>
+        </div>
+        <div class="field">
+          <span class="fl">Related case</span>
+          <span class="fv">Vale, Naomi E. — missing persons — WHLW-1998-001</span>
+        </div>
+        <div class="field">
+          <span class="fl">Investigating officer</span>
+          <span class="fv">Det. <span class="r">██████████</span></span>
+        </div>
+        <div class="field full no-bottom">
+          <span class="fl">Nature of incident</span>
+          <span class="fv">Suspected scene of confrontation — physical evidence recovered — investigation ongoing at time of report</span>
+        </div>
+      </div>
+
+      <div class="sec">Narrative — officer account</div>
+      <div class="body">
+        <p>On the evening of October 17, 1998, a search team was dispatched to the relay tower perimeter on Route 7 following an anonymous tip received by the department on October 16. The tip referenced activity at the tower on the night of October 14 — the date of Naomi Vale's disappearance.</p>
+        <p>Search team arrived on site at approximately 23:00. Conditions were poor — low visibility, no ambient light, ground wet from recent rainfall. A flashlight sweep of the tower perimeter identified several areas of interest including disturbed ground near the maintenance path, evidence of forced or unauthorized access at the tower gate, and physical items requiring collection.</p>
+        <p>One item of particular note was recovered from the left side of the access path approximately eight meters from the tower gate. See evidence inventory below.</p>
+        <p>The site is consistent with a location where a physical confrontation occurred. The nature and circumstances of that confrontation could not be established from physical evidence alone. Witness interviews were initiated — see page 2.</p>
+      </div>
+
+      <div class="sec">Evidence inventory — items recovered at scene</div>
+      <ul class="ev-list">
+        <li>Blood traces — ground surface, tower gate perimeter — type A positive — consistent with Vale, Naomi E. per medical records on file</li>
+        <li>Flashlight — handheld, lens cracked, found approx. 4m from gate — identified as property of Vale, Naomi E. per personal inventory</li>
+        <li>Disturbed ground — area approx. 3m × 2m near maintenance path — consistent with signs of struggle</li>
+        <li>Broken fencing — barbed wire section on north perimeter — recently separated, not weather-related</li>
+        <li class="subtle">Cassette tape casing — clear plastic, standard audio cassette size — found near gate post — no tape inside — casing only — contents absent</li>
+        <li>Partial footprint impression — cast taken — adult male, estimated size 10–11 — does not match Vale's footwear</li>
+        <li>Cigarette stub — <span class="r">████</span> brand — collected for analysis</li>
+      </ul>
+
+      <div class="note">
+        All items bagged and labeled on site. Full chain of custody documentation filed separately under case MH-1998-0014. Evidence bag reference: MH-7734.
+      </div>
+
+    </div>
+
+    <div class="page-footer">
+      <span>WVSP CID — MH-1998-0014 — RESTRICTED</span>
+      <span>Page 1 of 2</span>
+      <span>Do not reproduce</span>
+    </div>
+  </div>
+
+  <div class="break-label">— page 2 —</div>
+
+  <!-- ══════════════ PAGE 2 — TORN BOTTOM ══════════════ -->
+  <div class="page page-2">
+    <div class="stain" style="width:85px;height:68px;top:160px;right:32px;background:radial-gradient(ellipse,rgba(120,90,40,0.055),transparent 70%);"></div>
+    <div class="stain" style="width:60px;height:48px;top:300px;left:38px;background:radial-gradient(ellipse,rgba(120,90,40,0.04),transparent 70%);"></div>
+
+    <div class="stamp stamp-internal">Internal use only</div>
+
+    <div class="page-inner">
+
+      <div class="doc-header" style="margin-bottom:20px;">
+        <div class="header-top">
+          <div class="agency-block">
+            <b>West Virginia State Police — CID</b>
+            Case MH-1998-0014 — continued
+          </div>
+          <div class="report-title">
+            <span class="case-num">Page 2 of 2<br>Restricted</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">Witness interviews — initiated October 19, 1998</div>
+      <div class="body">
+        <p>Following physical evidence collection, the investigating officer identified two individuals for formal interview in connection with the site findings. Interview scheduling was coordinated through the department on October 19, 1998.</p>
+        <p>Interview 1 — <span class="r">████████████████</span> — completed October 19, 1998. Transcript on file. Subject denied knowledge of events at the relay tower on October 14. Subject's account is inconsistent with physical evidence recovered at scene in the following respects: <span class="r">████████████████████████████████████████████████████████</span>.</p>
+        <p>Interview 2 — Dr. Elias Voss — scheduled October 21, 1998. Subject attended voluntarily. Interview transcript filed separately — see AU-003. Subject's responses were noted as <span class="r">██████████████████████████</span> by the interviewing officer. No formal charges were recommended at this stage pending <span class="r">████████████████████████████████████████</span>.</p>
+        <p>Interview process was suspended following a direction from <span class="r">████████████████</span> on October 22, 1998. Reason given: <span class="r">████████████████████████████████████████████████████████████████████████</span>.</p>
+      </div>
+
+      <div class="sec">Preliminary findings</div>
+      <div class="body">
+        <p>Physical evidence at the relay tower site is consistent with the presence of Naomi Vale on the night of October 14, 1998. The evidence further indicates that a second individual was present. The nature of the interaction between the two individuals cannot be formally established from the available record.</p>
+        <p>The absence of Naomi Vale following October 14, and the physical condition of the site, are consistent with <span class="r">████████████████████████████████████████████████████████████████████████████████</span>.</p>
+        <p>This report is submitted as an internal record only. It has not been entered into the official case file for WHLW-1998-001 and does not appear in the public record of that investigation. Distribution is restricted to <span class="r">█████████████████████</span>.</p>
+      </div>
+
+      <div class="sec">Recommendations — investigating officer</div>
+      <div class="body">
+        <p>The investigating officer recommends the following actions prior to case closure:</p>
+        <p>1. Re-interview of all station personnel with knowledge of Dr. Voss's access arrangements at WHLW 88.3, specifically in relation to the archive and after-hours <span class="r">████████████████</span>.</p>
+        <p>2. Formal review of Dr. Voss's consulting agreement with the station and the scope of his authorized access to <span class="r">████████████████████████████</span>.</p>
+        <p>3. Further investigation recommended re: Dr. E</p>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

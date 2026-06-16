@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moth Hollow Sheriff's Department — Witness Statement — Evelyn Pike</title>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --paper: #ede4d2;
+    --paper-dark: #e2d6be;
+    --paper-aged: #d4c8b0;
+    --ink: #1c1610;
+    --ink-faded: #3a3028;
+    --ink-blue: #2a4066;
+    --ink-blue-faded: #3d5580;
+    --stamp-red: #b83a2a;
+    --pencil: #7a6b50;
+    --pencil-light: #9a8b70;
+    --highlight-yellow: rgba(255, 220, 80, 0.4);
+    --correction-red: rgba(160, 40, 20, 0.75);
+  }
+
+  body {
+    background: #b0a898;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 20px;
+    font-family: 'Courier Prime', monospace;
+  }
+
+  .page {
+    width: 850px;
+    background: var(--paper);
+    position: relative;
+    padding: 52px 65px 65px;
+    box-shadow:
+      2px 2px 0 rgba(0,0,0,0.04),
+      4px 4px 0 rgba(0,0,0,0.03),
+      8px 8px 20px rgba(0,0,0,0.2),
+      0 0 0 1px rgba(0,0,0,0.06);
+    overflow: hidden;
+  }
+
+  .page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,0.035) 0%, transparent 3.5%, transparent 96.5%, rgba(0,0,0,0.025) 100%),
+      repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(120,80,30,0.03) 27px, rgba(120,80,30,0.03) 28px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Cigarette burn — bottom right edge */
+  .burn-mark {
+    position: absolute;
+    bottom: 185px;
+    right: 0;
+    width: 28px;
+    height: 22px;
+    background: radial-gradient(ellipse at 80% 50%,
+      #2a1e10 0%,
+      #4a3420 30%,
+      rgba(100,65,20,0.4) 55%,
+      rgba(120,80,30,0.15) 70%,
+      transparent 85%
+    );
+    pointer-events: none;
+    z-index: 5;
+    border-radius: 0 0 0 2px;
+  }
+
+  /* Slight page warp from burn — shadow near edge */
+  .burn-shadow {
+    position: absolute;
+    bottom: 175px;
+    right: 0;
+    width: 55px;
+    height: 40px;
+    background: radial-gradient(ellipse at right center,
+      rgba(80,50,15,0.08) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  /* Tape marks */
+  .tape-mark {
+    position: absolute;
+    height: 20px;
+    background: rgba(200,180,130,0.2);
+    border-top: 1px solid rgba(160,140,100,0.15);
+    border-bottom: 1px solid rgba(160,140,100,0.15);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .tape-tl { top: 0; left: 85px; width: 68px; transform: rotate(-1.5deg); }
+  .tape-tr { top: 0; right: 95px; width: 58px; transform: rotate(1deg); }
+
+  /* Fold crease */
+  .fold-crease {
+    position: absolute;
+    left: 0; right: 0; top: 490px;
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent 5%, rgba(100,80,40,0.1) 15%,
+      rgba(100,80,40,0.16) 50%,
+      rgba(100,80,40,0.1) 85%, transparent 95%
+    );
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .page-inner { position: relative; z-index: 3; }
+
+  /* Margin annotations */
+  .margin-note {
+    position: absolute;
+    font-family: 'Special Elite', cursive;
+    font-size: 9.5px;
+    color: var(--pencil);
+    transform: rotate(-88deg);
+    transform-origin: top left;
+    left: 14px;
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0.7;
+    line-height: 1.4;
+  }
+
+  .watermark {
+    position: absolute;
+    bottom: 200px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Special Elite', cursive;
+    font-size: 50px;
+    color: rgba(0,0,0,0.02);
+    letter-spacing: 8px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 1;
+    user-select: none;
+  }
+
+  /* ============ HEADER ============ */
+  .doc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 10px;
+    margin-bottom: 6px;
+  }
+
+  .agency-id {
+    font-family: 'Special Elite', cursive;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+    line-height: 1.7;
+  }
+
+  .doc-title-block {
+    text-align: center;
+    flex: 1;
+    padding: 0 20px;
+  }
+
+  .doc-title-block .agency {
+    font-family: 'Special Elite', cursive;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: var(--ink);
+    display: block;
+    text-transform: uppercase;
+  }
+
+  .doc-title-block .subdept {
+    font-size: 9px;
+    color: var(--pencil);
+    letter-spacing: 2px;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .doc-title-block .doc-name {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--ink);
+    text-transform: uppercase;
+    margin-top: 6px;
+    display: block;
+    border-top: 1px solid var(--ink-faded);
+    padding-top: 4px;
+  }
+
+  .doc-meta-right {
+    text-align: right;
+    font-size: 9px;
+    color: var(--pencil);
+    line-height: 1.8;
+    letter-spacing: 0.5px;
+  }
+
+  /* ============ WITNESS INFO BAR ============ */
+  .witness-bar {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    border: 1px solid var(--paper-aged);
+    margin: 10px 0 20px;
+  }
+
+  .wb-cell {
+    padding: 6px 10px;
+    border-right: 1px solid var(--paper-aged);
+  }
+  .wb-cell:last-child { border-right: none; }
+
+  .wb-label {
+    font-size: 7.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--pencil);
+    margin-bottom: 3px;
+  }
+
+  .wb-value {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0.3px;
+  }
+
+  .wb-value.handwritten {
+    font-family: 'Special Elite', cursive;
+    font-size: 12px;
+    color: var(--ink-faded);
+    font-weight: normal;
+  }
+
+  /* ============ PREAMBLE ============ */
+  .preamble {
+    font-size: 9px;
+    color: var(--pencil);
+    line-height: 1.6;
+    margin-bottom: 16px;
+    padding: 6px 8px;
+    border-left: 2px solid var(--paper-aged);
+    font-style: italic;
+  }
+
+  /* ============ QUESTIONS / ANSWERS ============ */
+  .section-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--pencil);
+    margin: 14px 0 10px;
+    border-bottom: 1px solid var(--paper-aged);
+    padding-bottom: 3px;
+  }
+
+  .qa-block {
+    margin-bottom: 18px;
+  }
+
+  .question {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--ink-blue-faded);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+  }
+
+  .q-num {
+    font-size: 8px;
+    color: var(--pencil);
+    flex-shrink: 0;
+  }
+
+  .answer {
+    font-family: 'Crimson Pro', serif;
+    font-size: 12px;
+    color: var(--ink-faded);
+    line-height: 1.7;
+    padding: 6px 10px 6px 18px;
+    border-left: 2px solid var(--paper-aged);
+    position: relative;
+  }
+
+  
+
+  /* Handwritten correction — strikethrough original + written replacement */
+  .correction-wrap {
+    display: inline;
+    position: relative;
+  }
+
+  .original {
+    text-decoration: line-through;
+    color: var(--pencil-light);
+    font-style: italic;
+  }
+
+  .correction {
+    font-family: 'Special Elite', cursive;
+    font-size: 11px;
+    color: var(--pencil);
+    margin-left: 4px;
+  }
+
+  /* Pause / stammering indicator */
+  .ellipsis-pause {
+    color: var(--pencil-light);
+    font-style: italic;
+  }
+
+  /* Interviewer interjection */
+  .interviewer-note {
+    font-size: 8.5px;
+    color: var(--pencil-light);
+    font-style: italic;
+    padding-left: 18px;
+    margin-bottom: 6px;
+    margin-top: -4px;
+  }
+
+
+  /* ============ WITNESS DECLARATION ============ */
+  .declaration {
+    font-size: 9px;
+    color: var(--pencil);
+    line-height: 1.7;
+    margin-top: 16px;
+    padding: 8px 10px;
+    border: 1px solid var(--paper-aged);
+    background: rgba(200,185,155,0.08);
+    font-style: italic;
+  }
+
+  /* ============ BOTTOM ============ */
+  .bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: 1px solid var(--paper-aged);
+  }
+
+  .sig-block {
+    font-size: 8.5px;
+    color: var(--pencil);
+    line-height: 1.8;
+  }
+
+  .sig-line {
+    border-bottom: 1px solid var(--ink-faded);
+    width: 150px;
+    height: 18px;
+    margin-bottom: 3px;
+  }
+
+  .sig-written {
+    font-family: 'Special Elite', cursive;
+    font-size: 12px;
+    color: var(--ink);
+    position: relative;
+    top: -4px;
+    left: 4px;
+    letter-spacing: 1px;
+  }
+
+  .stamp-area {
+    transform: rotate(-5deg);
+    opacity: 0.78;
+  }
+
+  .stamp-box {
+    border: 2.5px solid var(--stamp-red);
+    padding: 6px 14px;
+    color: var(--stamp-red);
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .archive-note {
+    text-align: right;
+    font-size: 8px;
+    color: var(--pencil);
+    line-height: 1.7;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="tape-mark tape-tl"></div>
+  <div class="tape-mark tape-tr"></div>
+  <div class="fold-crease"></div>
+  <div class="burn-mark"></div>
+  <div class="burn-shadow"></div>
+  <div class="watermark">MHSD</div>
+
+  <!-- Margin annotations -->
+  <div class="margin-note" style="top: 380px;">time correction</div>
+
+  <div class="page-inner">
+
+    <!-- ===== HEADER ===== -->
+    <div class="doc-header">
+      <div class="agency-id">
+        Moth Hollow Sheriff's Dept.<br>
+        Investigative Division<br>
+        Moth Hollow, WV 26270
+      </div>
+      <div class="doc-title-block">
+        <span class="agency">Moth Hollow Sheriff's Department</span>
+        <span class="subdept">investigative division · witness statement</span>
+        <span class="doc-name">Voluntary Witness Statement — Recorded Interview</span>
+      </div>
+      <div class="doc-meta-right">
+        Form: WS-4 (Rev. 1993)<br>
+        Date of Statement: Oct 16, 1998<br>
+        Interviewing Officer: D. Mercer<br>
+        Statement No.: 1998-209-03
+      </div>
+    </div>
+
+    <!-- ===== WITNESS INFO ===== -->
+    <div class="witness-bar">
+      <div class="wb-cell">
+        <div class="wb-label">Witness Full Name</div>
+        <div class="wb-value handwritten">Evelyn Ruth Pike</div>
+      </div>
+      <div class="wb-cell">
+        <div class="wb-label">Occupation</div>
+        <div class="wb-value" style="font-size:9.5px;">Station Technician, WHLW</div>
+      </div>
+      <div class="wb-cell">
+        <div class="wb-label">Date of Birth</div>
+        <div class="wb-value handwritten">Aug 3, 1961</div>
+      </div>
+      <div class="wb-cell">
+        <div class="wb-label">Statement Voluntary</div>
+        <div class="wb-value handwritten">Yes</div>
+      </div>
+    </div>
+
+    <!-- ===== PREAMBLE ===== -->
+    <div class="preamble">
+      The following statement was provided voluntarily by Ms. Evelyn Pike on October 16, 1998 at Moth Hollow Sheriff's Department. Statement recorded and transcribed. Ms. Pike was not under arrest at the time of this interview. She was advised of her right to have counsel present and declined.
+    </div>
+
+    <!-- ===== Q&A ===== -->
+    <p class="section-label">Statement — Question and Answer Record</p>
+
+    <div class="qa-block">
+      <div class="question"><span class="q-num">Q.1</span> Can you describe the evening of October 13th through the morning of October 14th at the station?</div>
+      <div class="answer">
+        It was a regular shift, mostly. Naomi came in at her usual time — around eight in the evening. I was wrapping up from the afternoon. We talked briefly. She seemed <span class="hl">tired, maybe a little on edge</span>. I didn't think too much of it. She'd been a bit stressed the past few weeks. The phones had been ringing a lot, more than usual. I assumed listener calls — she had regular listeners that called in.
+      </div>
+    </div>
+
+    <div class="qa-block">
+      <div class="question"><span class="q-num">Q.2</span> What time did you leave the station that evening?</div>
+      <div class="answer">
+        I stayed later than I planned. I was running checks on the transmitter log — routine maintenance paperwork. I think I left around <span class="hl"><span class="correction-wrap"><span class="original">9:45</span><span class="correction">around 10, maybe just before</span></span></span>. I remember it was dark and the parking lot lights had come on.
+      </div>
+      <div class="interviewer-note">[Interviewer note: witness corrected initial time estimate during statement]</div>
+    </div>
+
+    <div class="qa-block">
+      <div class="question"><span class="q-num">Q.3</span> Was Naomi Vale still at the station when you left?</div>
+      <div class="answer">
+        No. That's the thing. <span class="hl">She left before I did.</span> Which is odd, because her shift runs until one in the morning, normally. I just assumed she had the overnight programmed to tape, or she'd called someone in. It wasn't my concern — I'm not her supervisor. I locked up the engineering side and left.
+      </div>
+    </div>
+
+    <div class="qa-block">
+      <div class="question"><span class="q-num">Q.4</span> Did you speak with Naomi before she left?</div>
+      <div class="answer">
+        Briefly. She said she had to go. Those were about her exact words — "I have to go." She had her bag already. She looked <span class="ellipsis-pause">...</span> I don't know. She looked like she'd made up her mind about something. I didn't ask. I wish I had.
+      </div>
+    </div>
+
+    <div class="qa-block">
+      <div class="question"><span class="q-num">Q.5</span> Did you notice anything unusual at the station that evening — visitors, vehicles, anything out of the ordinary?</div>
+      <div class="answer">
+        The phones, like I said. They kept ringing even after Naomi was already gone, which was strange, because the overnight line usually goes quiet if no one's on air. And one of the archive room lights was on when I went to check the transmitter log. I turned it off. I don't know who left it on. Could have been anyone.
+      </div>
+    </div>
+
+    <div class="qa-block">
+      <div class="question"><span class="q-num">Q.6</span> Is there anything else you think we should know about Naomi — her state of mind, any concerns she'd expressed recently?</div>
+      <div class="answer">
+        She mentioned once, maybe two weeks before, that she'd found something in the archive room she didn't recognize. Tapes that weren't labeled in the station's format. I told her it was probably old stock from before my time. She didn't bring it up again. <span class="ellipsis-pause">I should have asked more.</span>
+      </div>
+    </div>
+
+    <!-- ===== DECLARATION ===== -->
+    <div class="declaration">
+      I, Evelyn Ruth Pike, confirm that the above statement is true and accurate to the best of my knowledge and recollection. I provide this statement voluntarily and without coercion.
+    </div>
+
+    <!-- ===== BOTTOM ROW ===== -->
+    <div class="bottom-row">
+      <div class="sig-block">
+        <div class="sig-line"><span class="sig-written">Evelyn Pike</span></div>
+        <div>Witness Signature — Evelyn Ruth Pike</div>
+        <div>October 16, 1998</div>
+      </div>
+
+      <div class="sig-block" style="text-align: center;">
+        <div class="sig-line"><span class="sig-written">D. Mercer</span></div>
+        <div>Interviewing Officer — Sheriff D. Mercer</div>
+        <div>October 16, 1998</div>
+      </div>
+
+      <div class="stamp-area">
+        <div class="stamp-box">
+          ARCHIVE<br>
+          COPY<br>
+          1998-MH
+        </div>
+      </div>
+
+      <div class="archive-note" style="align-self: flex-end;">
+        Cold Case Review — Reopened 2026<br>
+        Moth Hollow Sheriff's Department
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

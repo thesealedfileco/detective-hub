@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EV-NEW3 — Voss 1991 — Behavioral Compliance Through Repeated Audio Stimulus</title>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,400;0,600;1,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper:     #f7f3ec;
+    --ink:       #141010;
+    --ink-faded: #2e2828;
+    --ink-light: #6a6060;
+    --border:    #ccc5b5;
+    --pencil:    #8a7060;
+    --highlight: rgba(220,200,100,0.28);
+    --stamp-red: #9a2a1c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #231f1a;
+    font-family: 'Crimson Pro', Georgia, serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  .document {
+    width: 900px;
+    max-width: 100%;
+    position: relative;
+  }
+
+  /* ── PAGE ── */
+  .page {
+    background: var(--paper);
+    padding: 3rem 14rem 3rem 3.4rem;
+    position: relative;
+    margin-bottom: 24px;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.25),
+      3px 5px 16px rgba(0,0,0,0.5),
+      6px 10px 32px rgba(0,0,0,0.35);
+  }
+
+  /* grain overlay */
+  .page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    background-size: 200px;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0.7;
+  }
+
+  /* edge shadow */
+  .page::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 65%, rgba(0,0,0,0.08) 100%);
+    pointer-events: none;
+    z-index: 9;
+  }
+
+  /* ── JOURNAL HEADER ── */
+  .journal-header {
+    text-align: center;
+    border-bottom: 1.5px solid var(--ink);
+    padding-bottom: 10px;
+    margin-bottom: 6px;
+  }
+
+  .journal-name {
+    font-family: 'Crimson Pro', serif;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+  }
+
+  .journal-meta {
+    font-size: 10px;
+    color: var(--ink-light);
+    margin-top: 3px;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── PAPER TITLE BLOCK ── */
+  .paper-title-block {
+    text-align: center;
+    padding: 24px 0 18px;
+    border-bottom: 0.75px solid var(--border);
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .paper-title {
+    font-family: 'Crimson Pro', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.35;
+    margin-bottom: 14px;
+  }
+
+  .paper-subtitle {
+    font-size: 13px;
+    font-style: italic;
+    color: var(--ink-faded);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  .paper-authors {
+    font-size: 12.5px;
+    color: var(--ink-faded);
+    margin-bottom: 4px;
+  }
+
+  .paper-affiliation {
+    font-size: 10.5px;
+    color: var(--ink-light);
+    font-style: italic;
+    margin-bottom: 10px;
+  }
+
+  .paper-dates {
+    font-size: 10px;
+    color: var(--ink-light);
+    letter-spacing: 0.06em;
+  }
+
+  /* ── ABSTRACT ── */
+  .abstract-block {
+    background: rgba(200,197,181,0.15);
+    border: 0.5px solid var(--border);
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .abstract-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 8px;
+  }
+
+  .abstract-text {
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--ink-faded);
+    font-style: italic;
+  }
+
+  .keywords {
+    font-size: 10.5px;
+    color: var(--ink-light);
+    margin-top: 10px;
+  }
+
+  .keywords strong {
+    color: var(--ink-faded);
+    font-weight: 700;
+  }
+
+  /* ── BODY TEXT ── */
+  .paper-body {
+    font-size: 13px;
+    line-height: 1.85;
+    color: var(--ink-faded);
+    position: relative;
+    z-index: 1;
+  }
+
+  .section-num {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 4px;
+    margin-top: 22px;
+  }
+
+  .section-title {
+    font-family: 'Crimson Pro', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  .paper-body p {
+    margin-bottom: 14px;
+  }
+
+  /* highlighted text — Lena's marking */
+  .hl {
+    background: var(--highlight);
+    padding: 0 2px;
+  }
+
+  /* ── HANDWRITTEN ANNOTATIONS ── */
+  .annotation {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--pencil);
+    position: absolute;
+    z-index: 6;
+    pointer-events: none;
+    line-height: 1.5;
+  }
+
+  .ann-margin-1 {
+    right: 2rem;
+    top: 22rem;
+    width: 160px;
+    transform: rotate(1.5deg);
+    font-size: 11px;
+    text-align: left;
+    color: #5a4530;
+  }
+
+  .ann-margin-2 {
+    right: 2rem;
+    top: 36rem;
+    width: 160px;
+    transform: rotate(-1deg);
+    font-size: 11px;
+    color: #5a4530;
+  }
+
+  .ann-margin-3 {
+    right: 2rem;
+    top: 48rem;
+    width: 160px;
+    transform: rotate(0.8deg);
+    font-size: 11px;
+    color: #5a4530;
+  }
+
+  /* underline annotation */
+  .underline-ann {
+    border-bottom: 1.5px solid rgba(130,90,40,0.5);
+    padding-bottom: 1px;
+  }
+
+  /* ── FOOTNOTES ── */
+  .footnotes {
+    border-top: 0.75px solid var(--border);
+    margin-top: 28px;
+    padding-top: 10px;
+    font-size: 10.5px;
+    color: var(--ink-light);
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+  }
+
+  .footnote {
+    margin-bottom: 4px;
+  }
+
+  /* ── PAGE NUMBER / FOOTER ── */
+  .page-foot {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 18px;
+    font-size: 9.5px;
+    color: var(--ink-light);
+    letter-spacing: 0.06em;
+    border-top: 0.5px solid var(--border);
+    padding-top: 7px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── EXCERPT BANNER ── */
+  .excerpt-banner {
+    background: #1e1a14;
+    color: #c8b890;
+    font-family: 'Courier Prime', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 8px 0;
+    margin-bottom: 0;
+  }
+
+  /* ── REDACTION ── */
+  .redacted {
+    background: var(--ink);
+    color: transparent;
+    user-select: none;
+    border-radius: 1px;
+    padding: 0 2px;
+  }
+
+  /* ── COVERSHEET STAMP ── */
+  .coversheet-stamp {
+    position: absolute;
+    top: 2.2rem;
+    right: 3rem;
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--stamp-red);
+    border: 1.5px solid var(--stamp-red);
+    padding: 4px 8px;
+    text-transform: uppercase;
+    transform: rotate(-6deg);
+    opacity: 0.6;
+    z-index: 5;
+    pointer-events: none;
+    line-height: 1.6;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="document">
+
+  <!-- EXCERPT BANNER -->
+  <div class="excerpt-banner">
+    Recovered excerpt — pages 1, 4–6 of 22 &nbsp;·&nbsp; Source: WVU Library Archive Request LH-2007-03
+  </div>
+
+  <!-- PAGE 1 — TITLE PAGE -->
+  <div class="page">
+
+    <div class="coversheet-stamp">
+      Lena Hart<br>
+      Feb 2007<br>
+      WVU Library
+    </div>
+
+    <div class="journal-header">
+      <div class="journal-name">Journal of Applied Behavioral Psychology</div>
+      <div class="journal-meta">Vol. 14, No. 2 &nbsp;·&nbsp; 1991 &nbsp;·&nbsp; pp. 118–139 &nbsp;·&nbsp; ISSN 0748-2410</div>
+    </div>
+
+    <div class="paper-title-block">
+      <div class="paper-title">Behavioral Compliance Through Repeated Audio Stimulus:<br>A Controlled Field Study in Non-Clinical Populations</div>
+      <div class="paper-subtitle">Examining threshold response, habituation patterns, and sustained compliance effects in passive-exposure subjects</div>
+      <div class="paper-authors">Elias M. Voss, Ph.D. &nbsp;&nbsp;·&nbsp;&nbsp; Raymond A. Pruitt, M.D.</div>
+      <div class="paper-affiliation">Department of Applied Psychology, West Virginia University<br>Correspondence: E. Voss, Dept. of Applied Psychology, PO Box 6040, Morgantown WV 26506</div>
+      <div class="paper-dates">Received: January 14, 1991 &nbsp;·&nbsp; Accepted: March 29, 1991 &nbsp;·&nbsp; Published: June 1991</div>
+    </div>
+
+    <div class="abstract-block">
+      <div class="abstract-label">Abstract</div>
+      <div class="abstract-text">
+        This study examines the degree to which <span class="hl">repeated exposure to structured audio stimulus — delivered passively through ambient broadcast media — produces measurable changes in behavioral compliance and affective response</span> in non-clinical adult populations. Across a 24-month field observation period, subjects with sustained passive exposure to a specifically calibrated tonal program demonstrated statistically significant increases in compliance index scores, reduced resistance thresholds, and altered baseline affect when compared to control groups with no exposure. <span class="hl">Results suggest that ambient audio conditioning, when applied consistently across extended periods, may produce durable behavioral modification without subject awareness or active participation.</span> Ethical and regulatory implications are discussed.
+      </div>
+      <div class="keywords"><strong>Keywords:</strong> behavioral compliance, audio conditioning, passive exposure, ambient stimulus, non-clinical population, tonal habituation, affective response</div>
+    </div>
+
+    <div class="paper-body">
+      <div class="section-num">1.</div>
+      <div class="section-title">Introduction</div>
+      <p>The relationship between repeated sensory stimulus and behavioral modification has been a subject of sustained academic interest since the foundational work of Pavlov (1927) and Skinner (1938). While classical and operant conditioning paradigms have been extensively studied in clinical and laboratory settings, the application of conditioning principles to ambient, non-targeted populations through broadcast media remains comparatively underexplored. The present study addresses this gap.</p>
+      <p>Our central hypothesis is that <span class="hl">structured tonal patterns, embedded within otherwise standard broadcast content and delivered over sustained periods, are capable of producing measurable compliance effects in passive listeners</span> — that is, individuals who receive the stimulus without awareness of its conditioning function. Unlike laboratory-based paradigms, our methodology employs a naturalistic field setting: a regional FM broadcast signal received by a geographically bounded population over a 24-month observation window.</p>
+      <p>We define "compliance" in behavioral terms as <span class="hl underline-ann">the reduction of active resistance to externally suggested behavior, measured through standardized response instruments administered without disclosure of the study's purpose to subjects.</span> This definition deliberately excludes conscious compliance — our interest is in the pre-attentive, sub-voluntary layer of behavioral response that we hypothesize is directly accessible through repeated ambient stimulus.</p>
+    </div>
+
+    <div class="footnotes">
+      <div class="footnote">¹ All field observation protocols approved under IRB waiver application WVU-89-117. Subject populations were not individually identifiable; broadcast signal reception constitutes a public, ambient medium under applicable federal guidelines at time of study.</div>
+      <div class="footnote">² Co-author R. Pruitt contributed to statistical analysis methodology. Primary study design, implementation, and field coordination: E. Voss.</div>
+    </div>
+
+    <div class="page-foot">
+      <span>J. Applied Behavioral Psychology &nbsp;·&nbsp; Vol. 14, No. 2 &nbsp;·&nbsp; 1991</span>
+      <span>118</span>
+    </div>
+
+    <!-- MARGIN ANNOTATIONS — Lena's handwriting -->
+    <div class="annotation ann-margin-1">
+      "without awareness" —<br>this is the whole thing.<br>they didn't know.
+    </div>
+
+  </div>
+
+  <!-- PAGES 4–6 EXCERPT -->
+  <div class="page">
+
+    <div class="paper-body">
+
+      <div class="section-num">4.</div>
+      <div class="section-title">Methodology — Field Implementation</div>
+
+      <p>The broadcast medium selected for implementation was a low-power regional FM station operating on a standard FCC community license. The station's overnight programming slot — defined here as 11:00 PM to 4:00 AM — was selected as the primary delivery window on the basis of three factors: <span class="hl">(a) reduced competing signal interference during overnight hours; (b) a consistent and geographically stable listener base; and (c) the availability of a dedicated auxiliary input channel that could carry the conditioning program independently of the primary broadcast content.</span></p>
+
+      <p>The conditioning stimulus consisted of a proprietary tonal sequence developed by the primary author across the period 1988–1990. The sequence operates at frequencies between 180–220 Hz, embedded beneath standard audio content at an amplitude ratio of approximately 1:14 — that is, <span class="hl">the conditioning layer is present in the broadcast signal but not consciously perceptible to a listener attending to the primary content.</span> Tonal patterns were structured in eight-minute cycles with a four-minute interval, repeated across each broadcast session.</p>
+
+      <p><span class="hl underline-ann">The auxiliary input channel was configured independently of the station's standard broadcast chain, allowing the conditioning program to run without modification to or awareness of the primary broadcast content by station personnel.</span> Standard broadcast operations continued without interruption. Cooperation of the station's ownership was obtained through a research consulting arrangement; <span class="hl">operational personnel were not informed of the study's function.</span></p>
+
+      <div class="section-num">5.</div>
+      <div class="section-title">Results — Compliance Index at 12 and 24 Months</div>
+
+      <p>Compliance index scores were collected at baseline (Month 0), Month 12, and Month 24 using the Standardized Behavioral Compliance Inventory (SBCI-R), administered by field researchers under the cover of an unrelated community survey instrument. The exposed population (n=<span class="redacted">███</span>) demonstrated the following mean SBCI-R score changes relative to the unexposed control group (n=<span class="redacted">███</span>):</p>
+
+      <p>At Month 12: exposed group mean SBCI-R score <strong>+18.4 points</strong> above control baseline (p&lt;0.001). At Month 24: <strong>+31.7 points</strong> above control baseline (p&lt;0.001). <span class="hl">The effect size at 24 months (Cohen's d = 1.42) is notably large for a passive-exposure paradigm and suggests that sustained ambient conditioning produces cumulative rather than plateau effects over the observed window.</span> Subjects showing highest compliance gains were those with estimated overnight broadcast exposure of four or more sessions per week.</p>
+
+      <div class="section-num">6.</div>
+      <div class="section-title">Discussion</div>
+
+      <p>The results of the present study offer strong preliminary support for the hypothesis that <span class="hl">structured ambient audio stimulus, delivered passively through a broadcast medium over an extended period, produces durable and statistically significant behavioral compliance effects in non-clinical populations.</span> These effects appear to be cumulative, dose-dependent, and — critically — not attributable to conscious awareness of the stimulus on the part of subjects.</p>
+
+      <p>The ethical implications of this finding are substantial and deserve direct consideration. The present study was conducted under IRB waiver on the basis that broadcast reception constitutes a public ambient medium; however, <span class="hl underline-ann">the authors acknowledge that the application of behavioral conditioning techniques to a non-consenting population raises questions that existing regulatory frameworks do not fully address.</span> It is the position of this paper that such frameworks require revision.</p>
+
+      <p>It is further noted that the durability of observed effects — compliance index scores remaining elevated at the study's 24-month measurement point with no evidence of plateau — raises the possibility that extended conditioning programs of greater duration than studied here could produce effects of considerably greater magnitude. <span class="hl">The study's termination at 24 months was a function of practical constraints rather than a conclusion that the conditioning effect had reached its maximum.</span> Further longitudinal study is warranted.</p>
+
+    </div>
+
+    <!-- MARGIN ANNOTATIONS -->
+    <div class="annotation ann-margin-1">
+      "not informed" —<br>Evelyn? Greer?<br>who knew??
+    </div>
+    <div class="annotation ann-margin-2">
+      31 points in 2 yrs.<br>what about 4?
+    </div>
+    <div class="annotation ann-margin-3">
+      "practical constraints"<br>= he wasn't done.<br>he kept going.
+    </div>
+
+    <div class="footnotes">
+      <div class="footnote">¹¹ Sample sizes withheld from publication at the request of the cooperating broadcast licensee as a condition of the research agreement. Full data on file with the Department of Applied Psychology, WVU. IRB waiver application WVU-89-117.</div>
+      <div class="footnote">¹² SBCI-R instrument (Voss & Pruitt, 1989) available upon request from corresponding author. Instrument validation data published separately: Voss, E.M. (1990). J. Psychometric Methods, 8(1), 44–58.</div>
+    </div>
+
+    <div class="page-foot">
+      <span>J. Applied Behavioral Psychology &nbsp;·&nbsp; Vol. 14, No. 2 &nbsp;·&nbsp; 1991</span>
+      <span>121–123 [excerpt]</span>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

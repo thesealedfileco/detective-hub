@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EV-009 — Archived Forum Threads — Moth Hollow Community Board</title>
+<link href="https://fonts.googleapis.com/css2?family=Verdana&family=Courier+New&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #b0b8c8;
+    padding: 30px 16px 50px;
+    min-height: 100vh;
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 12px;
+  }
+
+  .evidence-label {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #2a3a52;
+    background: #c8d0dc;
+    border: 1px solid #8a9ab0;
+    padding: 4px 10px;
+    display: inline-block;
+    margin-bottom: 6px;
+  }
+
+  /* ── BROWSER CHROME ── */
+
+  .browser-chrome {
+    background: #d4d0c8;
+    border: 2px solid #7a7a7a;
+    border-bottom: none;
+    box-shadow: 2px 2px 0 #888, inset 1px 1px 0 #fff, inset -1px -1px 0 #999;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .browser-titlebar {
+    background: linear-gradient(to bottom, #0a246a, #3a6ea5);
+    padding: 3px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .browser-title-text {
+    color: white;
+    font-size: 11px;
+    font-family: 'Trebuchet MS', Arial, sans-serif;
+    font-weight: bold;
+  }
+
+  .browser-controls {
+    display: flex;
+    gap: 2px;
+  }
+
+  .browser-btn {
+    width: 16px;
+    height: 14px;
+    background: #d4d0c8;
+    border: 1px solid #888;
+    border-top-color: #fff;
+    border-left-color: #fff;
+    font-size: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1a1a1a;
+    font-family: monospace;
+    box-shadow: inset -1px -1px 0 #999;
+  }
+
+  .browser-toolbar {
+    background: #d4d0c8;
+    padding: 4px 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border-bottom: 1px solid #999;
+  }
+
+  .toolbar-btn {
+    background: #d4d0c8;
+    border: 1px solid #888;
+    border-top-color: #fff;
+    border-left-color: #fff;
+    padding: 1px 6px;
+    font-size: 10px;
+    font-family: Arial, sans-serif;
+    color: #1a1a1a;
+    box-shadow: inset -1px -1px 0 #999;
+    cursor: default;
+  }
+
+  .toolbar-btn.disabled { color: #999; }
+
+  .address-bar {
+    flex: 1;
+    background: white;
+    border: 1px solid #888;
+    border-top-color: #555;
+    border-left-color: #555;
+    padding: 1px 4px;
+    font-size: 11px;
+    font-family: 'Courier New', monospace;
+    color: #1a1a1a;
+  }
+
+  .wayback-bar {
+    background: #fff3a0;
+    border-bottom: 1px solid #c8b800;
+    padding: 5px 12px;
+    font-size: 10px;
+    font-family: Arial, sans-serif;
+    color: #3a3000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  /* ── FORUM SHELL ── */
+
+  .forum-page {
+    background: #e8e8e8;
+    border: 2px solid #7a7a7a;
+    border-top: none;
+    box-shadow: 2px 2px 0 #888;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  /* Forum header */
+  .forum-header {
+    background: #1a3a6a;
+    padding: 10px 16px 8px;
+    border-bottom: 3px solid #4a7ab0;
+  }
+
+  .forum-site-name {
+    font-family: 'Trebuchet MS', Arial, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    color: #e0ecf8;
+    letter-spacing: 0.03em;
+  }
+
+  .forum-site-tagline {
+    font-size: 10px;
+    color: #8ab0d0;
+    margin-top: 2px;
+  }
+
+  /* Forum nav */
+  .forum-nav {
+    background: #2a5490;
+    padding: 4px 16px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    border-bottom: 1px solid #4a7ab0;
+  }
+
+  .forum-nav a {
+    color: #c0d8f0;
+    font-size: 11px;
+    text-decoration: none;
+    cursor: default;
+  }
+
+  .forum-nav a:hover { color: white; text-decoration: underline; }
+
+  .forum-nav-sep {
+    color: #4a7ab0;
+    font-size: 11px;
+  }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    background: #e0e4ec;
+    border-bottom: 1px solid #c0c8d8;
+    padding: 5px 16px;
+    font-size: 10px;
+    color: #444;
+  }
+
+  .breadcrumb a { color: #1a3a8a; text-decoration: none; cursor: default; }
+  .breadcrumb a:hover { text-decoration: underline; }
+
+  /* Archive notice */
+  .archive-notice {
+    background: #fff8e0;
+    border-bottom: 1px solid #d8c060;
+    border-left: 3px solid #b09020;
+    padding: 6px 16px;
+    font-size: 10px;
+    color: #4a3800;
+  }
+
+  /* Thread list index */
+  .thread-index {
+    background: white;
+    border-bottom: 2px solid #c0c8d8;
+    padding: 10px 16px;
+  }
+
+  .thread-index-title {
+    font-size: 11px;
+    font-weight: bold;
+    color: #1a3a6a;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .thread-index-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+  }
+
+  .thread-index-table thead tr {
+    background: #d0d8e8;
+  }
+
+  .thread-index-table th {
+    padding: 4px 8px;
+    text-align: left;
+    font-size: 10px;
+    color: #1a3a6a;
+    border: 1px solid #b0b8c8;
+    font-weight: bold;
+  }
+
+  .thread-index-table td {
+    padding: 4px 8px;
+    border: 1px solid #c8d0dc;
+    vertical-align: top;
+  }
+
+  .thread-index-table tr:nth-child(even) td { background: #f4f6fa; }
+
+  .thread-link {
+    color: #1a3a8a;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: default;
+    font-size: 11px;
+  }
+
+  .thread-link:hover { text-decoration: underline; }
+
+  .thread-active { color: #1a3a6a; font-weight: bold; background: #e8eef8; }
+
+  /* ── INDIVIDUAL THREAD ── */
+
+  .thread-section {
+    border-bottom: 3px solid #b0b8c8;
+    background: white;
+  }
+
+  .thread-header-bar {
+    background: #d0d8e8;
+    border-bottom: 1px solid #b0b8c8;
+    border-top: 1px solid #c0c8d8;
+    padding: 6px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .thread-title-display {
+    font-size: 13px;
+    font-weight: bold;
+    color: #1a3a6a;
+  }
+
+  .thread-meta-line {
+    font-size: 10px;
+    color: #666;
+  }
+
+  /* Post row */
+  .post-row {
+    display: flex;
+    border-bottom: 1px solid #e0e4ec;
+  }
+
+  .post-row:last-child { border-bottom: none; }
+
+  /* Left user card */
+  .post-usercard {
+    width: 130px;
+    flex-shrink: 0;
+    background: #f0f4f8;
+    border-right: 1px solid #d0d8e4;
+    padding: 10px 8px;
+    text-align: center;
+    font-size: 10px;
+    color: #444;
+  }
+
+  .user-avatar {
+    width: 50px;
+    height: 50px;
+    background: #d0d8e8;
+    border: 1px solid #b0b8c8;
+    margin: 0 auto 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: #888;
+    font-family: Arial, sans-serif;
+  }
+
+  .user-avatar.custom {
+    background: #c8d4e4;
+  }
+
+  .username {
+    font-weight: bold;
+    color: #1a3a8a;
+    font-size: 11px;
+    display: block;
+    margin-bottom: 4px;
+    word-break: break-word;
+  }
+
+  .user-stats {
+    font-size: 9px;
+    color: #666;
+    line-height: 1.7;
+    margin-top: 4px;
+    text-align: left;
+    border-top: 1px dotted #c8d0dc;
+    padding-top: 4px;
+  }
+
+  .user-rank {
+    font-size: 9px;
+    color: #8a5a00;
+    background: #fff0c0;
+    border: 1px solid #d0a030;
+    padding: 1px 4px;
+    display: inline-block;
+    margin-bottom: 3px;
+  }
+
+  /* Post body */
+  .post-content {
+    flex: 1;
+    padding: 10px 14px;
+    min-width: 0;
+  }
+
+  .post-timestamp {
+    font-size: 10px;
+    color: #888;
+    border-bottom: 1px solid #e8ecf4;
+    padding-bottom: 6px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .post-num {
+    font-size: 10px;
+    color: #888;
+    font-family: 'Courier New', monospace;
+  }
+
+  .post-text {
+    font-size: 11.5px;
+    line-height: 1.68;
+    color: #1a1a1a;
+  }
+
+  .post-text p { margin-bottom: 9px; }
+  .post-text p:last-child { margin-bottom: 0; }
+
+  /* Quote block */
+  .quote-block {
+    border-left: 3px solid #6a8fc8;
+    background: #f0f4fa;
+    padding: 6px 10px;
+    margin: 8px 0;
+    font-size: 11px;
+    color: #444;
+    line-height: 1.5;
+  }
+
+  .quote-attr {
+    font-size: 10px;
+    color: #6a8fc8;
+    font-weight: bold;
+    margin-bottom: 3px;
+  }
+
+  .post-sig {
+    border-top: 1px dotted #c8d0dc;
+    margin-top: 10px;
+    padding-top: 6px;
+    font-size: 10px;
+    color: #888;
+    font-style: italic;
+  }
+
+  /* Deleted post */
+  .post-deleted {
+    background: #f8f4f0;
+    border-bottom: 1px solid #e0d8d0;
+    padding: 8px 16px 8px 148px;
+    font-size: 10px;
+    color: #aaa;
+    font-style: italic;
+  }
+
+  /* Thread footer */
+  .thread-footer-bar {
+    background: #d0d8e8;
+    border-top: 1px solid #b0b8c8;
+    padding: 5px 16px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #555;
+  }
+
+  /* ── PAGE FOOTER ── */
+
+  .forum-footer {
+    background: #1a3a6a;
+    padding: 8px 16px;
+    font-size: 10px;
+    color: #6a90b8;
+    text-align: center;
+  }
+
+  .browser-statusbar {
+    background: #d4d0c8;
+    border-top: 1px solid #999;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-family: Arial, sans-serif;
+    color: #444;
+    display: flex;
+    justify-content: space-between;
+    max-width: 860px;
+    margin: 0 auto;
+    border: 2px solid #7a7a7a;
+    border-top: none;
+    box-shadow: 2px 2px 0 #888;
+  }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .browser-chrome, .forum-page, .browser-statusbar { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="evidence-label">EV-009 &nbsp;·&nbsp; Archived Forum Screenshots &nbsp;·&nbsp; WV Community Boards &nbsp;·&nbsp; Recovered 2026</div>
+
+<!-- BROWSER CHROME -->
+<div class="browser-chrome">
+  <div class="browser-titlebar">
+    <div class="browser-title-text">WV Community Boards — Moth Hollow Regional — Windows Internet Explorer</div>
+    <div class="browser-controls">
+      <div class="browser-btn">_</div>
+      <div class="browser-btn">□</div>
+      <div class="browser-btn">✕</div>
+    </div>
+  </div>
+  <div class="browser-toolbar">
+    <div class="toolbar-btn disabled">← Back</div>
+    <div class="toolbar-btn disabled">→ Fwd</div>
+    <div class="toolbar-btn">Stop</div>
+    <div class="toolbar-btn">Refresh</div>
+    <div class="toolbar-btn">Home</div>
+    <div class="address-bar">http://www.wvcommunityboards.net/regional/mothhollow/</div>
+    <div class="toolbar-btn">Go</div>
+  </div>
+</div>
+
+<div class="wayback-bar">
+  ⚑ &nbsp;<strong>Archived Pages.</strong> &nbsp;Three threads captured across multiple archive dates. &nbsp;Some content may be incomplete or unavailable. &nbsp;<span style="color:#888;">[Retrieved for case file reference — Sealed File Archive, 2026]</span>
+</div>
+
+<!-- FORUM PAGE -->
+<div class="forum-page">
+
+  <!-- HEADER -->
+  <div class="forum-header">
+    <div class="forum-site-name">WV Community Boards</div>
+    <div class="forum-site-tagline">West Virginia Regional Discussion &nbsp;·&nbsp; Est. 1999 &nbsp;·&nbsp; Free to register, free to post</div>
+  </div>
+
+  <div class="forum-nav">
+    <a href="#">Home</a><span class="forum-nav-sep">|</span>
+    <a href="#">Forums</a><span class="forum-nav-sep">|</span>
+    <a href="#">Regional</a><span class="forum-nav-sep">|</span>
+    <a href="#">Moth Hollow</a><span class="forum-nav-sep">|</span>
+    <a href="#">Search</a><span class="forum-nav-sep">|</span>
+    <a href="#">Register</a><span class="forum-nav-sep">|</span>
+    <a href="#">Login</a>
+  </div>
+
+  <div class="breadcrumb">
+    <a href="#">WV Community Boards</a> &rsaquo; <a href="#">Regional Discussion</a> &rsaquo; <a href="#">Nicholas County &amp; Surrounds</a> &rsaquo; Moth Hollow
+  </div>
+
+  <div class="archive-notice">
+    Showing 3 of 47 threads recovered from this board section. &nbsp;Remaining threads: unavailable or corrupted in archive.
+  </div>
+
+  <!-- THREAD INDEX -->
+  <div class="thread-index">
+    <div class="thread-index-title">Moth Hollow Regional — Recovered Threads</div>
+    <table class="thread-index-table">
+      <thead>
+        <tr>
+          <th style="width:50%;">Thread Title</th>
+          <th style="width:15%;">Started by</th>
+          <th style="width:10%;">Replies</th>
+          <th style="width:25%;">Last Post</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="thread-active">
+          <td><a href="#thread1" class="thread-link">Weird broadcasts near Moth Hollow — anyone else?</a></td>
+          <td>creekside_k</td>
+          <td>19</td>
+          <td>Feb 8, 2004 — creekside_k</td>
+        </tr>
+        <tr>
+          <td><a href="#thread2" class="thread-link">Missing: Lena Hart (2007) — anyone remember her?</a></td>
+          <td>notredones</td>
+          <td>6</td>
+          <td>Nov 3, 2014 — notredones</td>
+        </tr>
+        <tr>
+          <td><a href="#thread3" class="thread-link">Moth Hollow — what actually happened to this town?</a></td>
+          <td>appalachian_r</td>
+          <td>31</td>
+          <td>Mar 19, 2009 — hollow_local88</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- THREAD 1 — WEIRD BROADCASTS               -->
+  <!-- ══════════════════════════════════════════ -->
+
+  <div id="thread1" class="thread-section">
+    <div class="thread-header-bar">
+      <div>
+        <div class="thread-title-display">Weird broadcasts near Moth Hollow — anyone else?</div>
+        <div class="thread-meta-line">Started by <strong>creekside_k</strong> &nbsp;·&nbsp; October 14, 2003 &nbsp;·&nbsp; Nicholas County &amp; Surrounds</div>
+      </div>
+      <div class="thread-meta-line">19 replies &nbsp;·&nbsp; 4,381 views</div>
+    </div>
+
+    <!-- Post 1 -->
+    <div class="post-row">
+      <div class="post-usercard">
+        <div class="user-avatar">[ img ]</div>
+        <span class="username">creekside_k</span>
+        <div class="user-rank">Regular</div>
+        <div class="user-stats">
+          Posts: 204<br>
+          Joined: Mar 2001<br>
+          Location: Summersville
+        </div>
+      </div>
+      <div class="post-content">
+        <div class="post-timestamp">
+          <span>October 14, 2003 &nbsp;·&nbsp; 9:47 PM</span>
+          <span class="post-num">#1</span>
+        </div>
+        <div class="post-text">
+          <p>Okay so this might sound weird but bear with me. My cousin lives out past the Flat Fork Road area and she's been telling me for a few months now that she keeps hearing something on the radio late at night. Not a voice, more like a humming underneath the normal broadcast. She said it was happening most on 88.3 back before the station went dark.</p>
+          <p>I told her it was probably just interference from the relay tower and she said no, it's not that kind of noise. It's like it's part of the signal. Patterned, almost. She said it made her feel like she was supposed to do something but she didn't know what.</p>
+          <p>Has anyone else around the Moth Hollow area had anything like this? I know the station shut down a few years back but I'm curious if this is a known thing or if my cousin is just being weird lol</p>
+        </div>
+        <div class="post-sig">— kendra &nbsp;|&nbsp; "appalachia isn't haunted it just has good acoustics"</div>
+      </div>
+    </div>
+
+    <!-- Post 2 -->
+    <div class="post-row">
+      <div class="post-usercard">
+        <div class="user-avatar">[ img ]</div>
+        <span class="username">wvhiker_dan</span>
+        <div class="user-rank">Member</div>
+        <div class="user-stats">
+          Posts: 57<br>
+          Joined: Jan 2002<br>
+          Location: Marlinton
+        </div>
+      </div>
+      <div class="post-content">
+        <div class="post-timestamp">
+          <span>October 15, 2003 &nbsp;·&nbsp; 8:12 AM</span>
+          <span class="post-num">#2</span>
+        </div>
+        <div class="post-text">
+          <p>I used to listen to WHLW late at night when I was doing long drives through that area. There was definitely something unusual about the signal in the last year or so before it went quiet. I always assumed it was tower degradation. The relay infrastructure out there is old.</p>
+          <p>What your cousin said about feeling like she was supposed to do something — that's a strange description but I kind of know what she means. It was more like a feeling than a sound.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 3 -->
+    <div class="post-row">
+      <div class="post-usercard">
+        <div class="user-avatar">[ img ]</div>
+        <span class="username">nicholas_co_native</span>
+        <div class="user-rank">Member</div>
+        <div class="user-stats">
+          Posts: 122<br>
+          Joined: Sep 2000<br>
+          Location: Summersville
+        </div>
+      </div>
+      <div class="post-content">
+        <div class="post-timestamp">
+          <span>October 15, 2003 &nbsp;·&nbsp; 11:33 AM</span>
+          <span class="post-num">#3</span>
+        </div>
+        <div class="post-text">
+          <p>I grew up about four miles from that tower. The humming was just a thing people knew about. You got used to it. Some people didn't notice it at all, others were more sensitive to it I guess. My mom used to turn the radio off after midnight specifically because of it.</p>
+          <p>I don't know if it was always there or if it changed. Hard to say now. Everything about that station feels different in retrospect after the thing with that woman who went missing.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 4 -->
+    <div class="post-row">
+      <div class="post-usercard">
+        <div class="user-avatar">[ img ]</div>
+        <span class="username">late_nite_lurker</span>
+        <div class="user-rank">New Member</div>
+        <div class="user-stats">
+          Posts: 8<br>
+          Joined: Oct 2003<br>
+          Location: —
+        </div>
+      </div>
+      <div class="post-content">
+        <div class="post-timestamp">
+          <span>October 17, 2003 &nbsp;·&nbsp; 1:14 AM</span>
+          <span class="post-num">#4</span>
+        </div>
+        <div class="post-text">
+          <p>i used to call in to that show. the overnight one. the host was nice, she remembered your name if you called more than once. the humming was definitely louder on that show than any other time slot. i started noticing that maybe six months before the station went quiet.</p>
+          <p>it gets louder near the tower. everyone i knew who lived close to it said the same thing. i just thought it was normal.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 5 -->
+    <div class="post-row">
+      <div class="post-usercard">
+        <div class="user-avatar">[ img ]</div>
+        <span class="username">creekside_k</span>
+        <div class="user-rank">Regular</div>
+        <div class="user-stats">
+          Posts: 204<br>
+          Joined: Mar 2001<br>
+          Location: Summersville
+        </div>
+      </div>
+      <div class="post-content">
+        <div class="post-timestamp">
+          <span>October 18, 2003 &nbsp;·&nbsp; 7:55 PM</span>
+          <span class="post-num">#5</span>
+        </div>
+        <div class="post-text">
+          <p>Thanks everyone. @nicholas_co_native the thing about the missing woman — was that the radio host? Naomi something? My cousin mentioned that too but didn't know the details.</p>
+          <p>@late_nite_lurker that's interesting that you called in. Do you remember anything specific about the content of the show or what topics she covered?</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 6 -->
+    <div class="post-row">
+      <div class="post-usercard">
+        <div class="user-avatar">[ img ]</div>
+        <span class="username">late_nite_lurker</span>
+        <div class="user-rank">New Member</div>
+        <div class="user-stats">
+          Posts: 8<br>
+          Joined: Oct 2003<br>
+          Location: —
+        </div>
+      </div>
+      <div class="post-content">
+        <div class="post-timestamp">
+          <span>October 19, 2003 &nbsp;·&nbsp; 2:08 AM</span>
+          <span class="post-num">#6</span>
+        </div>
+        <div class="post-text">
+          <p>nothing specific. she would play music, take calls, do local news segments. pretty normal format. but something about it made you want to listen all the way through. like you were waiting for something even if you didn't know what.</p>
+          <p>i remember talking to other people who listened and using the same words to describe it. we all said the same things and didn't notice we were doing it. i only realized that later.</p>
+          <p>it gets louder near the tower. i know i already said that. i just keep thinking about it.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- deleted posts -->
+    <div class="post-deleted">[Posts #7–#14 — content unavailable in archive]</div>
+
+    <!-- Post 15 -->
+    <div class="post-row">
+      <div class="post-usercard">
+        <div class="user-avatar">[ img ]</div>
+        <span class="username">appalachian_r</span>
+        <div class="user-rank">Senior Member</div>
+        <div class="user-stats">
+          Posts: 891<br>
+          Joined: Nov 1999<br>
+          Location: Lewisburg
+        </div>
+      </div>
+      <div class="post-content">
+        <div class="post-timestamp">
+          <span>January 4, 2004 &nbsp;·&nbsp; 3:41 PM</span>
+          <span class="post-num">#15</span>
+        </div>
+        <div class="post-text">
+          <p>Coming to this thread late but I want to add something. I have a friend who worked briefly in radio engineering around that region in the late 90s — not at WHLW specifically but he knew people there. He told me once that someone brought in a "consultant" to work on the programming during that period who was not a radio person. Not an audio engineer, not a music director. He didn't know what the person actually did. He said it felt out of place.</p>
+          <p>I have no idea if that's connected to any of this. Probably not. But this thread reminded me of it.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 16 -->
+    <div class="post-row">
+      <div class="post-usercard">
+        <div class="user-avatar">[ img ]</div>
+        <span class="username">nicholas_co_native</span>
+        <div class="user-rank">Member</div>
+        <div class="user-stats">
+          Posts: 122<br>
+          Joined: Sep 2000<br>
+          Location: Summersville
+        </div>
+      </div>
+      <div class="post-content">
+        <div class="post-timestamp">
+          <span>January 5, 2004 &nbsp;·&nbsp; 10:14 AM</span>
+          <span class="post-num">#16</span>
+        </div>
+        <div class="post-text">
+          <p>That's interesting @appalachian_r. A non-radio consultant working on programming. That would be unusual.</p>
+          <p>Every time I drive through that area now I think about the tower. It gets louder near the tower. I don't know why I keep saying that. I heard someone else say it in this thread and now I can't stop thinking it.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="post-deleted">[Posts #17–#19 — content unavailable in archive]</div>
+
+    <div class="thread-footer-bar">
+      <span>Thread: <strong>Weird broadcasts near Moth Hollow — anyone else?</strong> &nbsp;·&nbsp; 19 replies</span>
+      <span>Last post: February 8, 2004</span>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- THREAD 2 — MISSING: LENA HART             -->
+  <!-- ══════════════════════════════════════════ -->
+
+  <div id="thread2" class="thread-section">
+    <div class="thread-header-bar">
+      <div>
+        <div class="thread-title-display">Missing: Lena Hart (2007) — anyone remember her?</div>
+        <div class="thread-meta-line">Started by <strong>notredones</strong> &nbsp;·&nbsp; March 2, 2008 &nbsp;·&nbsp; Nicholas County &amp; Surrounds</div>
+      </div>
+      <div class="thread-meta-line">6 replies &nbsp;·&nbsp; 312 views</div>
+    </div>
+
+    <!-- Post 1 -->
+    <div class="post-row">
+      <div class="post-usercard">
+        <div class="user-avatar custom">[ img ]</div>
+        <span class="username">notredones</span>
+        <div class="user-rank">New Member</div>
+        <div class="user-stats">
+          Posts: 4<br>
+          Joined: Mar 2008<br>
+          Location: —
+        </div>
+      </div>
+      <div class="post-content">
+        <div class="post-timestamp">
+          <span>March 2, 2008 &nbsp;·&nbsp; 11:58 PM</span>
+          <span class="post-num">#1</span>
+        </div>
+        <div class="post-text">
+          <p>I'm looking for anyone who might have known or had contact with a woman named Lena Hart. She went missing in early 2007. She had been running a blog called Notes from Nowhere about the disappearance of a radio host named Naomi Vale in Moth Hollow in 1998. The blog stopped updating in February 2007 and Lena hasn't been heard from since.</p>
+          <p>She was 21 years old. She had been living in Morgantown while doing her research but traveled frequently to the Moth Hollow and Summersville areas. Black hair, medium height, usually wore a green jacket she'd had since High School.</p>
+          <p>I'm not with any organization. I'm just trying to find her. If you saw her, spoke with her, or read her blog and corresponded with her, please reply here or use the board's message system.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 2 -->
+    <div class="post-row">
+      <div class="post-usercard">
+        <div class="user-avatar">[ img ]</div>
+        <span class="username">appalachian_r</span>
+        <div class="user-rank">Senior Member</div>
+        <div class="user-stats">
+          Posts: 1,044<br>
+          Joined: Nov 1999<br>
+          Location: Lewisburg
+        </div>
+      </div>
+      <div class="post-content">
+        <div class="post-timestamp">
+          <span>March 4, 2008 &nbsp;·&nbsp; 9:22 AM</span>
+          <span class="post-num">#2</span>
+        </div>
+        <div class="post-text">
+          <p>I remember the blog. I found it a couple of years ago when I was looking into the Moth Hollow stuff — there's another thread on this board from 2003-2004 if you search. The blog was well-researched. She clearly knew what she was talking about.</p>
+          <p>I didn't correspond with her directly. Have you been to the police? If she went missing in 2007 there should be a report.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 3 -->
+    <div class="post-row">
+      <div class="post-usercard">
+        <div class="user-avatar custom">[ img ]</div>
+        <span class="username">notredones</span>
+        <div class="user-rank">New Member</div>
+        <div class="user-stats">
+          Posts: 4<br>
+          Joined: Mar 2008<br>
+          Location: —
+        </div>
+      </div>
+      <div class="post-content">
+        <div class="post-timestamp">
+          <span>March 5, 2008 &nbsp;·&nbsp; 12:44 AM</span>
+          <span class="post-num">#3</span>
+        </div>
+        <div class="post-text">
+          <p>Yes, there's a report. Filed February 2007, Nicholas County. It's officially open. In practice they're not looking very hard.</p>
+          <p>I knew her. The last time I saw her she said she had found something significant and was planning to take it somewhere. She didn't say where. She didn't say what it was. That was the last conversation we had.</p>
+          <p>She'd been researching the station and Dr. Voss specifically for about four years at that point. She had call records, internal documents, something about an archive the station kept. She believed Voss had been running unauthorized psychological research using the radio signal as a delivery mechanism. I know how that sounds. She could back it up. She showed me some of what she had.</p>
+          <p>If she's missing, it's because she got too close to something. I don't say that dramatically. I say it because it's the most logical explanation for someone who was careful and methodical suddenly not contacting anyone.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 4 — stranger -->
+    <div class="post-row">
+      <div class="post-usercard">
+        <div class="user-avatar">[ img ]</div>
+        <span class="username">wvcurious09</span>
+        <div class="user-rank">New Member</div>
+        <div class="user-stats">
+          Posts: 1<br>
+          Joined: May 2009<br>
+          Location: —
+        </div>
+      </div>
+      <div class="post-content">
+        <div class="post-timestamp">
+          <span>May 19, 2009 &nbsp;·&nbsp; 3:02 AM</span>
+          <span class="post-num">#4</span>
+        </div>
+        <div class="post-text">
+          <p>found this thread searching for Lena Hart. I read her whole blog before it went down. Did anyone save it? The cached version I found is partial.</p>
+          <p>she mentioned a specific name in the later posts. Voss. is there more information about who that is anywhere?</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 5 -->
+    <div class="post-row">
+      <div class="post-usercard">
+        <div class="user-avatar custom">[ img ]</div>
+        <span class="username">notredones</span>
+        <div class="user-rank">New Member</div>
+        <div class="user-stats">
+          Posts: 4<br>
+          Joined: Mar 2008<br>
+          Location: —
+        </div>
+      </div>
+      <div class="post-content">
+        <div class="post-timestamp">
+          <span>May 21, 2009 &nbsp;·&nbsp; 9:17 PM</span>
+          <span class="post-num">#5</span>
+        </div>
+        <div class="post-text">
+          <p>I have a partial copy. Not complete — she sent me some posts separately before the blog came down, but not all of them.</p>
+
+          <div class="quote-block">
+            <div class="quote-attr">Originally posted by wvcurious09:</div>
+            she mentioned a specific name in the later posts. Voss. is there more information about who that is anywhere?
+          </div>
+
+          <p>Dr. Elias Voss. Listed as a consulting psychologist for WHLW during the period 1996-1998. His academic profile was removed from at least two university websites in the early 2000s. Lena found a reference to him in a 1994 paper on audience response to audio stimuli — a footnote, not a byline. His name doesn't appear publicly anywhere after 1999 that either of us could find.</p>
+          <p>Lena believed he used the broadcast signal to conduct conditioning research on listeners without their knowledge or consent. She was building a case. She had documentation I haven't been able to locate since she went missing.</p>
+          <p>If you find anything I haven't, I'd appreciate knowing.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 6 -->
+    <div class="post-row">
+      <div class="post-usercard">
+        <div class="user-avatar custom">[ img ]</div>
+        <span class="username">notredones</span>
+        <div class="user-rank">New Member</div>
+        <div class="user-stats">
+          Posts: 4<br>
+          Joined: Mar 2008<br>
+          Location: —
+        </div>
+      </div>
+      <div class="post-content">
+        <div class="post-timestamp">
+          <span>November 3, 2014 &nbsp;·&nbsp; 11:31 PM</span>
+          <span class="post-num">#6</span>
+        </div>
+        <div class="post-text">
+          <p>Still checking this thread occasionally. No updates. Still no contact. If anyone is reading this years later — if you've found her blog, or found documents connected to the WHLW case, or know anything about Dr. Voss or about what happened at that station — please post here or message me through the board.</p>
+          <p>I'm not giving up. I just don't know where else to look.</p>
+        </div>
+        <div class="post-sig">— checking back in, like always</div>
+      </div>
+    </div>
+
+    <div class="thread-footer-bar">
+      <span>Thread: <strong>Missing: Lena Hart (2007) — anyone remember her?</strong> &nbsp;·&nbsp; 6 replies</span>
+      <span>Last post: November 3, 2014</span>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- THREAD 3 — WHAT HAPPENED TO THIS TOWN     -->
+  <!-- ══════════════════════════════════════════ -->
+
+  <div id="thread3" class="thread-section">
+    <div class="thread-header-bar">
+      <div>
+        <div class="thread-title-display">Moth Hollow — what actually happened to this town?</div>
+        <div class="thread-meta-line">Started by <strong>appalachian_r</strong> &nbsp;·&nbsp; June 7, 2005 &nbsp;·&nbsp; Nicholas County &amp; Surrounds</div>
+      </div>
+      <div class="thread-meta-line">31 replies &nbsp;·&nbsp; 12,804 views</div>
+    </div>
+
+    <!-- Post 1 -->
+    <div class="post-row">
+      <div class="post-usercard">
+        <div class="user-avatar">[ img ]</div>
+        <span class="username">appalachian_r</span>
+        <div class="user-rank">Senior Member</div>
+        <div class="user-stats">
+          Posts: 944<br>
+          Joined: Nov 1999<br>
+          Location: Lewisburg
+        </div>
+      </div>
+      <div class="post-content">
+        <div class="post-timestamp">
+          <span>June 7, 2005 &nbsp;·&nbsp; 2:16 PM</span>
+          <span class="post-num">#1</span>
+        </div>
+        <div class="post-text">
+          <p>Genuine question for anyone who has history with the area. Moth Hollow is a census-designated place that has been losing population steadily since the mid-1990s. It's not the only small WV community in that situation, but the rate of decline is steeper than comparable areas. The main employer in the region was always just local agriculture and a few service businesses. Nothing dramatic happened — no mine closure, no major flood.</p>
+          <p>Except the radio station going dark in 1998 and a missing person case that was never resolved.</p>
+          <p>I'm a WV history amateur and I find the area interesting. Anyone with local knowledge willing to share what it was like before and after?</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 2 -->
+    <div class="post-row">
+      <div class="post-usercard">
+        <div class="user-avatar">[ img ]</div>
+        <span class="username">hollow_local88</span>
+        <div class="user-rank">Member</div>
+        <div class="user-stats">
+          Posts: 63<br>
+          Joined: Jun 2005<br>
+          Location: Moth Hollow
+        </div>
+      </div>
+      <div class="post-content">
+        <div class="post-timestamp">
+          <span>June 8, 2005 &nbsp;·&nbsp; 8:44 PM</span>
+          <span class="post-num">#2</span>
+        </div>
+        <div class="post-text">
+          <p>I'm one of maybe 200 people still here so I can speak to this a bit. The town was never big, but there was more going on before. The radio station was actually a point of pride — WHLW had a decent reach and the overnight show in particular had listeners from well outside the county. People knew us from that.</p>
+          <p>After the host went missing and the station closed, it felt like something just went out. Hard to describe. People started leaving pretty quickly after that. Not because of the disappearance exactly. More like the thing that made it feel like a community was gone.</p>
+          <p>The relay tower is still there. Nobody's touched it. I don't know who owns it now.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 3 -->
+    <div class="post-row">
+      <div class="post-usercard">
+        <div class="user-avatar">[ img ]</div>
+        <span class="username">nicholas_co_native</span>
+        <div class="user-rank">Member</div>
+        <div class="user-stats">
+          Posts: 156<br>
+          Joined: Sep 2000<br>
+          Location: Summersville
+        </div>
+      </div>
+      <div class="post-content">
+        <div class="post-timestamp">
+          <span>June 10, 2005 &nbsp;·&nbsp; 11:09 AM</span>
+          <span class="post-num">#3</span>
+        </div>
+        <div class="post-text">
+          <p>The humming. That's the thing people from outside the area don't know about. There's a folklore thing around the tower — people claim you can hear something near it even when the station hasn't been broadcasting for years. Local kids dare each other to go close to it at night. It's become a ghost story.</p>
+          <p>I don't believe in ghost stories but I did go up there once about two years after the station went dark. I can't explain what I heard. Probably just wind through the structure. But it didn't sound like wind.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 4 -->
+    <div class="post-row">
+      <div class="post-usercard">
+        <div class="user-avatar">[ img ]</div>
+        <span class="username">appalachian_r</span>
+        <div class="user-rank">Senior Member</div>
+        <div class="user-stats">
+          Posts: 944<br>
+          Joined: Nov 1999<br>
+          Location: Lewisburg
+        </div>
+      </div>
+      <div class="post-content">
+        <div class="post-timestamp">
+          <span>June 12, 2005 &nbsp;·&nbsp; 4:31 PM</span>
+          <span class="post-num">#4</span>
+        </div>
+        <div class="post-text">
+          <p>@hollow_local88 that's a really good description — "the thing that made it feel like a community was gone." That kind of social anchor matters more than people realize.</p>
+          <p>What do you know about the missing person case? I know there was a radio host — I've seen it mentioned in archived Nicholas County Gazette pieces — but I haven't been able to find much detail. Was there ever an official conclusion?</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 5 -->
+    <div class="post-row">
+      <div class="post-usercard">
+        <div class="user-avatar">[ img ]</div>
+        <span class="username">hollow_local88</span>
+        <div class="user-rank">Member</div>
+        <div class="user-stats">
+          Posts: 63<br>
+          Joined: Jun 2005<br>
+          Location: Moth Hollow
+        </div>
+      </div>
+      <div class="post-content">
+        <div class="post-timestamp">
+          <span>June 13, 2005 &nbsp;·&nbsp; 9:07 PM</span>
+          <span class="post-num">#5</span>
+        </div>
+        <div class="post-text">
+          <p>No conclusion. Officially still open. The sheriff at the time — Mercer — ran the investigation. A lot of people thought it was closed too fast. Her family definitely did. There was a sister who was very vocal about it for a few years.</p>
+          <p>My understanding is that there were witness statement problems. Somebody's timeline didn't add up and nobody could agree on when she actually left the building. The case just kind of collapsed under the contradictions.</p>
+          <p>The station itself closed a few months after. Management said it was financial but everyone assumed it was connected.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="post-deleted">[Posts #6–#31 — content unavailable in archive]</div>
+
+    <div class="thread-footer-bar">
+      <span>Thread: <strong>Moth Hollow — what actually happened to this town?</strong> &nbsp;·&nbsp; 31 replies</span>
+      <span>Last post: March 19, 2009</span>
+    </div>
+  </div>
+
+  <!-- FORUM FOOTER -->
+  <div class="forum-footer">
+    WV Community Boards &nbsp;·&nbsp; Nicholas County &amp; Surrounds &nbsp;·&nbsp; Powered by phpBB &copy; 2001, 2002 &nbsp;·&nbsp; All times are EST
+  </div>
+
+</div>
+
+<!-- STATUS BAR -->
+<div class="browser-statusbar">
+  <span>Done</span>
+  <span>⊙ Internet</span>
+</div>
+
+</body>
+</html>

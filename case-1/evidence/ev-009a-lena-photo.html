@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EV-009A — Lena Hart</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Courier+Prime:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1a1612;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Courier Prime', monospace;
+  }
+
+  /* subtle vignette overlay on body */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .scene {
+    perspective: 1200px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .photo-card {
+    width: 320px;
+    height: 420px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.85s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+    cursor: default;
+  }
+
+  .photo-card.flipped {
+    transform: rotateY(180deg);
+  }
+
+  /* ── FRONT ── */
+  .front, .back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 2px;
+  }
+
+  .front {
+    background: #e8e2d6;
+    padding: 12px 12px 40px 12px;
+    box-shadow:
+      0 2px 4px rgba(0,0,0,0.3),
+      0 8px 24px rgba(0,0,0,0.45),
+      inset 0 0 0 0.5px rgba(255,255,255,0.15);
+  }
+
+  .front img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: sepia(15%) saturate(90%) contrast(1.03) brightness(0.97);
+  }
+
+
+  /* ── CORNER LIFT HINT ── */
+  .corner-hint {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  /* the folded triangle */
+  .corner-hint::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 0 28px 28px;
+    border-color: transparent transparent #c8b99a transparent;
+    transition: border-width 0.25s ease;
+    filter: drop-shadow(-2px -2px 3px rgba(0,0,0,0.2));
+  }
+
+  /* shadow under the fold */
+  .corner-hint::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    background: rgba(0,0,0,0.08);
+    transform: rotate(45deg) skew(10deg, 10deg);
+    transition: opacity 0.25s ease;
+    opacity: 0;
+    border-radius: 1px;
+  }
+
+  .front:hover .corner-hint::before {
+    border-width: 0 0 42px 42px;
+    border-color: transparent transparent #d4c8b0 transparent;
+  }
+
+  .front:hover .corner-hint::after {
+    opacity: 1;
+  }
+
+  /* flip icon hint on hover */
+  .flip-hint {
+    position: absolute;
+    bottom: 10px;
+    right: 14px;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: #9a8060;
+    opacity: 0;
+    transition: opacity 0.3s ease 0.15s;
+    pointer-events: none;
+    font-family: 'Courier Prime', monospace;
+    text-transform: uppercase;
+  }
+
+  .front:hover .flip-hint {
+    opacity: 1;
+  }
+
+  /* ── BACK ── */
+  .back {
+    background: #ede7db;
+    transform: rotateY(180deg);
+    padding: 32px 30px 28px 32px;
+    box-shadow:
+      0 2px 4px rgba(0,0,0,0.3),
+      0 8px 24px rgba(0,0,0,0.45);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+
+  /* subtle paper texture lines */
+  .back::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent: 24px,
+      rgba(160,130,90,0.07) 24px,
+      rgba(160,130,90,0.07) 25px
+    );
+    pointer-events: none;
+  }
+
+  /* coffee stain on back */
+  .back::after {
+    content: '';
+    position: absolute;
+    bottom: 60px;
+    right: 20px;
+    width: 55px;
+    height: 45px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(140,100,50,0.12);
+    box-shadow: inset 0 0 0 6px rgba(140,100,50,0.05);
+    pointer-events: none;
+  }
+
+  .note-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .handwritten {
+    font-family: 'Caveat', cursive;
+    font-size: 19px;
+    color: #2e2416;
+    line-height: 1.75;
+  }
+
+  .handwritten .line {
+    display: block;
+  }
+
+  .handwritten .line.gap {
+    margin-top: 14px;
+  }
+
+  .handwritten .line.emphasis {
+    font-size: 21px;
+    font-weight: 600;
+    color: #1e160a;
+  }
+
+  .initials {
+    font-family: 'Caveat', cursive;
+    font-size: 15px;
+    color: #7a6040;
+    margin-top: 18px;
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+  }
+
+  .photo-back-info {
+    position: relative;
+    z-index: 1;
+    border-top: 0.5px solid rgba(160,130,90,0.25);
+    padding-top: 10px;
+    margin-top: 12px;
+  }
+
+  .photo-back-info p {
+    font-size: 8px;
+    color: #9a8878;
+    letter-spacing: 0.08em;
+    line-height: 1.9;
+    text-transform: uppercase;
+  }
+
+  /* click to flip back — subtle */
+  .back-flip {
+    position: absolute;
+    bottom: 10px;
+    right: 14px;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    color: #9a8060;
+    cursor: pointer;
+    text-transform: uppercase;
+    z-index: 10;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+  }
+
+  .back-flip:hover {
+    opacity: 1;
+  }
+</style>
+</head>
+<body>
+
+<div class="scene">
+  <div class="photo-card" id="card">
+
+    <!-- FRONT -->
+    <div class="front" id="front-face">
+      <img src="lena-hart-college.png" alt="Photograph — subject unidentified">
+      <div class="corner-hint" id="corner-btn"></div>
+      <div class="flip-hint">turn over</div>
+    </div>
+
+    <!-- BACK -->
+    <div class="back">
+      <div class="note-content">
+        <div class="handwritten">
+          <span class="line">Started from the beginning again.</span>
+          <span class="line">The tapes aren't the point —</span>
+          <span class="line">they're the proof.</span>
+          <span class="line gap">He used the signal.</span>
+          <span class="line">He used all of them.</span>
+          <span class="line gap">If something happens to me —</span>
+          <span class="line emphasis">check the static.</span>
+        </div>
+        <div class="initials">— L.H.</div>
+      </div>
+
+      <div class="photo-back-info">
+        <p>
+          Kodak Gold 200 &nbsp;·&nbsp; 35mm<br>
+          Process C-41 &nbsp;·&nbsp; Lab ref: FMT-2007-03
+        </p>
+      </div>
+
+      <div class="back-flip" id="back-btn">← turn over</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const card = document.getElementById('card');
+  const cornerBtn = document.getElementById('corner-btn');
+  const backBtn = document.getElementById('back-btn');
+
+  cornerBtn.addEventListener('click', () => {
+    card.classList.add('flipped');
+  });
+
+  backBtn.addEventListener('click', () => {
+    card.classList.remove('flipped');
+  });
+</script>
+
+</body>
+</html>

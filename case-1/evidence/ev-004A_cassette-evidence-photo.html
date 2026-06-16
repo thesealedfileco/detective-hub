@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHLW Physical Evidence — Cassette Tape — October 1998</title>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --paper: #f0e8d8;
+    --paper-dark: #e4d8c0;
+    --paper-aged: #d8ccb4;
+    --ink: #1c1610;
+    --ink-faded: #3a3028;
+    --ink-blue: #2a4066;
+    --ink-blue-faded: #3d5580;
+    --stamp-red: #b83a2a;
+    --pencil: #7a6b50;
+    --pencil-light: #9a8b70;
+    --photo-bg: #c8c4b8;
+    --fluorescent: #d8e0d0;
+    --bag-clear: rgba(210, 220, 205, 0.55);
+    --bag-border: rgba(140, 155, 130, 0.7);
+    --evidence-yellow: #e8d870;
+    --evidence-yellow-dark: #c8b840;
+    --ruler-cream: #f0ecd8;
+    --ruler-mark: #2a2010;
+    --cassette-body: #1a1814;
+    --cassette-mid: #2c2820;
+    --cassette-label: #e8e0cc;
+    --cassette-label-dark: #d0c8b0;
+    --cassette-window: #0a0c10;
+    --cassette-reel: #3a3530;
+    --cassette-reel-hub: #5a5248;
+    --cassette-chrome: #8a8880;
+  }
+
+  body {
+    background: #b8b0a0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 20px;
+    font-family: 'Courier Prime', monospace;
+  }
+
+  /* ============ OUTER DOCUMENT PAGE ============ */
+  .page {
+    width: 850px;
+    background: var(--paper);
+    position: relative;
+    padding: 50px 60px 60px;
+    box-shadow:
+      2px 2px 0 rgba(0,0,0,0.04),
+      4px 4px 0 rgba(0,0,0,0.03),
+      8px 8px 20px rgba(0,0,0,0.2),
+      0 0 0 1px rgba(0,0,0,0.06);
+    overflow: hidden;
+  }
+
+  .page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 27px,
+        rgba(120,80,30,0.03) 27px,
+        rgba(120,80,30,0.03) 28px
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Tape residue marks */
+  .tape-mark {
+    position: absolute;
+    height: 20px;
+    background: rgba(200,180,130,0.22);
+    border-top: 1px solid rgba(160,140,100,0.18);
+    border-bottom: 1px solid rgba(160,140,100,0.18);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .tape-tl { top: 0; left: 90px; width: 65px; transform: rotate(-1.5deg); }
+  .tape-tr { top: 0; right: 110px; width: 55px; transform: rotate(1deg); }
+
+  /* Corner coffee stain */
+  .stain-br {
+    position: absolute;
+    bottom: 80px;
+    right: 50px;
+    width: 70px;
+    height: 65px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center,
+      rgba(100,65,20,0.0) 52%,
+      rgba(100,65,20,0.06) 64%,
+      rgba(100,65,20,0.10) 73%,
+      rgba(100,65,20,0.05) 82%,
+      transparent 92%
+    );
+    transform: rotate(10deg) scaleX(1.15);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .page-inner {
+    position: relative;
+    z-index: 3;
+  }
+
+  /* ============ DOC HEADER ============ */
+  .doc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 10px;
+    margin-bottom: 6px;
+  }
+
+  .station-id {
+    font-family: 'Special Elite', cursive;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+    line-height: 1.7;
+  }
+
+  .doc-title-block {
+    text-align: center;
+    flex: 1;
+    padding: 0 20px;
+  }
+
+  .doc-title-block .dept {
+    font-family: 'Special Elite', cursive;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--ink);
+    display: block;
+    text-transform: uppercase;
+  }
+
+  .doc-title-block .subdept {
+    font-size: 9px;
+    color: var(--pencil);
+    letter-spacing: 2px;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .doc-title-block .doc-name {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--ink);
+    text-transform: uppercase;
+    margin-top: 6px;
+    display: block;
+    border-top: 1px solid var(--ink-faded);
+    padding-top: 4px;
+  }
+
+  .doc-meta-right {
+    text-align: right;
+    font-size: 9px;
+    color: var(--pencil);
+    line-height: 1.8;
+    letter-spacing: 0.5px;
+  }
+
+  /* ============ EVIDENCE META BAR ============ */
+  .meta-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0 22px;
+    padding: 5px 8px;
+    background: var(--paper-dark);
+    border: 1px solid var(--paper-aged);
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+  }
+
+  .meta-bar .field { display: flex; flex-direction: column; gap: 2px; }
+  .meta-bar .label { font-size: 7.5px; color: var(--pencil); letter-spacing: 1.5px; }
+  .meta-bar .value { font-weight: 700; color: var(--ink); font-size: 9.5px; }
+
+  /* ============ PHOTO FRAME ============ */
+  .photo-frame {
+    border: 1px solid #8a8070;
+    background: var(--photo-bg);
+    position: relative;
+    margin: 0 auto 22px;
+    overflow: hidden;
+    /* Fluorescent light gradient across the photo */
+    background: linear-gradient(
+      160deg,
+      #d0d4cc 0%,
+      #c8ccbf 20%,
+      #bcc0b4 45%,
+      #c0c4b8 65%,
+      #c8ccbf 85%,
+      #d0d4cc 100%
+    );
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.08);
+  }
+
+  /* Slight scan artifact lines on photo */
+  .photo-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(255,255,255,0.03) 3px,
+      rgba(255,255,255,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* Fluorescent bloom top */
+  .photo-frame::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 80px;
+    background: radial-gradient(ellipse at center top,
+      rgba(220,235,210,0.35) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+    z-index: 9;
+  }
+
+  .photo {
+    width: 100%;
+    height: auto;
+    display: block;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Top edge detail */
+  .cassette::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 10px; right: 10px;
+    height: 4px;
+    background: var(--cassette-mid);
+    border-radius: 6px 6px 0 0;
+  }
+
+  /* Guide notch top-left and top-right */
+  .cassette-notch {
+    position: absolute;
+    top: 0;
+    width: 18px;
+    height: 8px;
+    background: var(--cassette-body);
+    border-radius: 0 0 4px 4px;
+    z-index: 2;
+  }
+  .cassette-notch.left { left: 20px; }
+  .cassette-notch.right { right: 20px; }
+
+  /* ---- Tape window ---- */
+  .tape-window {
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180px;
+    height: 75px;
+    background: var(--cassette-window);
+    border-radius: 4px;
+    border: 2px solid #0a0c0e;
+    overflow: hidden;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
+  }
+
+  /* Guide posts in window */
+  .tape-post {
+    position: absolute;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #4a4640, #1a1814);
+    transform: translateY(-50%);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    z-index: 4;
+  }
+  .tape-post.left { left: 12px; }
+  .tape-post.right { right: 12px; }
+
+  /* Reels */
+  .reel {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%,
+      var(--cassette-reel-hub),
+      var(--cassette-reel) 50%,
+      #252220 80%
+    );
+    box-shadow: 0 2px 6px rgba(0,0,0,0.7);
+  }
+  .reel.left-reel {
+    left: 28px;
+    width: 38px;
+    height: 38px;
+  }
+  .reel.right-reel {
+    right: 28px;
+    width: 38px;
+    height: 38px;
+  }
+
+  /* Reel hub dot */
+  .reel::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #6a6460, #2a2820);
+  }
+
+  /* Tape visible across window */
+  .tape-strip {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90px;
+    height: 5px;
+    background: linear-gradient(90deg,
+      #3a3530 0%, #4a4540 20%, #3a3530 40%, #4a4540 60%, #3a3530 80%, #4a4540 100%
+    );
+    z-index: 3;
+  }
+
+  /* ---- Cassette label ---- */
+  .cassette-label {
+    position: absolute;
+    bottom: 18px;
+    left: 14px;
+    right: 14px;
+    height: 60px;
+    background: linear-gradient(180deg, var(--cassette-label) 0%, var(--cassette-label-dark) 100%);
+    border-radius: 2px;
+    border: 1px solid rgba(180,165,130,0.5);
+    padding: 6px 10px 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+
+  /* Label texture lines */
+  .cassette-label::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 7px,
+      rgba(0,0,0,0.04) 7px,
+      rgba(0,0,0,0.04) 8px
+    );
+  }
+
+  .label-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    z-index: 2;
+  }
+
+  .label-station {
+    font-family: 'Special Elite', cursive;
+    font-size: 8.5px;
+    letter-spacing: 2px;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+  }
+
+  .label-type {
+    font-size: 7px;
+    font-family: 'Courier Prime', monospace;
+    color: var(--pencil);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .label-title-text {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0.5px;
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+
+  .label-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: relative;
+    z-index: 2;
+  }
+
+  .label-date {
+    font-family: 'Courier Prime', monospace;
+    font-size: 7.5px;
+    color: var(--pencil);
+    letter-spacing: 0.5px;
+  }
+
+  .label-code {
+    font-family: 'Courier Prime', monospace;
+    font-size: 8px;
+    font-weight: 700;
+    color: var(--ink-faded);
+    letter-spacing: 1px;
+  }
+
+  /* Cassette chrome screws */
+  .screw {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--cassette-chrome), #4a4840);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    z-index: 5;
+  }
+  .screw::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 70%;
+    height: 1px;
+    background: rgba(0,0,0,0.5);
+  }
+  .screw.tl { top: 8px; left: 8px; }
+  .screw.tr { top: 8px; right: 8px; }
+  .screw.bl { bottom: 8px; left: 8px; }
+  .screw.br { bottom: 8px; right: 8px; }
+  .screw.tc { top: 8px; left: 50%; transform: translateX(-50%); }
+
+  /* Bottom ridge on cassette */
+  .cassette-ridge {
+    position: absolute;
+    bottom: 5px;
+    left: 20px;
+    right: 20px;
+    height: 3px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 1px;
+  }
+
+  /* ============ PHOTO CAPTION STRIP ============ */
+  .photo-caption-strip {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(30,25,15,0.82);
+    padding: 5px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 7;
+  }
+
+  .caption-text {
+    font-family: 'Courier Prime', monospace;
+    font-size: 8px;
+    color: rgba(220,210,190,0.9);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .caption-stamp {
+    font-family: 'Courier Prime', monospace;
+    font-size: 8px;
+    font-weight: 700;
+    color: rgba(220,210,190,0.7);
+    letter-spacing: 2px;
+  }
+
+  /* Slight vignette on photo */
+  .photo-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center,
+      transparent 50%,
+      rgba(0,0,0,0.12) 100%
+    );
+    pointer-events: none;
+    z-index: 6;
+  }
+
+  /* ============ DOCUMENT FIELDS BELOW PHOTO ============ */
+  .fields-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--paper-aged);
+    margin-bottom: 16px;
+  }
+
+  .field-cell {
+    padding: 7px 10px;
+    border-right: 1px solid var(--paper-aged);
+    border-bottom: 1px solid var(--paper-aged);
+  }
+  .field-cell:nth-child(3n) { border-right: none; }
+  .field-cell.full-width {
+    grid-column: 1 / -1;
+    border-right: none;
+  }
+  .field-cell.no-bottom { border-bottom: none; }
+
+  .field-label {
+    font-size: 7.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--pencil);
+    margin-bottom: 3px;
+  }
+
+  .field-value {
+    font-size: 10px;
+    color: var(--ink);
+    letter-spacing: 0.3px;
+    line-height: 1.4;
+  }
+
+  .field-value.handwritten {
+    font-family: 'Special Elite', cursive;
+    font-size: 11px;
+    color: var(--ink-faded);
+  }
+
+  /* ============ CHAIN OF CUSTODY ============ */
+  .section-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--pencil);
+    margin: 14px 0 6px;
+    border-bottom: 1px solid var(--paper-aged);
+    padding-bottom: 3px;
+  }
+
+  .custody-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8.5px;
+  }
+
+  .custody-table th {
+    font-size: 7.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--pencil);
+    background: var(--paper-dark);
+    border: 1px solid var(--paper-aged);
+    padding: 4px 8px;
+    text-align: left;
+    font-weight: 700;
+    background-image: radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px);
+    background-size: 3px 3px;
+  }
+
+  .custody-table td {
+    border: 1px solid var(--paper-aged);
+    padding: 5px 8px;
+    color: var(--ink-faded);
+    line-height: 1.5;
+  }
+
+  .custody-table td.handwritten-cell {
+    font-family: 'Special Elite', cursive;
+    font-size: 10px;
+    color: var(--ink-faded);
+  }
+
+  /* ============ OFFICER NOTES ============ */
+  .officer-notes {
+    border: 1px solid var(--paper-aged);
+    background: rgba(200,185,155,0.08);
+    padding: 10px 12px;
+    margin-top: 14px;
+  }
+
+  .officer-notes .notes-label {
+    font-size: 7.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--pencil);
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+
+  .officer-notes p {
+    font-size: 9.5px;
+    color: var(--ink-faded);
+    line-height: 1.65;
+    margin-bottom: 5px;
+  }
+
+  .handwritten-note {
+    font-family: 'Special Elite', cursive;
+    font-size: 10.5px;
+    color: var(--pencil);
+    font-style: italic;
+    margin-top: 6px;
+    display: block;
+    line-height: 1.5;
+  }
+
+  /* ============ STAMP + SIGNATURE ============ */
+  .bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 20px;
+    padding-top: 12px;
+    border-top: 1px solid var(--paper-aged);
+  }
+
+  .sig-block {
+    font-size: 8.5px;
+    color: var(--pencil);
+    line-height: 1.8;
+  }
+
+  .sig-line {
+    border-bottom: 1px solid var(--ink-faded);
+    width: 150px;
+    height: 18px;
+    margin-bottom: 3px;
+  }
+
+  .sig-written {
+    font-family: 'Special Elite', cursive;
+    font-size: 12px;
+    color: var(--ink);
+    position: relative;
+    top: -4px;
+    left: 4px;
+    letter-spacing: 1px;
+  }
+
+  .stamp-area {
+    transform: rotate(-5deg);
+    opacity: 0.78;
+  }
+
+  .stamp-box {
+    border: 2.5px solid var(--stamp-red);
+    padding: 7px 14px;
+    color: var(--stamp-red);
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .archive-note {
+    text-align: right;
+    font-size: 8px;
+    color: var(--pencil);
+    line-height: 1.7;
+    letter-spacing: 0.5px;
+  }
+
+  /* Margin annotation */
+  .margin-note {
+    position: absolute;
+    font-family: 'Special Elite', cursive;
+    font-size: 9.5px;
+    color: var(--pencil);
+    line-height: 1.4;
+    transform: rotate(-88deg);
+    transform-origin: top left;
+    left: 14px;
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0.7;
+  }
+
+  /* Watermark */
+  .watermark {
+    position: absolute;
+    bottom: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Special Elite', cursive;
+    font-size: 52px;
+    color: rgba(0,0,0,0.022);
+    letter-spacing: 8px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 1;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="tape-mark tape-tl"></div>
+  <div class="tape-mark tape-tr"></div>
+  <div class="stain-br"></div>
+  <div class="watermark">MHSD</div>
+
+  <!-- Margin annotation by a reviewer -->
+  <div class="margin-note" style="top: 480px;">label code partial</div>
+
+  <div class="page-inner">
+
+    <!-- ===== HEADER ===== -->
+    <div class="doc-header">
+      <div class="station-id">
+        Moth Hollow Sheriff's Dept.<br>
+        Evidence Division<br>
+        Moth Hollow, WV
+      </div>
+      <div class="doc-title-block">
+        <span class="dept">Physical Evidence Documentation</span>
+        <span class="subdept">photographic record · property of sheriff's department</span>
+        <span class="doc-name">Evidentiary Photograph — Item Log</span>
+      </div>
+      <div class="doc-meta-right">
+        Form: PEV-3 (Rev. 1995)<br>
+        Date Photographed: Oct 18, 1998<br>
+        Photographed By: Dep. R. Caulfield<br>
+        Film Roll: RC-18-10
+      </div>
+    </div>
+
+    <!-- ===== META BAR ===== -->
+    <div class="meta-bar">
+      <div class="field">
+        <span class="label">Case Ref.</span>
+        <span class="value">MHSD-1998-209</span>
+      </div>
+      <div class="field">
+        <span class="label">Item No.</span>
+        <span class="value">07 of 14</span>
+      </div>
+      <div class="field">
+        <span class="label">Recovered</span>
+        <span class="value">Oct 16, 1998</span>
+      </div>
+      <div class="field">
+        <span class="label">Recovery Location</span>
+        <span class="value">WHLW Station — Archive Room B</span>
+      </div>
+      <div class="field">
+        <span class="label">Condition</span>
+        <span class="value">Sealed / Intact</span>
+      </div>
+    </div>
+
+    <!-- ===== PHOTO ===== -->
+    <div class="photo-frame">
+      <!-- Image -->
+      <img src="evidence-tape.png" alt="Cassette Evidence Photo" class="photo">
+      <!-- Caption strip bottom of photo -->
+      <div class="photo-caption-strip">
+        <span class="caption-text">MHSD Evidence Photo · Item 07 · RC-18-10 · Oct 18, 1998</span>
+        <span class="caption-stamp">DO NOT REMOVE FROM FILE</span>
+      </div>
+
+    </div><!-- /photo-frame -->
+
+    <!-- ===== FIELDS BELOW PHOTO ===== -->
+    <div class="fields-grid">
+      <div class="field-cell">
+        <div class="field-label">Item Description</div>
+        <div class="field-value">Cassette tape, standard C-60 format, housed in original casing. Station archive label affixed.</div>
+      </div>
+      <div class="field-cell">
+        <div class="field-label">Recovery Location</div>
+        <div class="field-value">WHLW 88.3 FM Station<br>Archive Room B<br>Shelf 3 / Carousel Unit</div>
+      </div>
+      <div class="field-cell">
+        <div class="field-label">Recovery Date &amp; Time</div>
+        <div class="field-value">October 16, 1998<br>Approx. 2:30 PM<br>During station walkthrough</div>
+      </div>
+      <div class="field-cell no-bottom">
+        <div class="field-label">Condition at Recovery</div>
+        <div class="field-value">No visible damage. Tape appears intact. Case undamaged.</div>
+      </div>
+      <div class="field-cell no-bottom">
+        <div class="field-label">Packaging</div>
+        <div class="field-value">Sealed, standard evidence bag. Label affixed at recovery.</div>
+      </div>
+      <div class="field-cell no-bottom">
+        <div class="field-label">Contents Reviewed</div>
+        <div class="field-value handwritten">Not yet — awaiting authorization</div>
+      </div>
+    </div>
+
+    <!-- ===== CHAIN OF CUSTODY ===== -->
+    <p class="section-label">Chain of Custody</p>
+    <table class="custody-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Transferred From</th>
+          <th>Transferred To</th>
+          <th>Purpose</th>
+          <th>Signature</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Oct 16, 1998</td>
+          <td>WHLW Station</td>
+          <td>MHSD Evidence Locker</td>
+          <td>Initial recovery</td>
+          <td class="handwritten-cell">R. Caulfield</td>
+        </tr>
+        <tr>
+          <td>Oct 18, 1998</td>
+          <td>Evidence Locker</td>
+          <td>Photo Documentation</td>
+          <td>Photographic record</td>
+          <td class="handwritten-cell">R. Caulfield</td>
+        </tr>
+        <tr>
+          <td>Oct 18, 1998</td>
+          <td>Photo Documentation</td>
+          <td>Evidence Locker</td>
+          <td>Return after photo</td>
+          <td class="handwritten-cell">D. Mercer</td>
+        </tr>
+        <tr>
+          <td style="color: var(--pencil-light); font-style:italic;"></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ===== OFFICER NOTES ===== -->
+    <div class="officer-notes">
+      <div class="notes-label">Documenting Officer Notes</div>
+      <p>Item recovered during standard walkthrough of WHLW archive room following missing person report filed Oct 14, 1998. Tape found in carousel unit alongside standard broadcast stock. Label indicates station archive origin — consistent with routine production materials.</p>
+      <p>Tape flagged for documentation due to discrepancy in archive inventory log. Carousel count did not match station records. This item was not listed on the station's current inventory sheet.</p>
+      <span class="handwritten-note">Content review pending — Mercer to authorize. No playback conducted at scene.</span>
+    </div>
+
+    <!-- ===== BOTTOM ROW ===== -->
+    <div class="bottom-row">
+      <div class="sig-block">
+        <div class="sig-line"><span class="sig-written">R. Caulfield</span></div>
+        <div>Deputy R. Caulfield — Badge 14</div>
+        <div>Evidence Documentation Officer</div>
+      </div>
+
+      <div class="stamp-area">
+        <div class="stamp-box">
+          ARCHIVE<br>
+          COPY<br>
+          1998-MH
+        </div>
+      </div>
+
+      <div class="archive-note">
+        Cold Case Review — Reopened 2026<br>
+        Moth Hollow Sheriff's Department<br>
+        Evidence Archive
+      </div>
+    </div>
+
+  </div><!-- /page-inner -->
+</div>
+
+</body>
+</html>

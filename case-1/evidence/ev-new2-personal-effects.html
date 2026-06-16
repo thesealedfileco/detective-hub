@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EV-NEW2 — Personal Effects Inventory — MHSD-98-0041</title>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper:     #f3ede0;
+    --ink:       #1a1510;
+    --ink-faded: #3a3028;
+    --ink-light: #6a5f50;
+    --stamp-red: #9a2a1c;
+    --ink-blue:  #1e3355;
+    --border:    #c8bfa8;
+    --pencil:    #7a6b50;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #2a2318;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  .document {
+    width: 700px;
+    max-width: 100%;
+    background: var(--paper);
+    position: relative;
+    transform: rotate(-0.15deg);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.3),
+      4px 6px 20px rgba(0,0,0,0.6),
+      8px 12px 40px rgba(0,0,0,0.4);
+  }
+
+  .document::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 200px;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0.5;
+  }
+
+  .document::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.1) 100%);
+    pointer-events: none;
+    z-index: 9;
+  }
+
+  .page {
+    padding: 2.6rem 2.8rem 3rem;
+    position: relative;
+    min-height: 900px;
+  }
+
+  /* ── HEADER ── */
+  .form-header {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .form-agency {
+    font-family: 'Special Elite', serif;
+    font-size: 12px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  .form-agency-sub {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--ink-light);
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .form-ref {
+    text-align: right;
+    font-size: 9px;
+    color: var(--ink-light);
+    letter-spacing: 0.1em;
+    line-height: 2;
+    text-transform: uppercase;
+  }
+
+  .form-title {
+    font-family: 'Special Elite', serif;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-align: center;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 0.75px solid var(--border);
+  }
+
+  /* ── SUBJECT INFO ── */
+  .subject-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 24px;
+    font-size: 11px;
+    margin-bottom: 22px;
+    padding-bottom: 16px;
+    border-bottom: 0.75px solid var(--border);
+  }
+
+  .subject-field {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .subject-label {
+    font-size: 8.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-light);
+  }
+
+  .subject-value {
+    font-size: 12px;
+    color: var(--ink);
+    border-bottom: 0.5px solid var(--border);
+    padding-bottom: 3px;
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-light);
+    margin-bottom: 8px;
+    margin-top: 20px;
+  }
+
+  /* ── INVENTORY TABLE ── */
+  .inv-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+    color: var(--ink-faded);
+    margin-bottom: 6px;
+  }
+
+  .inv-table th {
+    text-align: left;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    border-bottom: 0.75px solid var(--border);
+    border-top: 0.75px solid var(--border);
+    padding: 5px 8px 5px 0;
+    font-weight: 700;
+  }
+
+  .inv-table th:first-child { width: 28px; }
+  .inv-table th:nth-child(2) { width: 240px; }
+  .inv-table th:nth-child(3) { width: 100px; }
+
+  .inv-table td {
+    padding: 6px 8px 6px 0;
+    border-bottom: 0.5px solid rgba(200,191,168,0.35);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  .inv-table td:first-child {
+    font-size: 10px;
+    color: var(--ink-light);
+  }
+
+  .status-present {
+    font-size: 10px;
+    color: #2a5a2a;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .status-missing {
+    font-size: 10px;
+    color: #8a2a1a;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .item-note {
+    font-size: 10px;
+    color: var(--ink-light);
+    font-style: italic;
+    margin-top: 2px;
+  }
+
+  /* ── NOT RECOVERED SECTION ── */
+  .not-recovered-box {
+    background: rgba(138,42,26,0.05);
+    border: 0.75px solid rgba(138,42,26,0.2);
+    border-left: 3px solid rgba(138,42,26,0.4);
+    padding: 14px 16px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 11.5px;
+    color: var(--ink-faded);
+    line-height: 1.8;
+    position: relative;
+    z-index: 1;
+  }
+
+  .not-recovered-box .nr-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #8a2a1a;
+    margin-bottom: 8px;
+  }
+
+  .nr-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 5px;
+    align-items: flex-start;
+  }
+
+  .nr-bullet {
+    color: #8a2a1a;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── OFFICER NOTES ── */
+  .officer-notes {
+    background: rgba(200,191,168,0.15);
+    border: 0.5px solid var(--border);
+    padding: 14px 16px;
+    font-size: 11px;
+    color: var(--ink-faded);
+    line-height: 1.8;
+    margin-top: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .officer-notes .notes-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-light);
+    margin-bottom: 8px;
+  }
+
+  /* ── SIGNATURE ── */
+  .sig-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 30px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .sig-field {
+    border-top: 0.75px solid var(--ink);
+    padding-top: 5px;
+    font-size: 9.5px;
+    color: var(--ink-light);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .sig-name {
+    font-family: 'Crimson Pro', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--ink-blue);
+    margin-bottom: 2px;
+    margin-top: 4px;
+    line-height: 1;
+  }
+
+  /* ── HANDWRITTEN ── */
+  .annotation {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: 12.5px;
+    color: var(--pencil);
+    position: absolute;
+    z-index: 6;
+    pointer-events: none;
+    line-height: 1.6;
+  }
+
+  .annotation-1 {
+    top: 3rem;
+    right: 2.8rem;
+    transform: rotate(1.2deg);
+    font-size: 11.5px;
+    text-align: right;
+  }
+
+  /* ── FOOTER ── */
+  .doc-footer {
+    position: absolute;
+    bottom: 1.4rem;
+    left: 2.8rem;
+    right: 2.8rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 8px;
+    color: var(--ink-light);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-top: 0.5px solid var(--border);
+    padding-top: 8px;
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+
+<div class="document">
+  <div class="page">
+
+    <div class="annotation annotation-1">
+      cassette player — not<br>in the vehicle. checked<br>twice. — T.C.
+    </div>
+
+    <!-- HEADER -->
+    <div class="form-header">
+      <div>
+        <div class="form-agency">Moth Hollow Sheriff's Department</div>
+        <div class="form-agency-sub">Evidence & Property Division &nbsp;·&nbsp; Raleigh County, WV</div>
+      </div>
+      <div class="form-ref">
+        Form MHSD-14B<br>
+        Case No. MHSD-98-0041<br>
+        Log Date: October 16, 1998<br>
+        Officer: Deputy T. Caulfield
+      </div>
+    </div>
+
+    <div class="form-title">Personal Effects Inventory — Vehicle Recovery</div>
+
+    <!-- SUBJECT INFO -->
+    <div class="subject-grid">
+      <div class="subject-field">
+        <span class="subject-label">Subject Name</span>
+        <span class="subject-value">Vale, Naomi Elise</span>
+      </div>
+      <div class="subject-field">
+        <span class="subject-label">Date of Birth</span>
+        <span class="subject-value">March 3, 1972</span>
+      </div>
+      <div class="subject-field">
+        <span class="subject-label">Vehicle Recovered</span>
+        <span class="subject-value">1994 Honda Civic — Slate Blue &nbsp;·&nbsp; WV Plate HLW-3821</span>
+      </div>
+      <div class="subject-field">
+        <span class="subject-label">Recovery Location</span>
+        <span class="subject-value">Tower Road, approx. 0.4mi N of Rt. 7 junction</span>
+      </div>
+      <div class="subject-field">
+        <span class="subject-label">Recovery Date & Time</span>
+        <span class="subject-value">October 16, 1998 &nbsp;·&nbsp; 09:14 AM</span>
+      </div>
+      <div class="subject-field">
+        <span class="subject-label">Case Reference</span>
+        <span class="subject-value">MHSD-98-0041</span>
+      </div>
+    </div>
+
+    <!-- ITEMS RECOVERED -->
+    <div class="section-label">Items Recovered From Vehicle</div>
+
+    <table class="inv-table">
+      <tr>
+        <th>#</th>
+        <th>Item Description</th>
+        <th>Status</th>
+        <th>Notes</th>
+      </tr>
+      <tr>
+        <td>001</td>
+        <td>Leather jacket, brown — women's medium</td>
+        <td class="status-present">RECOVERED</td>
+        <td>Passenger seat. No damage noted.</td>
+      </tr>
+      <tr>
+        <td>002</td>
+        <td>Station key ring — 3 keys, WHLW fob</td>
+        <td class="status-present">RECOVERED</td>
+        <td>Found in ignition.</td>
+      </tr>
+      <tr>
+        <td>003</td>
+        <td>Wallet — brown canvas, bifold</td>
+        <td class="status-present">RECOVERED</td>
+        <td>Contents intact. Cash ($14), WV DL, station ID.</td>
+      </tr>
+      <tr>
+        <td>004</td>
+        <td>Paperback novel — "The Shipping News"</td>
+        <td class="status-present">RECOVERED</td>
+        <td>Glovebox. Bookmark at p. 211.</td>
+      </tr>
+      <tr>
+        <td>005</td>
+        <td>Parking receipts (3) — Beckley garage</td>
+        <td class="status-present">RECOVERED</td>
+        <td>Glovebox.</td>
+      </tr>
+      <tr>
+        <td>006</td>
+        <td>Empty coffee thermos — green, dented lid</td>
+        <td class="status-present">RECOVERED</td>
+        <td>Cupholder, driver side.</td>
+      </tr>
+      <tr>
+        <td>007</td>
+        <td>Road atlas — West Virginia / Virginia</td>
+        <td class="status-present">RECOVERED</td>
+        <td>Rear seat. Tower Road circled in pen — Tower Road, Rt. 7 area.</td>
+      </tr>
+      <tr>
+        <td>008</td>
+        <td>Canvas tote bag — WHLW branded</td>
+        <td class="status-missing">NOT RECOVERED</td>
+        <td>Referenced by E. Pike (statement Oct 16) as carried by subject on departure. Not found in vehicle or at scene.</td>
+      </tr>
+      <tr>
+        <td>009</td>
+        <td>Spiral notebook — subject's field notes</td>
+        <td class="status-missing">NOT RECOVERED</td>
+        <td>Pike states subject carried a notebook regularly for work. Not located.</td>
+      </tr>
+      <tr>
+        <td>010</td>
+        <td>Portable cassette player — Sony Walkman Pro, black</td>
+        <td class="status-missing">NOT RECOVERED</td>
+        <td>Subject known to use cassette player for playback monitoring of broadcast recordings. Device not found in vehicle, at station, or at tower perimeter. See officer notes below.</td>
+      </tr>
+    </table>
+
+    <!-- NOT RECOVERED -->
+    <div class="not-recovered-box">
+      <div class="nr-label">Items Not Recovered — Summary</div>
+      <div class="nr-item">
+        <span class="nr-bullet">◆</span>
+        <span><strong>Canvas tote bag</strong> — last seen on subject's person at WHLW station (Pike statement). Contents unknown. Not recovered at vehicle, station, or tower perimeter.</span>
+      </div>
+      <div class="nr-item">
+        <span class="nr-bullet">◆</span>
+        <span><strong>Spiral notebook</strong> — subject's work notes. Station staff confirm she maintained a regular notebook for shift documentation. Not recovered at any location.</span>
+      </div>
+      <div class="nr-item">
+        <span class="nr-bullet">◆</span>
+        <span><strong>Portable cassette player (Sony Walkman Pro)</strong> — confirmed present at station Oct 13 by E. Pike. Not in vehicle. Not at station. Not recovered at tower site. Absence noted and unaccounted for.</span>
+      </div>
+    </div>
+
+    <!-- OFFICER NOTES -->
+    <div class="officer-notes">
+      <div class="notes-label">Logging Officer Notes — Deputy T. Caulfield</div>
+      The absence of the portable cassette player is noted as unusual. Subject was observed by Pike using the device in the archive room in the days prior to her disappearance — specifically for playback of archived broadcast tapes. Device was not left at the station, not in her vehicle, and not recovered at the tower search perimeter (Oct 17). Its location is currently unknown. No further follow-up actioned at this time per Sgt. direction.
+    </div>
+
+    <!-- SIGNATURE -->
+    <div class="sig-row">
+      <div class="sig-field">
+        <div class="sig-name">T. Caulfield</div>
+        Deputy, MHSD &nbsp;·&nbsp; Badge No. 0031<br>
+        October 16, 1998
+      </div>
+      <div class="sig-field">
+        Reviewed by:<br>
+        <div class="sig-name">D. Mercer</div>
+        Sheriff, MHSD &nbsp;·&nbsp; October 17, 1998
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="doc-footer">
+      <span>MHSD Form 14B &nbsp;·&nbsp; Personal Effects Inventory</span>
+      <span>MHSD-98-0041 &nbsp;·&nbsp; Vale, N.E.</span>
+      <span>Page 1 of 1</span>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

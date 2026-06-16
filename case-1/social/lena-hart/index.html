@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instalook</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #fafafa;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #262626;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV BAR */
+    .nav {
+      background: #fff;
+      border-bottom: 1px solid #dbdbdb;
+      padding: 0 16px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-inner {
+      max-width: 935px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #262626;
+    }
+
+    .nav-icons {
+      display: flex;
+      gap: 16px;
+      font-size: 13px;
+      color: #8e8e8e;
+    }
+
+    /* PROFILE */
+    .profile-section {
+      max-width: 935px;
+      margin: 0 auto;
+      padding: 30px 20px 0;
+    }
+
+    .profile-top {
+      display: flex;
+      gap: 28px;
+      margin-bottom: 20px;
+      align-items: flex-start;
+    }
+
+    .profile-pic {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 3px solid #dbdbdb;
+      flex-shrink: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #efefef;
+      font-size: 48px;
+      color: #8e8e8e;
+    }
+
+    .profile-pic img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-info { flex: 1; }
+
+    .profile-name-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .profile-username {
+      font-size: 20px;
+      font-weight: 400;
+      color: #262626;
+    }
+
+    .profile-btn {
+      background: #efefef;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: #262626;
+      cursor: default;
+    }
+
+    .profile-verified {
+      width: 18px;
+      height: 18px;
+      display: none;
+    }
+
+    .stats {
+      display: flex;
+      gap: 32px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .stats span { color: #262626; }
+    .stat-num { font-weight: 600; }
+
+    .bio {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #262626;
+      margin-bottom: 4px;
+    }
+
+    .bio-name {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .bio-text {
+      white-space: pre-line;
+    }
+
+    .bio-link {
+      color: #00376b;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 2px;
+    }
+
+    /* HIGHLIGHTS */
+    .highlights {
+      display: flex;
+      gap: 16px;
+      padding: 12px 0 20px;
+      overflow-x: auto;
+    }
+
+    .highlight-item {
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .highlight-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 1px solid #dbdbdb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 4px;
+      background: #fafafa;
+      font-size: 24px;
+    }
+
+    .highlight-label {
+      font-size: 12px;
+      color: #262626;
+      max-width: 64px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* TABS */
+    .tabs {
+      border-top: 1px solid #dbdbdb;
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+    }
+
+    .tab {
+      padding: 12px 0;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: #8e8e8e;
+      text-transform: uppercase;
+      border-top: 1px solid transparent;
+      margin-top: -1px;
+      cursor: default;
+    }
+
+    .tab.active {
+      color: #262626;
+      border-top-color: #262626;
+    }
+
+    /* POST GRID */
+    .post-grid {
+      max-width: 935px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      padding: 4px 0;
+    }
+
+    .post-thumb {
+      aspect-ratio: 1;
+      background: #efefef;
+      cursor: pointer;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .post-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .post-thumb-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: #c7c7c7;
+      background: #efefef;
+    }
+
+    .post-thumb:hover .post-overlay {
+      opacity: 1;
+    }
+
+    .post-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .post-overlay-stat {
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* POST MODAL */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      background: #fff;
+      border-radius: 4px;
+      max-width: 900px;
+      width: 100%;
+      min-height: 500px;
+      max-height: 90vh;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .modal-image {
+      flex: 1.2;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+    }
+
+    .modal-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .modal-image-placeholder {
+      font-size: 64px;
+      color: #555;
+    }
+
+    .modal-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      border-bottom: 1px solid #efefef;
+    }
+
+    .modal-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #efefef;
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #8e8e8e;
+    }
+
+    .modal-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .modal-user {
+      font-size: 14px;
+      font-weight: 600;
+      color: #262626;
+    }
+
+    .modal-location {
+      font-size: 12px;
+      color: #8e8e8e;
+      font-weight: 400;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 28px;
+      cursor: pointer;
+      z-index: 1001;
+      line-height: 1;
+    }
+
+    .modal-caption {
+      padding: 14px 16px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #262626;
+      border-bottom: 1px solid #efefef;
+    }
+
+    .modal-caption strong {
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .modal-comments {
+      padding: 10px 16px;
+      flex: 1;
+    }
+
+    .comment {
+      padding: 6px 0;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .comment strong {
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .comment-time {
+      font-size: 11px;
+      color: #8e8e8e;
+      margin-top: 2px;
+    }
+
+    .modal-footer {
+      padding: 12px 16px;
+      border-top: 1px solid #efefef;
+      font-size: 10px;
+      color: #8e8e8e;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .modal-actions {
+      padding: 8px 16px;
+      border-top: 1px solid #efefef;
+      display: flex;
+      gap: 12px;
+      font-size: 22px;
+      color: #262626;
+    }
+
+    .modal-action { cursor: default; }
+
+    /* MOBILE */
+    @media (max-width: 735px) {
+      .profile-pic { width: 77px; height: 77px; font-size: 28px; }
+      .profile-top { gap: 16px; }
+      .profile-username { font-size: 18px; }
+      .stats { gap: 16px; font-size: 13px; }
+      .post-grid { gap: 2px; }
+      .modal { flex-direction: column; max-height: 95vh; }
+      .modal-image { min-height: 200px; max-height: 40vh; }
+      .highlights { padding: 8px 0 16px; gap: 12px; }
+      .highlight-circle { width: 56px; height: 56px; font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">Instalook</div>
+    <div class="nav-icons">
+      <span>+</span>
+      <span>&hearts;</span>
+      <span>&#9776;</span>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div class="profile-section" id="profileSection">
+  <!-- Populated by config below -->
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active">Posts</div>
+  <div class="tab">Tagged</div>
+</div>
+
+<!-- POST GRID -->
+<div class="post-grid" id="postGrid">
+  <!-- Populated by config below -->
+</div>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
+  <button class="modal-close" onclick="closeModal()">&times;</button>
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-image" id="modalImage"></div>
+    <div class="modal-content">
+      <div class="modal-header" id="modalHeader"></div>
+      <div class="modal-actions">
+        <span class="modal-action">&hearts;</span>
+        <span class="modal-action">&#128172;</span>
+        <span class="modal-action">&#9993;</span>
+      </div>
+      <div class="modal-caption" id="modalCaption"></div>
+      <div class="modal-comments" id="modalComments"></div>
+      <div class="modal-footer" id="modalFooter"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/*
+  ============================================================
+  CONFIGURATION — EDIT THIS SECTION FOR EACH CASE
+  ============================================================
+  Replace the profile info and posts array below with your
+  character's content. Everything else stays the same.
+  ============================================================
+*/
+
+var PROFILE = {
+  username: "lena.hart.1986",
+  displayName: "Lena Hart",
+  photo: "lena-hart-profile.png",
+  bio: "journalism @ WVU \u2019 08 \ud83d\udcf0\nwriting what people don\u2019t want written\nMoth Hollow born\n\u201cthe truth doesn\u2019t go away just because no one\u2019s looking\u201d",
+  bioLink: null,
+  posts: 14,
+  followers: 203,
+  following: 178,
+  highlights: []
+};
+
+var POSTS = [
+  // POST 1 — most recent, last before disappearance — eerie, clue-bearing
+  {
+    image: "post01.png",
+    placeholderEmoji: "\ud83d\udce1",
+    location: "Moth Hollow, WV",
+    caption: "drove out to tower road tonight. didn\u2019t plan to. just ended up there.\n\nsomething about this place. the way the static gets louder the closer you get to the relay. like it\u2019s coming from the ground.\n\ni\u2019ve been reading about what happened here. i think i know why the signal was different on her shift. i think i know who changed it.\n\nneed a few more days to be sure.",
+    date: "FEBRUARY 28, 2007",
+    likes: 6,
+    comments: [
+      { user: "g.hart_wv", text: "lena please call me back", time: "2w" },
+      { user: "g.hart_wv", text: "i\u2019m serious. call me.", time: "2w" },
+      { user: "r.dell.writes", text: "are you okay?? you\u2019ve gone quiet", time: "1w" }
+    ]
+  },
+  // POST 2 — deep in obsession, references conditioning
+  {
+    image: "post02.png",
+    placeholderEmoji: "\ud83d\udcc3",
+    location: "WVU Library — Morgantown, WV",
+    caption: "spent six hours in the archive today going through broadcast logs from \u201896\u201399.\n\nthe pattern is not random. the same structural elements repeat across 14 separate broadcasts. same timing, same frequency windows, same emotional framing at the same intervals.\n\nthis is not coincidence. someone designed this.\n\n#journalism #research #whlw #mothhollow",
+    date: "FEBRUARY 14, 2007",
+    likes: 11,
+    comments: [
+      { user: "cass.m.media", text: "okay this is genuinely fascinating. what\u2019s the pattern exactly?" },
+      { user: "lena.hart.1986", text: "@cass.m.media I\u2019ll write it up properly when I\u2019m done. don\u2019t want to say too much yet" },
+      { user: "g.hart_wv", text: "you said that three weeks ago. when are you coming home", time: "3w" },
+      { user: "lena.hart.1986", text: "@g.hart_wv soon. I promise. this is almost done", time: "3w" }
+    ]
+  },
+  // POST 3 — finds Voss connection, still somewhat academic
+  {
+    image: "post03.png",
+    placeholderEmoji: "\ud83d\udd0d",
+    location: "Moth Hollow, WV",
+    caption: "found something in the WHLW staff records that\u2019s been sitting in a county archive for 8 years. one name that shouldn\u2019t be there.\n\na consulting psychologist. listed for \u201ccommunity outreach.\u201d at a radio station.\n\ni\u2019ve been reading his published papers. the language in his 1991 study on behavioral compliance and audio stimulus is\u2026 very specific. very familiar.\n\nmore soon.",
+    date: "JANUARY 30, 2007",
+    likes: 19,
+    comments: [
+      { user: "cass.m.media", text: "okay NOW I\u2019m nervous for you lol" },
+      { user: "lena.hart.1986", text: "@cass.m.media don\u2019t be. it\u2019s just research \ud83d\ude42" },
+      { user: "truthseeker_appalachia", text: "the WHLW case?? I\u2019ve been following this. what name did you find?" },
+      { user: "lena.hart.1986", text: "@truthseeker_appalachia not ready to say yet. need to verify more first" }
+    ]
+  },
+  // POST 4 — visiting Moth Hollow for first time in years
+  {
+    image: "post04.png",
+    placeholderEmoji: "\ud83c\udf32",
+    location: "Moth Hollow, WV",
+    caption: "first time back in four years.\n\nit\u2019s smaller than I remember. quieter. people don\u2019t really talk about Naomi here anymore. it\u2019s like the town just\u2026 moved on.\n\nbut the files didn\u2019t. and I\u2019m not going to either.\n\n#mothhollow #westvirginia #coldcase",
+    date: "JANUARY 12, 2007",
+    likes: 34,
+    comments: [
+      { user: "g.hart_wv", text: "you should have told me you were coming", time: "6w" },
+      { user: "lena.hart.1986", text: "@g.hart_wv I know. I\u2019m sorry. I didn\u2019t want to make it a whole thing. I\u2019m okay", time: "6w" },
+      { user: "wvu_press_club", text: "is this for the investigative piece?? we want to run it when you\u2019re ready!" },
+      { user: "lena.hart.1986", text: "@wvu_press_club yes. it\u2019s taking longer than I thought" }
+    ]
+  },
+  // POST 5 — the blog mention, still framed as a project
+  {
+    image: "post05.png",
+    placeholderEmoji: "\ud83d\udcdd",
+    location: "Morgantown, WV",
+    caption: "started writing it all up properly. blog format for now while I organize my notes. it\u2019s a lot.\n\nthe short version: Naomi Vale didn\u2019t just disappear. the conditions for her disappearance were created, deliberately, over a long period of time. and the investigation that followed was\u2026 not a real investigation.\n\npeople don\u2019t disappear because of the sound. they disappear because they believe the sound means something.\n\n#naomivale #whlw #journalism",
+    date: "DECEMBER 8, 2006",
+    likes: 47,
+    comments: [
+      { user: "cass.m.media", text: "that last line. wow." },
+      { user: "r.dell.writes", text: "lena this is really good. send me the blog link when it\u2019s up?" },
+      { user: "lena.hart.1986", text: "@r.dell.writes will do \u2764\ufe0f still drafting" },
+      { user: "truthseeker_appalachia", text: "following this closely. the WHLW case has been buried for too long" },
+      { user: "g.hart_wv", text: "please be careful with this", time: "8w" },
+      { user: "lena.hart.1986", text: "@g.hart_wv it\u2019s journalism gabe. I\u2019m fine", time: "8w" }
+    ]
+  },
+  // POST 6 — normal student life, transition point
+  {
+    image: "post06.png",
+    placeholderEmoji: "\u2615",
+    location: "Black Bear Coffee — Morgantown, WV",
+    caption: "deadline week. living at black bear. the barista knows my order before I open my mouth.\n\nhonestly couldn\u2019t get through this semester without this place (and Cassie who brings me food when I forget to eat \ud83d\ude02)\n\n#student #journalismschool #wvu #coffeeshop",
+    date: "NOVEMBER 19, 2006",
+    likes: 62,
+    comments: [
+      { user: "cass.m.media", text: "someone has to keep you alive \ud83d\ude44" },
+      { user: "lena.hart.1986", text: "@cass.m.media you are literally saving my life rn" },
+      { user: "blackbear.coffee.wv", text: "we\u2019ll have it ready when you walk in \u2615\u2764\ufe0f" }
+    ]
+  },
+  // POST 7 — announces the Naomi project for first time
+  {
+    image: "post07.png",
+    placeholderEmoji: "\ud83d\udcf0",
+    location: "WVU School of Journalism",
+    caption: "approved for my independent research project for spring semester.\n\nI\u2019m going to write about my sister Naomi. what happened in Moth Hollow in 1998. the investigation that went nowhere. the questions that were never asked.\n\nI don\u2019t know where it\u2019ll go yet. but I know she deserves to have someone try.\n\n#naomivale #journalism #coldcase #investigativejournalism",
+    date: "OCTOBER 31, 2006",
+    likes: 118,
+    comments: [
+      { user: "g.hart_wv", text: "lena\u2026" },
+      { user: "lena.hart.1986", text: "@g.hart_wv I know. but I have to. you know I have to." },
+      { user: "g.hart_wv", text: "@lena.hart.1986 yeah. I know. \ud83d\udc9b" },
+      { user: "wvu_press_club", text: "this is going to be incredible. we\u2019re behind you 100%" },
+      { user: "cass.m.media", text: "I\u2019m so proud of you \u2764\ufe0f \u2764\ufe0f \u2764\ufe0f" },
+      { user: "r.dell.writes", text: "she\u2019s going to be remembered. you\u2019re going to make sure of that." },
+      { user: "lena.hart.1986", text: "@r.dell.writes that\u2019s exactly it. exactly." }
+    ]
+  },
+  // POST 8 — normal life, campus
+  {
+    image: "post08.png",
+    placeholderEmoji: "\ud83c\udf42",
+    location: "WVU Campus — Morgantown, WV",
+    caption: "october on campus is unreal. why does it always go by so fast.\n\n#fall #wvu #morgantown #westvirginia",
+    date: "OCTOBER 14, 2006",
+    likes: 54,
+    comments: [
+      { user: "cass.m.media", text: "stop it\u2019s so pretty" },
+      { user: "r.dell.writes", text: "this is my whole personality in one photo" }
+    ]
+  },
+  // POST 9 — road trip home, normal
+  {
+    image: "post09.png",
+    placeholderEmoji: "\ud83d\ude97",
+    location: "Route 19 South, WV",
+    caption: "driving home for the weekend. my cousin\u2019s wedding. haven\u2019t been back to Moth Hollow in almost two years.\n\nwild how a four hour drive can feel like going back in time.",
+    date: "SEPTEMBER 2, 2006",
+    likes: 31,
+    comments: [
+      { user: "g.hart_wv", text: "text me when you\u2019re close! making food" },
+      { user: "lena.hart.1986", text: "@g.hart_wv \ud83d\udc9b \ud83d\udc9b" }
+    ]
+  }
+];
+
+/*
+  ============================================================
+  END OF CONFIGURATION — do not edit below this line
+  ============================================================
+*/
+
+function renderProfile() {
+  var p = PROFILE;
+  var photoHtml = p.photo
+    ? '<img src="' + p.photo + '" alt="' + p.displayName + '">'
+    : '\uD83D\uDC64';
+
+  var highlightsHtml = '';
+  if (p.highlights && p.highlights.length > 0) {
+    highlightsHtml = '<div class="highlights">';
+    for (var i = 0; i < p.highlights.length; i++) {
+      highlightsHtml += '<div class="highlight-item"><div class="highlight-circle">' +
+        p.highlights[i].emoji + '</div><div class="highlight-label">' +
+        p.highlights[i].label + '</div></div>';
+    }
+    highlightsHtml += '</div>';
+  }
+
+  var linkHtml = p.bioLink
+    ? '<a class="bio-link" href="#">' + p.bioLink + '</a>'
+    : '';
+
+  document.getElementById('profileSection').innerHTML =
+    '<div class="profile-top">' +
+      '<div class="profile-pic">' + photoHtml + '</div>' +
+      '<div class="profile-info">' +
+        '<div class="profile-name-row">' +
+          '<span class="profile-username">' + p.username + '</span>' +
+          '<button class="profile-btn">Following</button>' +
+          '<button class="profile-btn">Message</button>' +
+        '</div>' +
+        '<div class="stats">' +
+          '<span><span class="stat-num">' + p.posts + '</span> posts</span>' +
+          '<span><span class="stat-num">' + p.followers.toLocaleString() + '</span> followers</span>' +
+          '<span><span class="stat-num">' + p.following + '</span> following</span>' +
+        '</div>' +
+        '<div class="bio">' +
+          '<span class="bio-name">' + p.displayName + '</span>' +
+          '<span class="bio-text">' + p.bio.replace(/\n/g, '<br>') + '</span>' +
+          linkHtml +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    highlightsHtml;
+}
+
+function renderGrid() {
+  var grid = document.getElementById('postGrid');
+  var html = '';
+
+  for (var i = 0; i < POSTS.length; i++) {
+    var post = POSTS[i];
+    var imgHtml = post.image
+      ? '<img src="' + post.image + '" alt="Post">'
+      : '<div class="post-thumb-placeholder">' + (post.placeholderEmoji || '\uD83D\uDDBC') + '</div>';
+
+    html += '<div class="post-thumb" onclick="openModal(' + i + ')">' +
+      imgHtml +
+      '<div class="post-overlay">' +
+        '<div class="post-overlay-stat">&hearts; ' + post.likes + '</div>' +
+        '<div class="post-overlay-stat">&#128172; ' + post.comments.length + '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  grid.innerHTML = html;
+}
+
+function openModal(index) {
+  var post = POSTS[index];
+  var p = PROFILE;
+  var backdrop = document.getElementById('modalBackdrop');
+
+  var imgHtml = post.image
+    ? '<img src="' + post.image + '" alt="Post">'
+    : '<div class="modal-image-placeholder">' + (post.placeholderEmoji || '\uD83D\uDDBC') + '</div>';
+
+  document.getElementById('modalImage').innerHTML = imgHtml;
+
+  var avatarHtml = p.photo
+    ? '<img src="' + p.photo + '" alt="">'
+    : '\uD83D\uDC64';
+
+  var locationHtml = post.location
+    ? '<div class="modal-location">' + post.location + '</div>'
+    : '';
+
+  document.getElementById('modalHeader').innerHTML =
+    '<div class="modal-avatar">' + avatarHtml + '</div>' +
+    '<div><div class="modal-user">' + p.username + '</div>' + locationHtml + '</div>';
+
+  document.getElementById('modalCaption').innerHTML =
+    '<strong>' + p.username + '</strong> ' + post.caption;
+
+  var commentsHtml = '';
+  for (var i = 0; i < post.comments.length; i++) {
+    var c = post.comments[i];
+    commentsHtml += '<div class="comment"><strong>' + c.user + '</strong> ' + c.text +
+      '<div class="comment-time">' + (c.time || '1w') + '</div></div>';
+  }
+  document.getElementById('modalComments').innerHTML = commentsHtml;
+  document.getElementById('modalFooter').textContent = post.date || '';
+
+  backdrop.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modalBackdrop') && e.target.className !== 'modal-close') return;
+  document.getElementById('modalBackdrop').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+
+window.addEventListener('DOMContentLoaded', function() {
+  renderProfile();
+  renderGrid();
+});
+</script>
+<script>
+  // Tell the hub this profile has been viewed
+  try {
+    var STORAGE_KEY = 'detective-hub-save';
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      var state = JSON.parse(saved);
+      if (!state.viewedEvidence) state.viewedEvidence = [];
+      if (!state.viewedEvidence.includes('social-lena-hart')) {
+        state.viewedEvidence.push('social-lena-hart');
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }
+    }
+  } catch(e) {}
+</script>
+
+</body>
+</html>

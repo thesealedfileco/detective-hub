@@ -1,224 +1,370 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Case File — Detective Hub</title>
+  <title>The Moth Hollow Tapes — Cold Case File</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- NAME GATE -->
-<div class="name-gate" id="nameGate">
-  <div class="name-gate-inner">
-    <div class="name-gate-stamp">CLASSIFIED MATERIAL</div>
-    <div class="name-gate-title">Case File Access</div>
-    <p class="name-gate-sub">This file is restricted to assigned personnel only.<br>Please identify yourself to proceed.</p>
-    <input class="name-gate-input" type="text" id="nameInput" placeholder="Enter your name, Detective" autocomplete="off" autofocus>
-    <div class="name-gate-add-row" id="addNameRow">
-      <button class="name-gate-add-btn" id="addNameBtn" onclick="addDetective()">+ Add another detective</button>
-    </div>
-    <div class="name-gate-names" id="nameList"></div>
-    <button class="name-gate-btn" id="nameBtn" disabled onclick="enterCase()">Open Case File</button>
-    <div class="name-gate-footer">Investigating solo or with a team — all are welcome</div>
-  </div>
-</div>
+  <!-- ═══════════════════════════════════════════
+       SCREEN 1: NAME GATE
+       ═══════════════════════════════════════════ -->
+  <div class="screen" id="screen-namegate">
+    <div class="namegate-inner">
 
-<!-- STEP 1: CINEMATIC OVERLAY -->
-<div class="cinematic-overlay" id="cinematicOverlay" style="display:none;">
-  <canvas id="cinematicCanvas"></canvas>
-  <div class="cinematic-stamp" id="cinematicStamp">CASE CLOSED</div>
-</div>
+      <div class="namegate-stamp">CLASSIFIED MATERIAL</div>
+      <div class="namegate-logo">THE SEALED FILE CO.</div>
+      <h1 class="namegate-title">The Moth Hollow Tapes</h1>
+      <p class="namegate-sub">This case file is restricted to assigned personnel only.<br>Identify yourself to proceed.</p>
 
-<!-- STEP 2: FULL REVEAL PAGE -->
-<div class="reveal-fullpage" id="revealFullpage" style="display:none;">
-  <div class="reveal-fp-inner">
-    <div class="reveal-fp-header">
-      <div class="reveal-fp-archive-label">THE SEALED FILE CO — RECOVERED FILES ARCHIVE</div>
-      <div class="reveal-fp-stamp-wrap">
-        <div class="reveal-fp-stamp">CASE CLOSED</div>
-      </div>
-      <h1 class="reveal-fp-title" id="revealFpTitle"></h1>
-      <div class="reveal-fp-case-id" id="revealFpCaseId"></div>
-      <div class="reveal-fp-solved-by" id="revealFpSolvedBy"></div>
-    </div>
-    <div class="reveal-fp-divider"></div>
-    <div class="reveal-fp-section">
-      <div class="reveal-fp-section-label">Case resolution — what happened</div>
-      <div class="reveal-fp-story" id="revealFpStory"></div>
-    </div>
-    <div class="reveal-fp-section">
-      <div class="reveal-fp-section-label">Key evidence recovered</div>
-      <div class="reveal-fp-evidence-grid">
-        <div class="reveal-fp-evidence-slot"><div class="reveal-fp-evidence-placeholder">📋</div><div class="reveal-fp-evidence-label">Missing Person Report</div></div>
-        <div class="reveal-fp-evidence-slot"><div class="reveal-fp-evidence-placeholder">📼</div><div class="reveal-fp-evidence-label">The Fourth Tape</div></div>
-        <div class="reveal-fp-evidence-slot"><div class="reveal-fp-evidence-placeholder">📷</div><div class="reveal-fp-evidence-label">Relay Tower Photos</div></div>
-        <div class="reveal-fp-evidence-slot"><div class="reveal-fp-evidence-placeholder">🔒</div><div class="reveal-fp-evidence-label">Incident Report</div></div>
-      </div>
-    </div>
-    <div class="reveal-fp-section">
-      <div class="reveal-fp-section-label">Case subjects — final status</div>
-      <div class="reveal-fp-characters" id="revealFpCharacters"></div>
-    </div>
-    <div class="reveal-fp-divider"></div>
-    <div class="reveal-fp-section">
-      <div class="reveal-fp-section-label">Case closure documents</div>
-      <div class="reveal-fp-download-grid">
-        <div class="reveal-fp-download-card" onclick="downloadCertificate()">
-          <div class="reveal-fp-download-icon">📜</div>
-          <div class="reveal-fp-download-name">Case closure certificate</div>
-          <div class="reveal-fp-download-desc">Official resolution document</div>
+      <div class="namegate-form">
+        <input
+          class="namegate-input"
+          type="text"
+          id="nameInput"
+          placeholder="Enter your name, Detective"
+          autocomplete="off"
+          maxlength="40"
+        >
+        <div class="namegate-add-row" id="addNameRow">
+          <button class="namegate-add-btn" id="addNameBtn">+ Add another detective</button>
         </div>
-        <div class="reveal-fp-download-card" onclick="downloadBadge()">
-          <div class="reveal-fp-download-icon">🏷️</div>
-          <div class="reveal-fp-download-name">Social media badge</div>
-          <div class="reveal-fp-download-desc">Share your achievement</div>
+        <div class="namegate-names" id="nameList"></div>
+        <button class="namegate-btn" id="nameBtn" disabled>Open Case File</button>
+      </div>
+
+      <p class="namegate-disclaimer">
+        All characters, events, recordings, and locations in this case are entirely fictional.
+        Character images are AI-generated. Any resemblance to real persons or events is coincidental.
+        This is a work of interactive fiction created by The Sealed File Co.
+      </p>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       SCREEN 2: CINEMATIC INTRO
+       ═══════════════════════════════════════════ -->
+  <div class="screen" id="screen-intro" hidden>
+    <div class="intro-inner">
+      <div class="intro-lines" id="introLines"></div>
+      <div class="intro-stamp" id="introStamp"></div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       SCREEN 3: MAIN HUB
+       shown in two sub-views via JS class toggling
+       ═══════════════════════════════════════════ -->
+  <div class="screen" id="screen-hub" hidden>
+
+    <!-- ── HUB HEADER (always visible) ── -->
+    <header class="hub-header">
+      <div class="hub-header-inner">
+        <div class="hub-header-left">
+          <div class="hub-case-id" id="hubCaseId"></div>
+          <div class="hub-title" id="hubTitle"></div>
         </div>
-        <div class="reveal-fp-download-card" onclick="downloadID()">
-          <div class="reveal-fp-download-icon">🪪</div>
-          <div class="reveal-fp-download-name">Detective ID card</div>
-          <div class="reveal-fp-download-desc">Collector's credential</div>
-        </div>
-      </div>
-    </div>
-    <div class="reveal-fp-final-note" id="revealFpFinalNote"></div>
-    <div class="reveal-fp-return">
-      <button class="reveal-fp-return-btn" onclick="returnToHub()">Return to Archive</button>
-    </div>
-    <div class="reveal-fp-footer">
-      The Sealed File Co — Recovered Files Archive &nbsp;·&nbsp; thesealedfileco.com
-    </div>
-  </div>
-</div>
-
-<!-- SPECTROGRAM NOTIFICATION -->
-<div class="spectro-notification" id="spectroNotification" style="display:none;">
-  <div class="spectro-notification-inner">
-    <div class="spectro-notif-icon">📡</div>
-    <div class="spectro-notif-text" id="spectroNotifText"></div>
-    <button class="spectro-notif-dismiss" onclick="dismissSpectroNotification()">Understood</button>
-  </div>
-</div>
-
-<!-- SPECTROGRAM RESULT MODAL -->
-<div class="spectro-modal-bg" id="spectroModalBg" style="display:none;" onclick="closeSpectroModal()">
-  <div class="spectro-modal" onclick="event.stopPropagation()">
-    <div class="spectro-modal-header">
-      <div class="spectro-modal-label" id="spectroModalLabel"></div>
-      <button class="spectro-modal-close" onclick="closeSpectroModal()">&times;</button>
-    </div>
-    <div class="spectro-modal-body">
-      <iframe id="spectroModalImg" src="" style="width:100%;height:500px;border:none;background:#0a120e;"></iframe>
-    </div>
-    <div class="spectro-modal-footer">Visual analysis complete — anomalies detected in waveform</div>
-  </div>
-</div>
-
-<!-- MAIN HUB -->
-<div class="container" id="mainHub" style="display:none;">
-
-  <div class="folder-tab" id="caseTab">Case — Active</div>
-  <div class="folder-body">
-    <div class="coffee-stain" style="bottom:30px;right:40px;"></div>
-    <div class="coffee-stain" style="bottom:60px;right:50px;width:45px;height:45px;border-width:3px;"></div>
-
-    <div class="header">
-      <div class="stamp" id="headerStamp">COLD CASE — REOPENED</div>
-      <h1 class="case-title" id="caseTitle"></h1>
-      <div class="case-meta" id="caseSubtitle"></div>
-    </div>
-
-    <div class="notebook" id="notebook"></div>
-
-    <div class="progress-section">
-      <div class="progress-item"><div class="progress-num" id="evidenceCount">0/0</div><div class="progress-label">Evidence</div></div>
-      <div class="progress-item"><div class="progress-num" id="suspectCount">0/0</div><div class="progress-label">Suspects</div></div>
-      <div class="progress-item"><div class="progress-num" id="questionCount">0/0</div><div class="progress-label">Questions</div></div>
-      <div class="progress-item"><div class="progress-num" id="progressPct">0%</div><div class="progress-label">Complete</div></div>
-    </div>
-
-    <div class="section-divider">
-      <span>Evidence locker</span>
-      <span class="section-count" id="evidenceSectionCount" style="margin-left:auto"></span>
-    </div>
-    <div class="evidence-grid" id="evidenceGrid"></div>
-
-    <div class="section-divider"><span>Audio evidence</span></div>
-    <div class="audio-list" id="audioList"></div>
-
-    <div class="section-divider">
-      <span>Suspect board</span>
-      <span class="section-count" id="suspectSectionCount" style="margin-left:auto"></span>
-    </div>
-    <div class="suspect-grid" id="suspectGrid"></div>
-
-    <div class="input-area">
-      <div class="input-title">Submit evidence</div>
-      <div class="input-subtitle">Found a code in the evidence? A phone number on a document? An answer to the case? Enter it here.</div>
-      <div class="input-row">
-        <input class="text-input" type="text" id="codeInput" placeholder="Enter password, phone number, or answer..." autocomplete="off">
-        <button class="submit-btn" onclick="submitCode()">Submit</button>
-      </div>
-      <div class="hint-area">
-        <button class="hint-btn" id="hintBtn" onclick="showHint()">Stuck on the case? Request a hint...</button>
-        <span class="hint-remaining" id="hintCount">3 hints remaining</span>
-      </div>
-      <div class="hint-box" id="hintBox"></div>
-      <div class="feedback" id="feedback"></div>
-    </div>
-
-    <div class="solution-section" id="solutionSection">
-      <div class="solution-envelope" id="solutionEnvelope">
-        <div class="envelope-flap" id="envelopeFlap"></div>
-        <div class="envelope-body">
-          <div class="envelope-stamp">CASE RESOLUTION</div>
-          <div class="envelope-locked" id="envelopeLocked">
-            <div class="envelope-lock-icon">&#128274;</div>
-            <div class="envelope-lock-text">Complete your investigation before submitting your findings.</div>
-            <div class="envelope-progress-note" id="envelopeProgress"></div>
-          </div>
-          <div class="envelope-unlocked" id="envelopeUnlocked" style="display:none;">
-            <div class="envelope-intro">Your investigation is complete. Review the evidence one final time, then submit your findings below.</div>
-            <div class="solution-form" id="solutionForm">
-              <div class="solution-label">Who is responsible?</div>
-              <div class="suspect-select" id="suspectSelect"></div>
-              <div class="solution-questions" id="solutionQuestions"></div>
-              <button class="solution-submit-btn" id="solutionSubmitBtn" onclick="submitSolution()" disabled>Submit case resolution</button>
+        <div class="hub-header-right">
+          <div class="hub-detective" id="hubDetective"></div>
+          <div class="hub-progress-wrap">
+            <div class="hub-progress-bar">
+              <div class="hub-progress-fill" id="hubProgressFill"></div>
             </div>
-            <div class="solution-wrong" id="solutionWrong" style="display:none;">
-              <div class="solution-wrong-icon">&#10007;</div>
-              <div class="solution-wrong-text">Your findings do not match the evidence. Review the case and try again, Detective.</div>
-              <button class="solution-retry-btn" onclick="retrySolution()">Re-examine evidence</button>
+            <div class="hub-progress-label" id="hubProgressLabel"></div>
+          </div>
+          <div class="hub-menu-wrap" id="hubMenuWrap">
+            <button class="hub-menu-btn" id="hubMenuBtn" aria-label="Menu">⋯</button>
+            <div class="hub-menu-dropdown" id="hubMenuDropdown" hidden>
+              <button class="hub-menu-item hub-menu-item--danger" id="hubResetBtn">Reset game</button>
             </div>
           </div>
         </div>
       </div>
+    </header>
+
+
+    <!-- ══════════════════════════════════════════
+         SUB-VIEW A: LEAD BOARD
+         ══════════════════════════════════════════ -->
+    <div class="hub-view" id="view-board">
+
+      <div class="board-layout">
+
+        <!-- LEFT: Active leads + locked leads -->
+        <div class="board-leads-col">
+
+          <div class="board-section-label">Active Leads</div>
+          <div class="board-leads-active" id="boardLeadsActive">
+            <!-- Lead cards injected by JS -->
+          </div>
+
+          <div class="board-section-label board-section-label--mt" id="lockedLeadsLabel">Locked</div>
+          <div class="board-leads-locked" id="boardLeadsLocked">
+            <!-- Locked lead cards injected by JS -->
+          </div>
+
+          <div class="board-section-label board-section-label--mt" id="closedLeadsLabel" hidden>Closed</div>
+          <div class="board-leads-closed" id="boardLeadsClosed">
+            <!-- Closed lead cards injected by JS -->
+          </div>
+
+        </div>
+
+        <!-- RIGHT: Findings + Evidence locker + People -->
+        <div class="board-right-col">
+
+          <!-- Case Findings -->
+          <div class="board-panel" id="panel-findings">
+            <div class="board-panel-header">
+              <span class="board-panel-title">Case Findings</span>
+              <span class="board-panel-count" id="findingsCount">0</span>
+            </div>
+            <div class="board-findings-list" id="boardFindings">
+              <p class="board-empty-note">No findings yet. Close your first lead to record a finding.</p>
+            </div>
+          </div>
+
+          <!-- Evidence Locker -->
+          <div class="board-panel" id="panel-evidence">
+            <div class="board-panel-header">
+              <span class="board-panel-title">Evidence Locker</span>
+              <span class="board-panel-count" id="evidenceCount">0</span>
+            </div>
+            <div class="board-evidence-grid" id="boardEvidence">
+              <!-- Evidence cards injected by JS -->
+            </div>
+          </div>
+
+          <!-- People of Interest -->
+          <div class="board-panel" id="panel-people">
+            <div class="board-panel-header">
+              <span class="board-panel-title">People of Interest</span>
+              <span class="board-panel-count" id="peopleCount">0</span>
+            </div>
+            <div class="board-people-grid" id="boardPeople">
+              <!-- People cards injected by JS -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
     </div>
 
-    <!-- legacy reveal placeholder — hidden, new fullpage used instead -->
-    <div id="revealPage" style="display:none;"></div>
 
+    <!-- ══════════════════════════════════════════
+         SUB-VIEW B: ACTIVE LEAD DETAIL
+         ══════════════════════════════════════════ -->
+    <div class="hub-view" id="view-lead" hidden>
+
+      <!-- Sticky lead nav (back + switcher) -->
+      <div class="lead-nav" id="leadNav">
+        <button class="lead-nav-back" id="leadNavBack">
+          <span class="lead-nav-back-arrow">←</span> Lead Board
+        </button>
+        <div class="lead-nav-switcher" id="leadNavSwitcher">
+          <!-- Active lead tabs injected by JS -->
+        </div>
+      </div>
+
+      <!-- Sticky question bar -->
+      <div class="lead-question-bar" id="leadQuestionBar">
+        <div class="lead-question-label">Active Lead</div>
+        <div class="lead-question-text" id="leadQuestionText"></div>
+      </div>
+
+      <!-- Lead body -->
+      <div class="lead-body">
+
+        <!-- Detective note -->
+        <div class="lead-note" id="leadNote"></div>
+
+        <!-- Start here evidence -->
+        <div class="lead-evidence-section">
+          <div class="lead-section-label">Start Here</div>
+          <div class="lead-evidence-list" id="leadStartHere">
+            <!-- Start-here evidence cards injected by JS -->
+          </div>
+          <div class="lead-section-label lead-section-label--mt">All Unlocked Evidence</div>
+          <div class="lead-evidence-list" id="leadAllEvidence">
+            <!-- All other unlocked evidence injected by JS -->
+          </div>
+        </div>
+
+        <!-- Unlock task -->
+        <div class="lead-task-section" id="leadTaskSection">
+
+          <!-- Theory Select -->
+          <div class="task-block" id="task-theorySelect" hidden>
+            <div class="task-prompt" id="theoryPrompt"></div>
+            <div class="task-options" id="theoryOptions"></div>
+          </div>
+
+          <!-- Evidence Select -->
+          <div class="task-block" id="task-evidenceSelect" hidden>
+            <div class="task-prompt" id="evidenceSelectPrompt"></div>
+            <div class="task-options" id="evidenceSelectOptions"></div>
+          </div>
+
+          <!-- Suspect Select -->
+          <div class="task-block" id="task-suspectSelect" hidden>
+            <div class="task-prompt" id="suspectSelectPrompt"></div>
+            <div class="task-options" id="suspectSelectOptions"></div>
+          </div>
+
+          <!-- Code Entry -->
+          <div class="task-block" id="task-codeEntry" hidden>
+            <div class="task-prompt" id="codeEntryPrompt"></div>
+            <input class="task-code-input" type="text" id="codeEntryInput" placeholder="Enter code" autocomplete="off">
+          </div>
+
+          <!-- Case Report (multi-field, Lead 10) -->
+          <div class="task-block" id="task-caseReport" hidden>
+            <div class="task-prompt" id="caseReportPrompt"></div>
+            <div class="task-report-fields" id="caseReportFields">
+              <!-- Fields injected by JS -->
+            </div>
+          </div>
+
+          <!-- Hint + Submit row -->
+          <div class="task-actions">
+            <button class="task-hint-btn" id="taskHintBtn">Request a hint</button>
+            <button class="task-submit-btn" id="taskSubmitBtn">Submit Finding</button>
+          </div>
+
+          <!-- Hint display -->
+          <div class="task-hints" id="taskHints" hidden>
+            <div class="task-hints-inner" id="taskHintsInner"></div>
+          </div>
+
+          <!-- Feedback (correct / incorrect) -->
+          <div class="task-feedback" id="taskFeedback" hidden></div>
+
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         AUDIO PLAYER (fixed bottom, hub only)
+         ══════════════════════════════════════════ -->
+    <div class="audio-player" id="audioPlayer" hidden>
+      <div class="audio-player-inner">
+        <div class="audio-info">
+          <div class="audio-label" id="audioLabel"></div>
+          <div class="audio-meta" id="audioMeta"></div>
+        </div>
+        <div class="audio-controls">
+          <button class="audio-btn audio-btn--rewind" id="audioRewind" title="Back 10s">⟨⟨</button>
+          <button class="audio-btn audio-btn--play" id="audioPlay">▶</button>
+          <button class="audio-btn audio-btn--fwd" id="audioFwd" title="Forward 10s">⟩⟩</button>
+        </div>
+        <div class="audio-progress-wrap">
+          <div class="audio-progress-bar" id="audioProgressBar">
+            <div class="audio-progress-fill" id="audioProgressFill"></div>
+          </div>
+          <div class="audio-time" id="audioTime">0:00 / 0:00</div>
+        </div>
+        <button class="audio-close" id="audioClose" title="Close player">✕</button>
+      </div>
+      <audio id="audioEl"></audio>
+    </div>
+
+  </div><!-- /screen-hub -->
+
+
+  <!-- ═══════════════════════════════════════════
+       SCREEN 4: CASE CLOSED / REVEAL
+       ═══════════════════════════════════════════ -->
+  <div class="screen" id="screen-reveal" hidden>
+    <div class="reveal-inner">
+
+      <div class="reveal-archive-label">THE SEALED FILE CO. — RECOVERED FILES ARCHIVE</div>
+
+      <div class="reveal-stamp-wrap">
+        <div class="reveal-stamp">CASE CLOSED</div>
+      </div>
+
+      <h1 class="reveal-title" id="revealTitle"></h1>
+      <div class="reveal-case-id" id="revealCaseId"></div>
+      <div class="reveal-solved-by" id="revealSolvedBy"></div>
+
+      <div class="reveal-divider"></div>
+
+      <div class="reveal-section">
+        <div class="reveal-section-label">What Happened</div>
+        <div class="reveal-story" id="revealStory"></div>
+      </div>
+
+      <div class="reveal-section">
+        <div class="reveal-section-label">Case Findings — In Order</div>
+        <ol class="reveal-findings-list" id="revealFindings"></ol>
+      </div>
+
+      <div class="reveal-section">
+        <div class="reveal-section-label">Final Status — All Subjects</div>
+        <div class="reveal-fates" id="revealFates"></div>
+      </div>
+
+      <div class="reveal-divider"></div>
+
+      <div class="reveal-footer">
+        <div class="reveal-footer-ref" id="revealCaseRef"></div>
+        <div class="reveal-footer-co">The Sealed File Co.</div>
+      </div>
+
+    </div>
   </div>
 
-  <div class="folder-footer" id="footerText"></div>
 
-  <div style="text-align:center;margin-bottom:2rem;">
-    <button onclick="resetGame()" style="background:none;border:1px dashed var(--border);padding:6px 14px;font-family:'Courier Prime',monospace;font-size:10px;color:var(--text-muted);cursor:pointer;border-radius:4px;">Reset case progress</button>
+  <!-- ═══════════════════════════════════════════
+       MODAL: Evidence viewer (opens on card click)
+       ═══════════════════════════════════════════ -->
+  <div class="modal-overlay" id="modalOverlay" hidden>
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle"></div>
+        <button class="modal-close" id="modalClose">✕</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- iframe for HTML evidence files -->
+        <iframe class="modal-iframe" id="modalIframe" src="" title="Evidence file"></iframe>
+      </div>
+    </div>
   </div>
 
-</div>
 
-<!-- DEV ONLY — REMOVE BEFORE LAUNCH -->
-<div id="devTools" style="position:fixed;bottom:20px;right:20px;background:#ffeb3b;border:2px solid #f57f17;padding:10px 16px;font-family:monospace;font-size:13px;z-index:9999;border-radius:4px;">
-  🛠 DEV
-  <button onclick="devSkipStage()" style="margin-left:8px;cursor:pointer;padding:4px 10px;">Skip Stage →</button>
-  <button onclick="resetGame()" style="margin-left:8px;cursor:pointer;padding:4px 10px;">Reset</button>
-  <button onclick="devTriggerCinematic()" style="margin-left:8px;cursor:pointer;padding:4px 10px;background:#ff5722;color:white;border:none;">▶ End Seq</button>
-</div>
-<!-- END DEV ONLY -->
+  <!-- ═══════════════════════════════════════════
+       MODAL: People profile viewer
+       ═══════════════════════════════════════════ -->
+  <div class="modal-overlay" id="personModalOverlay" hidden>
+    <div class="modal modal--person" id="personModal">
+      <div class="modal-header">
+        <div class="modal-title" id="personModalTitle"></div>
+        <button class="modal-close" id="personModalClose">✕</button>
+      </div>
+      <div class="modal-body" id="personModalBody">
+        <!-- Person profile injected by JS -->
+      </div>
+    </div>
+  </div>
 
-<!-- script -->
-<script src="script.js"></script>
+
+  <!-- ═══════════════════════════════════════════
+       TOAST notifications
+       ═══════════════════════════════════════════ -->
+  <div class="toast-container" id="toastContainer"></div>
+
+
+  <script src="script.js"></script>
 </body>
 </html>

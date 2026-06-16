@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moth Hollow Emergency Dispatch — Incident Transcript — October 14, 1998</title>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --paper: #f0e8d8;
+    --paper-dark: #e4d8c0;
+    --paper-aged: #d8ccb4;
+    --ink: #1c1610;
+    --ink-faded: #3a3028;
+    --ink-blue: #2a4066;
+    --ink-blue-faded: #3d5580;
+    --stamp-red: #b83a2a;
+    --pencil: #7a6b50;
+    --pencil-light: #9a8b70;
+    --highlight-yellow: rgba(255, 220, 80, 0.42);
+    --redact: #1a1614;
+  }
+
+  body {
+    background: #b0a898;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 20px;
+    font-family: 'Courier Prime', monospace;
+  }
+
+  .page {
+    width: 850px;
+    background: var(--paper);
+    position: relative;
+    padding: 52px 65px 65px;
+    box-shadow:
+      2px 2px 0 rgba(0,0,0,0.04),
+      4px 4px 0 rgba(0,0,0,0.03),
+      8px 8px 20px rgba(0,0,0,0.2),
+      0 0 0 1px rgba(0,0,0,0.06);
+    overflow: hidden;
+  }
+
+  /* Scan texture — slightly darker on left edge like a photocopier */
+  .page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,0.04) 0%, transparent 4%, transparent 96%, rgba(0,0,0,0.03) 100%),
+      repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(120,80,30,0.03) 27px, rgba(120,80,30,0.03) 28px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Grainy scan overlay */
+  .scan-grain {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.5;
+  }
+
+  /* Tape marks top */
+  .tape-mark {
+    position: absolute;
+    height: 20px;
+    background: rgba(200,180,130,0.2);
+    border-top: 1px solid rgba(160,140,100,0.15);
+    border-bottom: 1px solid rgba(160,140,100,0.15);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .tape-tl { top: 0; left: 100px; width: 60px; transform: rotate(-1deg); }
+  .tape-tr { top: 0; right: 90px; width: 70px; transform: rotate(1.5deg); }
+
+  /* Coffee stain — top left, partially cut off */
+  .stain-tl {
+    position: absolute;
+    top: -15px; left: -10px;
+    width: 80px; height: 75px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center,
+      rgba(100,65,20,0.0) 50%,
+      rgba(100,65,20,0.07) 64%,
+      rgba(100,65,20,0.11) 73%,
+      rgba(100,65,20,0.05) 82%,
+      transparent 92%
+    );
+    transform: rotate(8deg) scaleX(1.1);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Bottom right stain */
+  .stain-br {
+    position: absolute;
+    bottom: 60px; right: 50px;
+    width: 55px; height: 50px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center,
+      rgba(100,65,20,0.0) 52%,
+      rgba(100,65,20,0.06) 65%,
+      rgba(100,65,20,0.09) 74%,
+      rgba(100,65,20,0.04) 83%,
+      transparent 92%
+    );
+    transform: rotate(-12deg) scaleX(0.9);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .page-inner { position: relative; z-index: 3; }
+
+  /* Margin annotation */
+  .margin-note {
+    position: absolute;
+    font-family: 'Special Elite', cursive;
+    font-size: 9.5px;
+    color: var(--pencil);
+    transform: rotate(-88deg);
+    transform-origin: top left;
+    left: 14px;
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0.72;
+    line-height: 1.4;
+  }
+
+  .watermark {
+    position: absolute;
+    bottom: 220px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Special Elite', cursive;
+    font-size: 50px;
+    color: rgba(0,0,0,0.022);
+    letter-spacing: 8px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 1;
+    user-select: none;
+  }
+
+  /* ============ HEADER ============ */
+  .doc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 10px;
+    margin-bottom: 6px;
+  }
+
+  .agency-id {
+    font-family: 'Special Elite', cursive;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+    line-height: 1.7;
+  }
+
+  .doc-title-block {
+    text-align: center;
+    flex: 1;
+    padding: 0 20px;
+  }
+
+  .doc-title-block .agency {
+    font-family: 'Special Elite', cursive;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: var(--ink);
+    display: block;
+    text-transform: uppercase;
+  }
+
+  .doc-title-block .subdept {
+    font-size: 9px;
+    color: var(--pencil);
+    letter-spacing: 2px;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .doc-title-block .doc-name {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--ink);
+    text-transform: uppercase;
+    margin-top: 6px;
+    display: block;
+    border-top: 1px solid var(--ink-faded);
+    padding-top: 4px;
+  }
+
+  .doc-meta-right {
+    text-align: right;
+    font-size: 9px;
+    color: var(--pencil);
+    line-height: 1.8;
+    letter-spacing: 0.5px;
+  }
+
+  /* ============ INCIDENT INFO BAR ============ */
+  .incident-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid var(--paper-aged);
+    margin: 10px 0 20px;
+  }
+
+  .incident-cell {
+    padding: 6px 10px;
+    border-right: 1px solid var(--paper-aged);
+  }
+  .incident-cell:last-child { border-right: none; }
+
+  .ic-label {
+    font-size: 7.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--pencil);
+    margin-bottom: 3px;
+  }
+
+  .ic-value {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0.3px;
+  }
+
+  /* ============ TRANSCRIPT SECTION ============ */
+  .section-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--pencil);
+    margin: 16px 0 8px;
+    border-bottom: 1px solid var(--paper-aged);
+    padding-bottom: 3px;
+  }
+
+  /* Notes box above transcript */
+  .transcription-note {
+    font-size: 8.5px;
+    color: var(--pencil);
+    font-style: italic;
+    margin-bottom: 14px;
+    line-height: 1.5;
+    padding: 5px 8px;
+    border-left: 2px solid var(--paper-aged);
+  }
+
+  /* Transcript lines */
+  .transcript-block {
+    border: 1px solid var(--paper-aged);
+    padding: 16px 18px;
+    background: rgba(200,185,155,0.07);
+    font-size: 10px;
+    line-height: 1.75;
+    color: var(--ink-faded);
+  }
+
+  .t-line {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+
+  .t-line:last-child { margin-bottom: 0; }
+
+  .t-time {
+    font-size: 8px;
+    color: var(--pencil);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+    width: 48px;
+  }
+
+  .t-speaker {
+    font-weight: 700;
+    color: var(--ink);
+    flex-shrink: 0;
+    width: 75px;
+    font-size: 9.5px;
+    letter-spacing: 0.3px;
+    margin-top: 1px;
+  }
+
+  .t-speaker.dispatch { color: var(--ink-blue-faded); }
+
+  .t-text {
+    flex: 1;
+    line-height: 1.65;
+  }
+
+
+  /* REDACTED line */
+  .redacted-bar {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .redact-time {
+    font-size: 8px;
+    color: var(--pencil);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    width: 48px;
+  }
+
+  .redact-speaker {
+    font-weight: 700;
+    color: var(--ink-blue-faded);
+    width: 75px;
+    font-size: 9.5px;
+  }
+
+  .redact-block {
+    background: var(--redact);
+    height: 14px;
+    flex: 1;
+    border-radius: 1px;
+    position: relative;
+    /* Slight imperfection — not perfectly rectangular */
+    clip-path: polygon(0 0, 100% 1px, 100% 100%, 0% calc(100% - 1px));
+  }
+
+  /* Timestamp header inside transcript */
+  .t-header {
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--pencil);
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--paper-aged);
+  }
+
+  /* Pause / ambient note */
+  .t-ambient {
+    font-size: 8.5px;
+    color: var(--pencil-light);
+    font-style: italic;
+    padding-left: 137px;
+    margin-bottom: 8px;
+  }
+
+  /* ============ RESPONSE LOG ============ */
+  .response-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--paper-aged);
+    margin-top: 16px;
+  }
+
+  .resp-cell {
+    padding: 6px 10px;
+    border-right: 1px solid var(--paper-aged);
+  }
+  .resp-cell:last-child { border-right: none; }
+
+  .resp-label {
+    font-size: 7.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--pencil);
+    margin-bottom: 3px;
+  }
+
+  .resp-value {
+    font-size: 10px;
+    color: var(--ink);
+    letter-spacing: 0.3px;
+  }
+
+  .resp-value.handwritten {
+    font-family: 'Special Elite', cursive;
+    font-size: 11px;
+    color: var(--ink-faded);
+  }
+
+  /* Response time — subtle flag */
+  .resp-value.flagged {
+    color: var(--stamp-red);
+    font-weight: 700;
+  }
+
+  /* ============ BOTTOM ADMIN ============ */
+  .admin-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 16px;
+    padding-top: 10px;
+    border-top: 1px solid var(--paper-aged);
+    font-size: 8.5px;
+    color: var(--pencil);
+    line-height: 1.8;
+  }
+
+  .admin-field { flex: 1; }
+
+  .sig-line {
+    border-bottom: 1px solid var(--ink-faded);
+    width: 140px;
+    height: 18px;
+    margin-bottom: 3px;
+  }
+
+  .sig-written {
+    font-family: 'Special Elite', cursive;
+    font-size: 12px;
+    color: var(--ink);
+    position: relative;
+    top: -4px;
+    left: 4px;
+    letter-spacing: 1px;
+  }
+
+  /* Missing operator — blank line */
+  .missing-field {
+    color: var(--pencil-light);
+    font-style: italic;
+    font-size: 8px;
+  }
+
+  .stamp-area {
+    transform: rotate(-5deg);
+    opacity: 0.78;
+    align-self: flex-end;
+  }
+
+  .stamp-box {
+    border: 2.5px solid var(--stamp-red);
+    padding: 6px 14px;
+    color: var(--stamp-red);
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .archive-note {
+    text-align: right;
+    font-size: 8px;
+    color: var(--pencil);
+    line-height: 1.7;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="scan-grain"></div>
+  <div class="tape-mark tape-tl"></div>
+  <div class="tape-mark tape-tr"></div>
+  <div class="stain-tl"></div>
+  <div class="stain-br"></div>
+  <div class="watermark">MHSD</div>
+
+  <!-- Margin annotation -->
+  <div class="margin-note" style="top: 390px;">time vs. statement</div>
+
+  <div class="page-inner">
+
+    <!-- ===== HEADER ===== -->
+    <div class="doc-header">
+      <div class="agency-id">
+        Moth Hollow Sheriff's Dept.<br>
+        Emergency Communications<br>
+        Moth Hollow, WV 26270
+      </div>
+      <div class="doc-title-block">
+        <span class="agency">Moth Hollow Sheriff's Department</span>
+        <span class="subdept">emergency dispatch division · incident transcript</span>
+        <span class="doc-name">911 Call Transcript — Verbatim Record</span>
+      </div>
+      <div class="doc-meta-right">
+        Form: ED-11 (Rev. 1994)<br>
+        Transcribed: Oct 15, 1998<br>
+        Transcribed By: Dispatch Records<br>
+        Tape Ref: MHSD-D-141098
+      </div>
+    </div>
+
+    <!-- ===== INCIDENT INFO ===== -->
+    <div class="incident-bar">
+      <div class="incident-cell">
+        <div class="ic-label">Incident Date</div>
+        <div class="ic-value">October 14, 1998</div>
+      </div>
+      <div class="incident-cell">
+        <div class="ic-label">Time of Call</div>
+        <div class="ic-value highlight">11:42 PM</div>
+      </div>
+      <div class="incident-cell">
+        <div class="ic-label">Incident Type</div>
+        <div class="ic-value">Unknown / Possible Injury</div>
+      </div>
+      <div class="incident-cell">
+        <div class="ic-label">Dispatch Operator</div>
+        <div class="ic-value missing-field">[Not recorded]</div>
+      </div>
+    </div>
+
+    <!-- ===== TRANSCRIPT ===== -->
+    <p class="section-label">Verbatim Transcript</p>
+
+    <div class="transcription-note">
+      Transcribed from dispatch tape MHSD-D-141098. Audio quality variable — portions transcribed with best-effort accuracy. Tape retained in evidence. Some content withheld pending review.
+    </div>
+
+    <div class="transcript-block">
+
+      <div class="t-header">Call begins — 11:42:07 PM · Duration: 1 min 48 sec · Anonymous male caller</div>
+
+      <div class="t-line">
+        <span class="t-time">11:42:07</span>
+        <span class="t-speaker dispatch">DISPATCH</span>
+        <span class="t-text">911, what is your emergency?</span>
+      </div>
+
+      <div class="t-line">
+        <span class="t-time">11:42:10</span>
+        <span class="t-speaker">CALLER</span>
+        <span class="t-text">Yeah — yeah, I need to report something. Out on Relay Road. Past the signal tower.</span>
+      </div>
+
+      <div class="t-line">
+        <span class="t-time">11:42:16</span>
+        <span class="t-speaker dispatch">DISPATCH</span>
+        <span class="t-text">What are you reporting, sir? Are you injured?</span>
+      </div>
+
+      <div class="t-line highlighted">
+        <span class="t-time">11:42:19</span>
+        <span class="t-speaker">CALLER</span>
+        <span class="t-text">No, not me. I heard — there was screaming. A woman, I think. Coming from up near the tower road. And the lights on the tower, they were — they were on. I don't know if they're supposed to be on.</span>
+      </div>
+
+      <div class="t-line">
+        <span class="t-time">11:42:35</span>
+        <span class="t-speaker dispatch">DISPATCH</span>
+        <span class="t-text">Can you describe the screaming? Was it continuous or —</span>
+      </div>
+
+      <div class="t-line">
+        <span class="t-time">11:42:38</span>
+        <span class="t-speaker">CALLER</span>
+        <span class="t-text">It stopped. It stopped by the time I pulled over. I wasn't sure if I imagined it. But I didn't. I know what I heard.</span>
+      </div>
+
+      <div class="t-ambient">[background noise — vehicle engine, wind]</div>
+
+      <div class="t-line">
+        <span class="t-time">11:42:52</span>
+        <span class="t-speaker dispatch">DISPATCH</span>
+        <span class="t-text">Are you still at the location now, sir?</span>
+      </div>
+
+      <div class="t-line">
+        <span class="t-time">11:42:54</span>
+        <span class="t-speaker">CALLER</span>
+        <span class="t-text">No. I kept driving. I didn't — I didn't want to stop. It didn't feel right. Something felt wrong up there.</span>
+      </div>
+
+      <div class="t-line">
+        <span class="t-time">11:43:02</span>
+        <span class="t-speaker dispatch">DISPATCH</span>
+        <span class="t-text">We'll send someone out. Can I get your name?</span>
+      </div>
+
+      <!-- REDACTED LINE -->
+      <div class="redacted-bar">
+        <span class="redact-time">11:43:05</span>
+        <span class="redact-speaker">CALLER</span>
+        <div class="redact-block"></div>
+      </div>
+
+      <div class="t-line">
+        <span class="t-time">11:43:09</span>
+        <span class="t-speaker dispatch">DISPATCH</span>
+        <span class="t-text">Sir, can you repeat that? I didn't —</span>
+      </div>
+
+      <div class="t-line">
+        <span class="t-time">11:43:11</span>
+        <span class="t-speaker">CALLER</span>
+        <span class="t-text">Just send someone. There was a woman. Someone needs to go check.</span>
+      </div>
+
+      <div class="t-ambient">[line disconnects — 11:43:15 PM]</div>
+
+    </div>
+
+    <!-- ===== RESPONSE LOG ===== -->
+    <p class="section-label">Response Log</p>
+
+    <div class="response-grid">
+      <div class="resp-cell">
+        <div class="resp-label">Dispatch Time</div>
+        <div class="resp-value">11:44 PM</div>
+      </div>
+      <div class="resp-cell">
+        <div class="resp-label">Unit Dispatched</div>
+        <div class="resp-value">Unit 4 — Dep. Caulfield</div>
+      </div>
+      <div class="resp-cell">
+        <div class="resp-label">Arrival at Scene</div>
+        <div class="resp-value flagged">12:07 AM</div>
+      </div>
+      <div class="resp-cell">
+        <div class="resp-label">Response Duration</div>
+        <div class="resp-value flagged">23 min</div>
+      </div>
+    </div>
+
+    <div style="padding: 6px 10px; border: 1px solid var(--paper-aged); border-top: none; font-size: 8.5px; color: var(--pencil); font-style: italic; line-height: 1.6;">
+      Scene arrival notes: No individual located at scene. Tower lights confirmed active on arrival. Access road tire tracks present — condition and origin not logged. Search of immediate area conducted. No injured party found.
+      <span style="font-family: 'Special Elite', cursive; font-size: 10px; color: var(--ink-faded);"> Mercer notified 12:14 AM.</span>
+    </div>
+
+    <!-- ===== BOTTOM ADMIN ===== -->
+    <div class="admin-row">
+      <div class="admin-field">
+        <div class="sig-line"><span class="sig-written">R. Caulfield</span></div>
+        <div>Dep. R. Caulfield — Responding Officer</div>
+        <div>Filed: October 15, 1998</div>
+      </div>
+
+      <div class="admin-field" style="text-align: center;">
+        <div class="sig-line"></div>
+        <div>Dispatch Operator Signature</div>
+        <div class="missing-field">[Operator log not attached to file]</div>
+      </div>
+
+      <div class="stamp-area">
+        <div class="stamp-box">
+          ARCHIVE<br>
+          COPY<br>
+          1998-MH
+        </div>
+      </div>
+
+      <div class="archive-note" style="align-self: flex-end;">
+        Cold Case Review — Reopened 2026<br>
+        Moth Hollow Sheriff's Department
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Moth Hollow Community Psychology | Dr. Elias Voss, Ph.D.</title>
+  <meta name="description" content="Licensed psychological services for individuals, families, and community organizations in Moth Hollow, West Virginia. Dr. Elias Voss, Ph.D., has served the Moth Hollow community since 1988." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&family=Courier+Prime&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =============================================
+       ROOT VARIABLES
+    ============================================= */
+    :root {
+      --bg:        #f4f0e8;
+      --bg-card:   #faf8f4;
+      --border:    #d8cfc0;
+      --border-light: #e8e2d6;
+      --text:      #2a2318;
+      --text-mid:  #5a5040;
+      --text-light: #8a7d68;
+      --teal:      #2a5c5c;
+      --teal-light: #3d7a7a;
+      --teal-muted: #e8f0f0;
+      --gold:      #8a7030;
+      --cream:     #fdf8ee;
+      --shadow:    rgba(42, 35, 24, 0.08);
+    }
+
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-weight: 300;
+      font-size: 17px;
+      line-height: 1.75;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* =============================================
+       SITE-WIDE HEADER BAR
+    ============================================= */
+    .site-banner {
+      background: var(--teal);
+      color: #fff;
+      text-align: center;
+      padding: 7px 20px;
+      font-family: 'Courier Prime', monospace;
+      font-size: 11.5px;
+      letter-spacing: 0.05em;
+      color: rgba(255,255,255,0.82);
+    }
+
+    /* =============================================
+       NAV
+    ============================================= */
+    nav {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 6px var(--shadow);
+    }
+
+    .nav-inner {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--teal);
+      text-decoration: none;
+      line-height: 1.2;
+      letter-spacing: 0.01em;
+    }
+
+    .nav-logo small {
+      display: block;
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--text-light);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 1px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Courier Prime', monospace;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--teal); }
+
+    /* =============================================
+       HERO
+    ============================================= */
+    .hero {
+      background: var(--cream);
+      border-bottom: 1px solid var(--border);
+      padding: 72px 32px 64px;
+      text-align: center;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(28px, 4vw, 46px);
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.2;
+      max-width: 640px;
+      margin: 0 auto 16px;
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      color: var(--text-mid);
+      max-width: 520px;
+      margin: 0 auto 36px;
+      font-style: italic;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      background: var(--teal);
+      color: #fff;
+      font-family: 'Courier Prime', monospace;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 14px 32px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .hero-cta:hover { background: var(--teal-light); }
+
+    .hero-divider {
+      width: 48px;
+      height: 2px;
+      background: var(--gold);
+      margin: 32px auto 0;
+      opacity: 0.5;
+    }
+
+    /* =============================================
+       MAIN CONTENT WRAPPER
+    ============================================= */
+    .page-wrap {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* =============================================
+       SECTION HEADINGS
+    ============================================= */
+    .section {
+      padding: 64px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .section-label {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10.5px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 12px;
+    }
+
+    .section h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(22px, 2.8vw, 32px);
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.25;
+      margin-bottom: 24px;
+    }
+
+    /* =============================================
+       ABOUT SECTION
+    ============================================= */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .about-photo {
+      aspect-ratio: 3 / 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+
+
+    .about-photo-caption {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      color: var(--text-light);
+      letter-spacing: 0.06em;
+      text-align: center;
+      padding: 8px;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(244,240,232,0.9);
+      border-top: 1px solid var(--border-light);
+    }
+
+    .about-text p {
+      margin-bottom: 18px;
+      color: var(--text-mid);
+    }
+
+    .about-text p:last-child { margin-bottom: 0; }
+
+    .credentials-list {
+      list-style: none;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .credentials-list li {
+      font-family: 'Courier Prime', monospace;
+      font-size: 12.5px;
+      color: var(--text-mid);
+      padding: 6px 0;
+      border-bottom: 1px dotted var(--border-light);
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+    }
+
+    .credentials-list li::before {
+      content: '—';
+      color: var(--teal);
+      flex-shrink: 0;
+    }
+
+    /* =============================================
+       SERVICES SECTION
+    ============================================= */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .service-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 28px;
+    }
+
+    .service-card h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .service-card p {
+      font-size: 14.5px;
+      color: var(--text-mid);
+      line-height: 1.65;
+    }
+
+    /* =============================================
+       COMMUNITY SECTION
+    ============================================= */
+    .community-note {
+      background: var(--teal-muted);
+      border-left: 3px solid var(--teal);
+      padding: 24px 28px;
+      max-width: 680px;
+    }
+
+    .community-note p {
+      font-style: italic;
+      color: var(--text-mid);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .community-note cite {
+      display: block;
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      color: var(--text-light);
+      letter-spacing: 0.06em;
+      font-style: normal;
+      margin-top: 10px;
+    }
+
+    .community-partners {
+      margin-top: 32px;
+    }
+
+    .partners-label {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10.5px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 14px;
+    }
+
+    .partners-list {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .partners-list li {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11.5px;
+      color: var(--text-mid);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+    }
+
+    /* =============================================
+       TESTIMONIALS
+    ============================================= */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .testimonial {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 28px;
+    }
+
+    .testimonial blockquote {
+      font-style: italic;
+      font-size: 15.5px;
+      color: var(--text-mid);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .testimonial cite {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      color: var(--text-light);
+      letter-spacing: 0.06em;
+      font-style: normal;
+    }
+
+    /* =============================================
+       CONTACT SECTION
+    ============================================= */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+    }
+
+    .contact-block h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 600;
+      font-size: 18px;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    .contact-info-list {
+      list-style: none;
+    }
+
+    .contact-info-list li {
+      font-family: 'Courier Prime', monospace;
+      font-size: 13px;
+      color: var(--text-mid);
+      padding: 8px 0;
+      border-bottom: 1px dotted var(--border-light);
+      display: grid;
+      grid-template-columns: 88px 1fr;
+      gap: 8px;
+    }
+
+    .contact-info-list .label {
+      color: var(--text-light);
+      font-size: 10.5px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding-top: 2px;
+    }
+
+    .contact-note {
+      font-size: 13px;
+      color: var(--text-light);
+      font-style: italic;
+      margin-top: 18px;
+      line-height: 1.6;
+    }
+
+    /* Notice box — insurance / referral */
+    .notice-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 22px 26px;
+      margin-top: 28px;
+    }
+
+    .notice-box h4 {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 10px;
+    }
+
+    .notice-box p {
+      font-size: 13.5px;
+      color: var(--text-mid);
+      line-height: 1.6;
+    }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      background: var(--text);
+      color: rgba(255,255,255,0.55);
+      padding: 40px 32px;
+      margin-top: 0;
+    }
+
+    .footer-inner {
+      max-width: 1040px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    footer h4 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 15px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 10px;
+    }
+
+    footer p, footer address {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11.5px;
+      line-height: 1.8;
+      font-style: normal;
+    }
+
+    .footer-copy {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      margin-top: 32px;
+      padding-top: 18px;
+      font-family: 'Courier Prime', monospace;
+      font-size: 10.5px;
+      color: rgba(255,255,255,0.3);
+      max-width: 1040px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 32px;
+      padding-right: 32px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* =============================================
+       SUBTLE CLUE — hidden in plain sight
+       The page was last updated in 1998 in the footer
+       and then not updated for years.
+       The copyright reads 1994–1998 — still wrong in 2026.
+       A note says "Site last reviewed: October 1998."
+       Nothing more. Just... stopped.
+    ============================================= */
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 720px) {
+      .about-grid { grid-template-columns: 1fr; }
+      .about-photo { max-width: 180px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===============================================================
+       BANNER — faint, institutional
+  ================================================================ -->
+  <div class="site-banner">
+    Serving Moth Hollow and the surrounding county since 1988 &nbsp;·&nbsp; (304) 555-0193 &nbsp;·&nbsp; Licensed in West Virginia
+  </div>
+
+  <!-- ===============================================================
+       NAVIGATION
+  ================================================================ -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        Moth Hollow Community Psychology
+        <small>Dr. Elias Voss, Ph.D. &nbsp;·&nbsp; Est. 1988</small>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#community">Community</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ===============================================================
+       HERO
+  ================================================================ -->
+  <section class="hero">
+    <p class="hero-eyebrow">Moth Hollow, West Virginia</p>
+    <h1>Compassionate psychological care for individuals, families, and community.</h1>
+    <p class="hero-sub">When you are ready to begin, the door is open.</p>
+    <a href="#contact" class="hero-cta">Request a Consultation</a>
+    <div class="hero-divider"></div>
+  </section>
+
+  <main class="page-wrap">
+
+    <!-- ============================================================
+         ABOUT
+    ============================================================= -->
+    <section class="section" id="about">
+      <p class="section-label">About the Practice</p>
+      <h2>Dr. Elias Voss, Ph.D.</h2>
+
+      <div class="about-grid">
+
+        <div class="about-photo">
+          <img src="../character-images/dr-voss.png" alt="Dr. Elias Voss" style="width:100%; height:100%; object-fit:cover; display:block;" />
+        </div>
+        <div class="about-text">
+          <p>Dr. Elias Voss has practiced clinical and community psychology in Moth Hollow, West Virginia for over three decades. His work centers on the relationship between environment, behavior, and community identity — exploring how place shapes the interior life of its inhabitants.</p>
+
+          <p>Before establishing his private practice, Dr. Voss worked in applied behavioral research and community consultation, contributing to outreach programs across rural Appalachian counties. He has long believed that psychology's most meaningful work happens not in the clinic alone, but in the wider structures of community life.</p>
+
+          <p>His therapeutic approach is integrative and patient-led. He draws from cognitive-behavioral, psychodynamic, and narrative frameworks, adapting to each individual's needs. He works with adults navigating anxiety, grief, life transitions, and long-term psychological patterns. He also consults with local organizations and institutions seeking to better understand and serve their communities.</p>
+
+          <p style="color: var(--text-light); font-style: italic; font-size: 14.5px;">Dr. Voss is currently accepting a limited number of new patients. Please contact the practice for availability.</p>
+
+          <ul class="credentials-list">
+            <li>Ph.D., Clinical Psychology — University of Pittsburgh, 1978</li>
+            <li>M.A., Behavioral Psychology — West Virginia University, 1974</li>
+            <li>Licensed Psychologist — State of West Virginia, Lic. #WV-PSY-04417</li>
+            <li>Member, American Psychological Association (APA), Division 27</li>
+            <li>Former Consultant, Regional Community Outreach Initiative, 1990–2001</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SERVICES
+    ============================================================= -->
+    <section class="section" id="services">
+      <p class="section-label">Clinical Services</p>
+      <h2>How We Can Help</h2>
+
+      <div class="services-grid">
+        <div class="service-card">
+          <h3>Individual Therapy</h3>
+          <p>One-on-one sessions for adults working through anxiety, depression, grief, behavioral patterns, or significant life changes. Sessions are typically fifty minutes and held weekly or biweekly based on need.</p>
+        </div>
+        <div class="service-card">
+          <h3>Community Consultation</h3>
+          <p>Organizational and institutional consultation services for local employers, civic groups, schools, and community programs. Dr. Voss has provided consultation to media organizations, municipal offices, and community health initiatives throughout the region.</p>
+        </div>
+        <div class="service-card">
+          <h3>Psychological Assessment</h3>
+          <p>Formal evaluations for a range of clinical and vocational purposes. Assessments are conducted with care and precision, with written reports provided for referral or treatment planning.</p>
+        </div>
+        <div class="service-card">
+          <h3>Group Sessions</h3>
+          <p>Dr. Voss periodically facilitates small group sessions for specific populations. Current group programming is on hiatus. Inquire about future availability.</p>
+        </div>
+        <div class="service-card">
+          <h3>Grief &amp; Bereavement</h3>
+          <p>Dedicated support for individuals navigating loss — including sudden loss, prolonged illness, disappearance, or unresolved mourning. Dr. Voss understands that grief rarely follows a predictable course.</p>
+        </div>
+        <div class="service-card">
+          <h3>Long-Term Cases</h3>
+          <p>Dr. Voss accepts long-term therapeutic relationships for patients with complex histories. Some of his most enduring professional work has involved patients he has worked with across many years.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         COMMUNITY
+    ============================================================= -->
+    <section class="section" id="community">
+      <p class="section-label">Community &amp; Outreach</p>
+      <h2>Rooted in Moth Hollow</h2>
+
+      <div class="community-note">
+        <p>"The health of a community is not measured by the absence of crisis — it is measured by what the community carries quietly, and for how long. My work has always been about listening to what goes unspoken."</p>
+        <cite>— Dr. Elias Voss, address to the Moth Hollow Civic Forum, 1996</cite>
+      </div>
+
+      <div style="margin-top: 32px; max-width: 640px;">
+        <p style="color: var(--text-mid); margin-bottom: 18px;">For many years, Dr. Voss extended his practice beyond individual sessions into the broader structures of Moth Hollow's community. He served as a consultant to local media, school programs, and health organizations — contributing to the psychological literacy and resilience of the region.</p>
+        <p style="color: var(--text-mid); margin-bottom: 18px;">That outreach work concluded in 2001. Dr. Voss now focuses exclusively on private practice.</p>
+        <p style="color: var(--text-light); font-style: italic; font-size: 14px; margin-bottom: 0;">He remains a fixture of community life in Moth Hollow, where he has lived and worked for over thirty-five years.</p>
+      </div>
+
+      <div class="community-partners" style="margin-top: 40px;">
+        <p class="partners-label">Past Institutional Affiliations</p>
+        <ul class="partners-list">
+          <li>WHLW 88.3 — Community Outreach Consultant</li>
+          <li>Moth Hollow School District</li>
+          <li>Fayette County Health Department</li>
+          <li>Regional Community Outreach Initiative</li>
+          <li>Moth Hollow Civic Forum</li>
+          <li>Appalachian Behavioral Health Cooperative</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         TESTIMONIALS — anonymized, feel real
+    ============================================================= -->
+    <section class="section">
+      <p class="section-label">Patient Reflections</p>
+      <h2>From Those We Have Worked With</h2>
+
+      <div class="testimonials-grid">
+        <div class="testimonial">
+          <blockquote>"I came to Dr. Voss after years of struggling with something I couldn't name. He has a way of listening that made me feel, for the first time, that someone understood the shape of it."</blockquote>
+          <cite>— Patient, 2019</cite>
+        </div>
+        <div class="testimonial">
+          <blockquote>"He doesn't rush. He doesn't push. He asks the kind of questions that stay with you after the session ends — and that stay with you, and keep working."</blockquote>
+          <cite>— Patient, 2022</cite>
+        </div>
+        <div class="testimonial">
+          <blockquote>"I was skeptical. I'd never talked to anyone before. Dr. Voss has a way of making you feel that what you remember — and what you don't — is exactly what it should be."</blockquote>
+          <cite>— Patient, 2017</cite>
+        </div>
+        <div class="testimonial">
+          <blockquote>"After my mother passed, I didn't know where to turn. He helped me understand that grief isn't something to be resolved. It's something to be shaped."</blockquote>
+          <cite>— Patient, 2021</cite>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CONTACT
+    ============================================================= -->
+    <section class="section" id="contact" style="border-bottom: none;">
+      <p class="section-label">Contact &amp; Appointments</p>
+      <h2>Reach the Practice</h2>
+
+      <div class="contact-grid">
+        <div class="contact-block">
+          <h3>Practice Information</h3>
+          <ul class="contact-info-list">
+            <li>
+              <span class="label">Address</span>
+              <span>14 Millbrook Lane, Suite 2<br>Moth Hollow, WV 25801</span>
+            </li>
+            <li>
+              <span class="label">Phone</span>
+              <span>(304) 555-0193</span>
+            </li>
+            <li>
+              <span class="label">Hours</span>
+              <span>Tuesday – Friday, 9:00 AM – 5:00 PM<br><em style="font-size:12px; color:var(--text-light)">Closed Monday. Evening availability by arrangement.</em></span>
+            </li>
+            <li>
+              <span class="label">Referrals</span>
+              <span>Accepted by self-referral or physician referral</span>
+            </li>
+            <li>
+              <span class="label">Insurance</span>
+              <span>Select plans accepted. Contact office to confirm.</span>
+            </li>
+          </ul>
+          <p class="contact-note">New patient inquiries can be made by phone. Dr. Voss does not accept electronic communication for clinical matters. All correspondence is handled through the office.</p>
+        </div>
+
+        <div class="contact-block">
+          <h3>Before Your First Session</h3>
+          <p style="font-size: 14.5px; color: var(--text-mid); margin-bottom: 18px;">Dr. Voss conducts a brief introductory consultation — typically twenty minutes — before scheduling ongoing sessions. This allows him to understand your situation and determine whether the practice is the right fit for your needs.</p>
+          <p style="font-size: 14.5px; color: var(--text-mid); margin-bottom: 18px;">He works with a small patient roster by intention. This ensures that the attention he gives each person is undivided.</p>
+
+          <div class="notice-box">
+            <h4>A Note on Privacy</h4>
+            <p>All clinical records are maintained in strict confidence, in accordance with applicable law and professional ethics. Dr. Voss has maintained his own paper-based record system throughout his career. Electronic health records are not used by this practice.</p>
+          </div>
+
+          <!-- Subtle clue: this note was added and NOT updated -->
+          <div class="notice-box" style="margin-top: 16px; border-color: #c8c0b0;">
+            <h4>Notice — Research Consultancy</h4>
+            <p>Dr. Voss previously accepted consultancy requests from research institutions and independent investigators. <strong>This service is no longer offered.</strong> Inquiries of this nature will not be returned.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===============================================================
+       FOOTER
+  ================================================================ -->
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <h4>Moth Hollow Community Psychology</h4>
+        <address>
+          Dr. Elias Voss, Ph.D.<br>
+          14 Millbrook Lane, Suite 2<br>
+          Moth Hollow, WV 25801<br>
+          (304) 555-0193
+        </address>
+      </div>
+      <div>
+        <h4>Licensure &amp; Ethics</h4>
+        <p>
+          Licensed Psychologist, State of West Virginia<br>
+          License No. WV-PSY-04417<br>
+          Member, American Psychological Association<br>
+          All services provided in accordance with APA ethical standards.
+        </p>
+      </div>
+    </div>
+    <div class="footer-copy">
+      <!-- The copyright ending in 1998 is a deliberate subtle wrongness -->
+      <span>&copy; 1994–1998 Moth Hollow Community Psychology. All rights reserved.</span>
+      <span>Site last reviewed: October 1998</span>
+    </div>
+  </footer>
+
+</body>
+</html>

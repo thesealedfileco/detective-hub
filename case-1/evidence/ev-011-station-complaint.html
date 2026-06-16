@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EV-011 — Internal Complaint</title>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&family=Crimson+Pro:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #272220;
+    min-height: 100vh;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    font-family: 'Courier Prime', monospace;
+  }
+
+  .document {
+    width: 680px;
+    max-width: 100%;
+  }
+
+  /* ── PAGE BASE ── */
+  .page {
+    background: #f6f1e8;
+    position: relative;
+    margin-bottom: 28px;
+    box-shadow:
+      0 1px 3px rgba(0,0,0,0.22),
+      0 8px 24px rgba(0,0,0,0.38);
+    overflow: hidden;
+  }
+
+/* fold creases */
+  .page::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 33%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(160,135,95,0.18) 8%,
+    rgba(160,135,95,0.28) 20%,
+    rgba(160,135,95,0.22) 50%,
+    rgba(160,135,95,0.28) 80%,
+    rgba(160,135,95,0.18) 92%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 3;
+}
+
+.page::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 33%;
+  height: 18px;
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,0.025) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+.page .fold-2 {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 66%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.page .fold-2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(160,135,95,0.14) 8%,
+    rgba(160,135,95,0.22) 20%,
+    rgba(160,135,95,0.18) 50%,
+    rgba(160,135,95,0.22) 80%,
+    rgba(160,135,95,0.14) 92%,
+    transparent 100%
+  );
+}
+
+.page .fold-2::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 1px;
+  height: 14px;
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,0.018) 0%,
+    transparent 100%
+  );
+}
+
+.page-inner {
+  padding: 48px 56px 64px 56px;
+  position: relative;
+  z-index: 1;
+  min-height: 860px;
+}
+
+/* ruled lines — very faint */
+  .ruled {
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 27px,
+      rgba(140,120,90,0.05) 27px,
+      rgba(140,120,90,0.05) 28px
+    );
+  }
+
+/* paper aging */
+  .stain {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+/* ── STATION LETTERHEAD ── */
+  .letterhead {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-bottom: 1.5px solid #2a2015;
+    padding-bottom: 14px;
+    margin-bottom: 22px;
+  }
+
+  .station-name {
+    font-family: 'Special Elite', serif;
+    font-size: 18px;
+    color: #1a1208;
+    letter-spacing: 0.06em;
+    line-height: 1.2;
+  }
+
+  .station-sub {
+    font-size: 8.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #6a5840;
+    margin-top: 5px;
+    line-height: 1.7;
+  }
+
+  .form-title-block {
+    text-align: right;
+  }
+
+  .form-title {
+    font-family: 'Special Elite', serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #1a1208;
+  }
+
+  .form-number {
+    font-size: 8.5px;
+    color: #8a7558;
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+  }
+
+/* ── FORM FIELDS ── */
+  .field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin-bottom: 18px;
+    border: 0.75px solid #b0a080;
+  }
+
+  .field-grid-3 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .field-cell {
+    padding: 7px 10px 6px;
+    border-right: 0.75px solid #b0a080;
+    border-bottom: 0.75px solid #b0a080;
+    min-height: 38px;
+  }
+
+  .field-cell:last-child,
+  .field-cell.no-border-right {
+    border-right: none;
+  }
+
+  .field-cell.full-width {
+    grid-column: 1 / -1;
+    border-right: none;
+  }
+
+  .field-cell.no-border-bottom {
+    border-bottom: none;
+  }
+
+  .field-label {
+    font-size: 7.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #8a7558;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .field-value {
+    font-size: 11.5px;
+    color: #1a1208;
+    line-height: 1.4;
+    font-family: 'Courier Prime', monospace;
+  }
+
+  .field-value.typewritten {
+    letter-spacing: 0.02em;
+  }
+
+  .field-value.empty {
+    color: transparent;
+    min-height: 16px;
+  }
+
+  /* ── NARRATIVE SECTION ── */
+  .narrative-label {
+    font-size: 8px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8a7558;
+    border-bottom: 0.5px solid #c0ae88;
+    padding-bottom: 4px;
+    margin-bottom: 14px;
+    margin-top: 20px;
+  }
+
+  .narrative {
+    font-family: 'Crimson Pro', serif;
+    font-size: 13.5px;
+    color: #1a1208;
+    line-height: 1.85;
+  }
+
+  .narrative p {
+    margin-bottom: 12px;
+  }
+
+  .narrative p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ── SIGNATURE BLOCK ── */
+  .sig-section {
+    margin-top: 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 28px;
+    align-items: end;
+  }
+
+  .sig-item {}
+
+  .sig-line {
+    border-bottom: 0.75px solid #6a5840;
+    height: 32px;
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
+  .sig-caption {
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #8a7558;
+  }
+
+  /* ── PAGE 2 — OFFICE USE ── */
+  .office-header {
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #8a7558;
+    border-bottom: 0.75px solid #b0a080;
+    padding-bottom: 6px;
+    margin-bottom: 20px;
+  }
+
+  .office-grid {
+    border: 0.75px solid #b0a080;
+    margin-bottom: 16px;
+  }
+
+  .office-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 0.75px solid #b0a080;
+  }
+
+  .office-row:last-child {
+    border-bottom: none;
+  }
+
+  .office-row.three {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .office-cell {
+    padding: 8px 10px 7px;
+    border-right: 0.75px solid #b0a080;
+    min-height: 42px;
+  }
+
+  .office-cell:last-child {
+    border-right: none;
+  }
+
+  .office-cell.tall {
+    min-height: 72px;
+  }
+
+  /* ── STAMPS ── */
+  .stamp {
+    position: absolute;
+    font-family: 'Special Elite', serif;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  /* ── PAGE FOOTER ── */
+  .page-footer {
+    position: absolute;
+    bottom: 18px;
+    left: 56px;
+    right: 56px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 7.5px;
+    color: #9a8870;
+    letter-spacing: 0.1em;
+    border-top: 0.5px solid #c0ae88;
+    padding-top: 7px;
+    z-index: 1;
+  }
+
+  .break-label {
+    text-align: center;
+    font-size: 8.5px;
+    letter-spacing: 0.15em;
+    color: #6a5840;
+    text-transform: uppercase;
+    margin: 6px 0 28px;
+  }
+</style>
+</head>
+<body>
+<div class="document">
+
+  <!-- ══════════════ PAGE 1 ══════════════ -->
+  <div class="page ruled">
+    <div class="fold-2"></div>
+    <div class="stain" style="width:80px;height:65px;top:140px;right:32px;background:radial-gradient(ellipse,rgba(130,95,45,0.06),transparent 70%);"></div>
+    <div class="stain" style="width:50px;height:40px;bottom:110px;left:44px;background:radial-gradient(ellipse,rgba(130,95,45,0.05),transparent 70%);"></div>
+    <div class="stain" style="width:40px;height:32px;top:55%;right:55px;background:radial-gradient(ellipse,rgba(130,95,45,0.04),transparent 70%);"></div>
+
+    <div class="page-inner">
+
+      <div class="letterhead">
+        <div>
+          <div class="station-name">WHLW 88.3</div>
+          <div class="station-sub">
+            Moth Hollow Community Radio<br>
+            Tower Road, Moth Hollow, WV 26554<br>
+            (304) 555-0188
+          </div>
+        </div>
+        <div class="form-title-block">
+          <div class="form-title">Internal Incident Report</div>
+          <div class="form-number">Form IR-4 &nbsp;·&nbsp; Staff Use Only</div>
+        </div>
+      </div>
+
+      <!-- top fields -->
+      <div class="field-grid">
+        <div class="field-cell">
+          <span class="field-label">Filed by</span>
+          <span class="field-value typewritten">Naomi Vale</span>
+        </div>
+        <div class="field-cell no-border-right">
+          <span class="field-label">Date of report</span>
+          <span class="field-value typewritten">October 9, 1998</span>
+        </div>
+        <div class="field-cell">
+          <span class="field-label">Employee title / role</span>
+          <span class="field-value typewritten">Overnight Host — WHLW 88.3</span>
+        </div>
+        <div class="field-cell no-border-right">
+          <span class="field-label">Department</span>
+          <span class="field-value typewritten">Broadcasting</span>
+        </div>
+        <div class="field-cell full-width no-border-bottom">
+          <span class="field-label">Subject of report</span>
+          <span class="field-value typewritten">Unauthorized archive access and alteration of broadcast recordings</span>
+        </div>
+      </div>
+
+      <!-- narrative -->
+      <div class="narrative-label">Report — in employee's own words</div>
+      <div class="narrative">
+        <p>I am filing this report because I have been unable to get a response through informal channels and I believe the situation requires a formal record.</p>
+        <p>Over the past several months I have found tapes in the station archive that I did not place there and cannot account for. On at least three occasions I have also discovered that recordings I prepared for broadcast have been altered — material I do not recognize has been inserted into files I made myself. I have not been informed of any maintenance, editing, or archiving work that would explain these changes.</p>
+        <p>I have also found evidence that someone has been accessing the archive after hours. The door to the archive room has been unlocked on mornings when I was the last person to leave the night before and I know I locked it. The tape storage index has entries I did not make. I raised this with the evening engineer on two occasions. Nothing was done.</p>
+        <p>I want to be careful about what I write here because I am not certain, but I believe the person responsible may be Dr. Voss, the consulting psychologist attached to the Community Outreach Program. I have no proof. But his access to the station — including the archive — has never been clearly defined to me, and on one occasion I found him in the archive room at a time when he had no scheduled reason to be there. When I asked him about it he told me he was reviewing listener research materials. I do not know what that means in relation to the archive.</p>
+        <p>I am not making an accusation. I am making a record. I would like someone in management to look into this and tell me what Dr. Voss's access rights actually are and whether what I have described falls within them.</p>
+        <p>I would also like someone to listen to the altered recordings. I have kept one. I can provide it if asked.</p>
+      </div>
+
+      <!-- signature block -->
+      <div class="sig-section">
+        <div class="sig-item">
+          <div class="sig-line"></div>
+          <div class="sig-caption">Signature of reporting employee</div>
+        </div>
+        <div class="sig-item">
+          <div class="sig-line"></div>
+          <div class="sig-caption">Date signed</div>
+        </div>
+        <div class="sig-item">
+          <div class="sig-line"></div>
+          <div class="sig-caption">Witness signature (if applicable)</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="page-footer">
+      <span>WHLW 88.3 — Internal Use Only</span>
+      <span>Form IR-4 &nbsp;·&nbsp; Page 1 of 2</span>
+      <span>Retain for station records</span>
+    </div>
+  </div>
+
+  <div class="break-label">— page 2 —</div>
+
+  <!-- ══════════════ PAGE 2 — OFFICE USE ══════════════ -->
+  <div class="page ruled">
+    <div class="fold-2"></div>
+    <div class="stain" style="width:90px;height:72px;top:80px;left:40px;background:radial-gradient(ellipse,rgba(130,95,45,0.055),transparent 70%);"></div>
+    <div class="stain" style="width:60px;height:48px;bottom:130px;right:38px;background:radial-gradient(ellipse,rgba(130,95,45,0.05),transparent 70%);"></div>
+
+    <div class="page-inner">
+
+      <div class="office-header">For office use only — do not complete below this line</div>
+
+      <div class="office-grid">
+        <div class="office-row three">
+          <div class="office-cell">
+            <span class="field-label">Date received</span>
+            <span class="field-value empty">—</span>
+          </div>
+          <div class="office-cell">
+            <span class="field-label">Received by</span>
+            <span class="field-value empty">—</span>
+          </div>
+          <div class="office-cell">
+            <span class="field-label">Case / reference number</span>
+            <span class="field-value empty">—</span>
+          </div>
+        </div>
+        <div class="office-row">
+          <div class="office-cell">
+            <span class="field-label">Forwarded to</span>
+            <span class="field-value empty">—</span>
+          </div>
+          <div class="office-cell">
+            <span class="field-label">Date forwarded</span>
+            <span class="field-value empty">—</span>
+          </div>
+        </div>
+        <div class="office-row">
+          <div class="office-cell tall full-width" style="grid-column: 1 / -1; border-right: none;">
+            <span class="field-label">Initial review notes</span>
+            <span class="field-value empty">—</span>
+          </div>
+        </div>
+        <div class="office-row three">
+          <div class="office-cell">
+            <span class="field-label">Action taken</span>
+            <span class="field-value empty">—</span>
+          </div>
+          <div class="office-cell">
+            <span class="field-label">Date of action</span>
+            <span class="field-value empty">—</span>
+          </div>
+          <div class="office-cell">
+            <span class="field-label">Resolved by</span>
+            <span class="field-value empty">—</span>
+          </div>
+        </div>
+        <div class="office-row" style="border-bottom:none;">
+          <div class="office-cell tall" style="border-bottom:none;">
+            <span class="field-label">Follow-up required</span>
+            <span class="field-value empty">—</span>
+          </div>
+          <div class="office-cell tall" style="border-bottom:none;">
+            <span class="field-label">Resolution notes</span>
+            <span class="field-value empty">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- management sig block -->
+      <div class="sig-section" style="margin-top:22px;">
+        <div class="sig-item">
+          <div class="sig-line"></div>
+          <div class="sig-caption">Station manager signature</div>
+        </div>
+        <div class="sig-item">
+          <div class="sig-line"></div>
+          <div class="sig-caption">Date</div>
+        </div>
+        <div class="sig-item">
+          <div class="sig-line"></div>
+          <div class="sig-caption">Copy provided to employee</div>
+        </div>
+      </div>
+
+      <div style="margin-top:32px; border-top: 0.5px solid #c0ae88; padding-top: 14px;">
+        <div style="font-size:8px;color:#8a7558;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;">Distribution</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:0.75px solid #b0a080;">
+          <div style="padding:6px 10px;border-right:0.75px solid #b0a080;">
+            <span class="field-label">Employee file</span>
+            <div style="width:14px;height:14px;border:0.75px solid #b0a080;margin-top:4px;"></div>
+          </div>
+          <div style="padding:6px 10px;border-right:0.75px solid #b0a080;">
+            <span class="field-label">Station records</span>
+            <div style="width:14px;height:14px;border:0.75px solid #b0a080;margin-top:4px;"></div>
+          </div>
+          <div style="padding:6px 10px;">
+            <span class="field-label">Department head</span>
+            <div style="width:14px;height:14px;border:0.75px solid #b0a080;margin-top:4px;"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="page-footer">
+      <span>WHLW 88.3 — Internal Use Only</span>
+      <span>Form IR-4 &nbsp;·&nbsp; Page 2 of 2</span>
+      <span>Retain for station records</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

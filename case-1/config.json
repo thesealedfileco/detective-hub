@@ -1,303 +1,364 @@
 {
   "caseId": "WHL-1998-001",
   "title": "The Moth Hollow Tapes",
-  "subtitle": "Reopened January 2026 — Assigned to you, Detective",
-  "setting": "Moth Hollow, West Virginia, October 1998",
+  "subtitle": "Cold Case — Reopened January 2026",
+  "setting": "Moth Hollow, West Virginia — October 1998",
   "departmentName": "Moth Hollow Police Department",
-  "stages": [
+
+  "intro": {
+    "lines": [
+      "COLD CASE FILE RETRIEVED.",
+      "ARCHIVE DIVISION — THE SEALED FILE CO.",
+      "Assigned to Detective [NAME].",
+      "Proceed with caution."
+    ],
+    "stampText": "COLD CASE — REOPENED"
+  },
+
+  "leads": [
+
     {
-      "id": "start",
-      "triggeredBy": "auto",
-      "detectiveNote": "The files are incomplete. Some evidence appears damaged or intentionally removed. Start with the station records and Naomi Vale's original disappearance report.",
-      "dispatchMessage": "Detective [NAME] — review the initial evidence package and determine the date Naomi Vale disappeared.",
-      "unlockedEvidence": [
-        "ev-000",
-        "ev-001",
-        "ev-002",
-        "ev-003",
-        "ev-004a"
-      ],
-      "visibleLocked": [
-        "au-001",
-        "ev-004",
-        "ev-005"
-      ],
-      "hiddenLocked": [
-        "ev-006",
-        "au-002",
-        "ev-007",
-        "ev-008",
-        "ev-009",
-        "ev-009a",
-        "ev-010",
-        "ev-011",
-        "ev-012",
-        "ev-013",
-        "ev-014",
-        "au-003",
-        "au-004"
-      ],
-      "unlockQuestion": "What was the official date Naomi Vale disappeared?",
-      "acceptedAnswers": [
-        "october 14",
-        "october 14 1998",
-        "oct 14",
-        "oct 14 1998",
-        "10/14",
-        "10/14/98",
-        "october 14th",
-        "the 14th of october"
-      ],
-      "hints": [
-        "The answer appears in the official report, not the station records.",
-        "Check the Missing Person Report carefully. The date appears near the top of the page.",
-        "Naomi Vale disappeared on October 14."
-      ],
-      "passwordUnlocks": [
-        {
-          "password": "ARCHIVE-COPY-01",
-          "unlocksEvidence": [
-            "au-004"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "stage-1",
-      "triggeredBy": {
-        "type": "answered",
-        "stageId": "start"
+      "id": "lead-01-case-closure",
+      "title": "The Case Closure",
+      "question": "Why was Naomi Vale's case closed after eleven days?",
+      "status": "active",
+      "detectiveNote": "First thing that jumps out — eleven days. That's not an investigation, that's a formality. Someone closed this fast. I need to figure out why before I go any further.",
+      "startHereEvidence": ["ev-001", "ev-new1", "ev-new2"],
+      "unlockTask": {
+        "type": "theorySelect",
+        "prompt": "What is the strongest issue with the original investigation?",
+        "options": [
+          { "id": "opt-a", "text": "The case was closed before a primary suspect was identified or ruled out" },
+          { "id": "opt-b", "text": "The missing person report was never properly filed with county records" },
+          { "id": "opt-c", "text": "The sheriff personally knew Naomi Vale and had a conflict of interest" },
+          { "id": "opt-d", "text": "The investigation ran for the standard minimum period before suspension" }
+        ],
+        "correct": ["opt-a"],
+        "hints": [
+          "Read the closure memo carefully. What is missing from it that you would expect to see in a proper investigation closure?",
+          "A real closure should document what was ruled out. This one doesn't. It closes without naming a suspect, without explaining the timeline gap, and without accounting for Naomi's complaint.",
+          "The answer is in what the memo does NOT include. No suspect named. No explanation for the 1 hour 42 minute gap. No mention of the internal complaint Naomi filed days before she disappeared."
+        ]
       },
-      "popup": "stage-1",
-      "detectiveNote": "Evelyn says Naomi left around 10, but the emergency call wasn't placed until nearly midnight. Someone's timeline doesn't add up. And that humming in the background of the caller recording — I've heard that before somewhere.",
-      "dispatchMessage": "Detective [NAME] — the witness timeline doesn't match the emergency response. What time was the 911 call placed?",
-      "unlockQuestion": "What time was the 911 call placed?",
-      "acceptedAnswers": [
-        "11:42",
-        "11:42 pm",
-        "11:42pm",
-        "11.42",
-        "11:42 p.m.",
-        "2342",
-        "23:42"
-      ],
-      "hints": [
-        "Compare the witness statement against the emergency records.",
-        "The exact time appears in the 911 transcript, at the top of the document.",
-        "The emergency call was placed at 11:42 PM."
-      ],
-      "unlockedEvidence": [
-        "au-001",
-        "ev-004",
-        "ev-005"
-      ],
-      "visibleLocked": [
-        "ev-006",
-        "ev-007"
-      ],
-      "hiddenLocked": []
+      "onComplete": {
+        "finding": "The case was closed before the investigation was complete — no suspect named, no timeline explained, no complaint on record.",
+        "unlockEvidence": ["ev-000", "ev-002", "ev-003", "ev-004a", "ev-new4"],
+        "unlockLeads": ["lead-02-timeline-gap", "lead-03-station-irregularities"],
+        "revealPeople": []
+      }
     },
+
     {
-      "id": "stage-2",
-      "triggeredBy": {
-        "type": "answered",
-        "stageId": "stage-1"
+      "id": "lead-02-timeline-gap",
+      "title": "The Timeline Gap",
+      "question": "Where was Naomi between leaving WHLW and the 911 call?",
+      "status": "locked",
+      "detectiveNote": "Two timestamps. One from a witness, one from emergency dispatch. They don't match. That gap in the middle — nearly two hours — is where the whole case lives.",
+      "startHereEvidence": ["ev-004", "ev-005", "ev-new4"],
+      "unlockTask": {
+        "type": "theorySelect",
+        "prompt": "What does the timeline gap most strongly suggest?",
+        "options": [
+          { "id": "opt-a", "text": "Naomi went somewhere between leaving the station and the 911 call — the gap is intentional and unaccounted for" },
+          { "id": "opt-b", "text": "The witness was mistaken about the time and the gap doesn't actually exist" },
+          { "id": "opt-c", "text": "The 911 call was delayed due to poor radio signal in the area" },
+          { "id": "opt-d", "text": "Naomi drove to a nearby town and the travel time explains the gap" }
+        ],
+        "correct": ["opt-a"],
+        "hints": [
+          "Compare the witness statement time to the 911 call timestamp. Calculate exactly how long the gap is — then ask yourself whether the map explains it.",
+          "The map shows Naomi's vehicle was recovered near the relay tower on Route 7. The station is close. The gap is too long to be explained by driving time alone.",
+          "The gap is 1 hour and 42 minutes. The drive from the station to the tower takes under 15 minutes. Something happened during those remaining 87 minutes that no one has accounted for."
+        ]
       },
-      "detectiveNote": "The phone records show the same number calling in every week during Naomi's shift. And that memo footer — there's a URL in there. Barely visible but it's there. I need to look at that.",
-      "dispatchMessage": null,
-      "unlockedEvidence": [
-        "ev-006",
-        "ev-007"
-      ],
-      "visibleLocked": [
-        "ev-008"
-      ],
-      "hiddenLocked": [
-        "ev-009",
-        "ev-009a"
-      ]
+      "onComplete": {
+        "finding": "There is an unexplained 1 hour 42 minute gap in Naomi's movements — far too long to be explained by travel time alone.",
+        "unlockEvidence": ["au-001", "ev-004", "ev-005"],
+        "unlockLeads": ["lead-04-the-caller"],
+        "revealPeople": ["evelyn-pike"]
+      }
     },
+
     {
-      "id": "stage-3",
-      "triggeredBy": {
-        "type": "unlock",
-        "item": "au-002"
+      "id": "lead-03-station-irregularities",
+      "title": "Station Irregularities",
+      "question": "What was happening at WHLW before Naomi disappeared?",
+      "status": "locked",
+      "detectiveNote": "The broadcast schedule has a segment that shouldn't be there. The maintenance memo dances around something without saying it directly. Someone was doing something at that station that wasn't on any official record.",
+      "startHereEvidence": ["ev-002", "ev-003", "ev-007"],
+      "unlockTask": {
+        "type": "evidenceSelect",
+        "prompt": "Which two pieces of evidence together most strongly suggest unauthorized activity at WHLW?",
+        "options": [
+          { "id": "ev-003", "text": "Broadcast Schedule — unauthorized midnight segment with initials E.V." },
+          { "id": "ev-007", "text": "Maintenance Memo — after-hours archive access via consulting badge" },
+          { "id": "ev-001", "text": "Missing Person Report — Naomi's disappearance record" },
+          { "id": "ev-002", "text": "Staff Directory — only external consultants section carries those initials" },
+          { "id": "ev-new4", "text": "Area Map — vehicle recovery location near the relay tower" }
+        ],
+        "correct": ["ev-003", "ev-007"],
+        "minSelect": 2,
+        "maxSelect": 2,
+        "hints": [
+          "Look for evidence that documents something happening at the station itself — something that wasn't authorized or wasn't on any official log.",
+          "One document shows an unauthorized broadcast segment. Another shows unauthorized after-hours access to the station archive. Together they tell the same story.",
+          "The broadcast schedule shows a midnight segment authorized by initials E.V. — not in the standard rotation. The maintenance memo documents after-hours archive access using a consulting badge. Both point to the same person operating outside their sanctioned role."
+        ]
       },
-      "popup": "stage-3",
-      "detectiveNote": "Lena was ahead of everyone. She wasn't just researching Naomi — she was building a case. And then she vanished too. Whatever she found, someone didn't want it found. That note on the back of her photo — check the static. What does that mean?",
-      "dispatchMessage": "Detective [NAME] — Lena believed the broadcasts were intentionally designed to influence listeners. What term did she use to describe the technique?",
-      "unlockQuestion": "What term did Lena use to describe the broadcast technique?",
-      "acceptedAnswers": [
-        "conditioning",
-        "conditioning patterns",
-        "psychological conditioning",
-        "behavioral conditioning",
-        "audio conditioning",
-        "manipulation",
-        "suggestion",
-        "psychological manipulation",
-        "mind control"
-      ],
-      "hints": [
-        "Lena uses the term multiple times throughout her archived blog posts.",
-        "It's a psychological term — she uses it to describe how repeated audio was changing listeners' behavior.",
-        "The answer is conditioning."
-      ],
-      "unlockedEvidence": [
-        "ev-008"
-      ],
-      "visibleLocked": [
-        "ev-009",
-        "ev-009a",
-        "ev-010",
-        "ev-011"
-      ],
-      "hiddenLocked": [
-        "ev-012"
-      ]
+      "onComplete": {
+        "finding": "Naomi was investigating unauthorized station activity — an unlisted broadcast segment and after-hours archive access, both connected to the same external party.",
+        "unlockEvidence": ["ev-006", "ev-007"],
+        "unlockLeads": ["lead-05-missing-tape"],
+        "revealPeople": []
+      }
     },
+
     {
-      "id": "stage-4",
-      "triggeredBy": {
-        "type": "answered",
-        "stageId": "stage-3"
+      "id": "lead-04-the-caller",
+      "title": "The Caller",
+      "question": "Who or what was warning Naomi?",
+      "status": "locked",
+      "detectiveNote": "The same number, calling in week after week during Naomi's shift. Each call longer than the last. Someone was reaching out to her specifically. Whether that was a warning, a threat, or something else — I don't know yet.",
+      "startHereEvidence": ["au-001", "ev-006"],
+      "unlockTask": {
+        "type": "theorySelect",
+        "prompt": "What do the calls most likely represent?",
+        "options": [
+          { "id": "opt-a", "text": "Someone aware of the broadcast manipulation was trying to reach Naomi specifically" },
+          { "id": "opt-b", "text": "A regular listener who called in frequently during her show" },
+          { "id": "opt-c", "text": "A prank caller who happened to call during her shift" },
+          { "id": "opt-d", "text": "Station management checking in on the overnight broadcast" }
+        ],
+        "correct": ["opt-a"],
+        "hints": [
+          "Look at the pattern in the phone records — the same number, escalating frequency, always during Naomi's specific shift. That's not random.",
+          "Listen to the Caller 03 recording. The caller references something specific about 'what's on the air.' They know something about the broadcast content.",
+          "The calls escalate over the final weeks before Naomi's disappearance. The caller references the signal and seems to be warning her. This isn't a regular listener — this is someone who knew what was happening."
+        ]
       },
-      "detectiveNote": "Maybe the recordings weren't dangerous because of what they contained. Maybe they were dangerous because people believed they were. Voss is a psychologist. He would know exactly how to make that work. And the phrases in these clinical notes — I've read those exact words somewhere else in this case.",
-      "dispatchMessage": "Detective [NAME] — Naomi believed someone inside the station was manipulating the broadcasts. Who had unauthorized archive access?",
-      "unlockQuestion": "Who had unauthorized archive access to the station?",
-      "acceptedAnswers": [
-        "voss",
-        "dr voss",
-        "elias voss",
-        "dr elias voss",
-        "dr. voss",
-        "dr. elias voss",
-        "the doctor",
-        "the psychologist"
-      ],
-      "hints": [
-        "The internal complaint memo narrows archive access to a specific individual.",
-        "Cross-reference who had consulting access to the station from the staff directory.",
-        "Dr. Elias Voss had direct archive access."
-      ],
-      "unlockedEvidence": [
-        "ev-009",
-        "ev-009a",
-        "ev-010",
-        "ev-011"
-      ],
-      "visibleLocked": [
-        "ev-012",
-        "ev-013"
-      ],
-      "hiddenLocked": [
-        "ev-014",
-        "au-003"
-      ]
+      "onComplete": {
+        "finding": "The calls suggest someone knew the WHLW broadcasts were being manipulated and was trying to warn Naomi.",
+        "unlockEvidence": ["au-002"],
+        "unlockLeads": [],
+        "revealPeople": []
+      }
     },
+
     {
-      "id": "stage-5",
-      "triggeredBy": {
-        "type": "answered",
-        "stageId": "stage-4"
+      "id": "lead-05-missing-tape",
+      "title": "The Missing Tape",
+      "question": "Why does the cassette matter — and how did it get back to the station?",
+      "status": "locked",
+      "detectiveNote": "The tape shows up in the station archive after Naomi is already gone. That's the thing nobody explained. She couldn't have returned it. So who did?",
+      "startHereEvidence": ["ev-004a", "ev-new2", "ev-006", "ev-007"],
+      "unlockTask": {
+        "type": "theorySelect",
+        "prompt": "Why was the cassette tape returned to the station archive after Naomi's disappearance?",
+        "options": [
+          { "id": "opt-a", "text": "Someone returned it deliberately — the experiment wasn't finished and an unlisted tape left out would draw attention" },
+          { "id": "opt-b", "text": "Naomi returned it herself before she disappeared" },
+          { "id": "opt-c", "text": "It was never removed — the personal effects inventory is inaccurate" },
+          { "id": "opt-d", "text": "A station employee found it in Naomi's belongings and returned it without knowing its significance" }
+        ],
+        "correct": ["opt-a"],
+        "hints": [
+          "Check the personal effects inventory. The tape is listed as recovered from the station archive — but Naomi was already gone when it was found there. Work backwards from that.",
+          "The tape was unlisted. An unlisted tape sitting in an archive would be noticed eventually. Whoever was using it needed it back in the system before anyone started asking questions.",
+          "The tape was returned by whoever ran the experiment. Leaving an unlisted tape in the archive was a loose end. Returning it quietly buried it alongside the legitimate inventory — and the experiment could continue."
+        ]
       },
-      "popup": "stage-5",
-      "detectiveNote": "The tower. Everything keeps coming back to the tower. And Voss keeps saying memory is easy to shape — like he's not even hiding it anymore. Like he knows no one will ever prove it. There's a code on that evidence bag in the search photos. I need to look more carefully.",
-      "dispatchMessage": "Detective [NAME] — where did Naomi confront Voss the night she disappeared?",
-      "unlockQuestion": "Where did Naomi confront Voss the night she disappeared?",
-      "acceptedAnswers": [
-        "relay tower",
-        "tower",
-        "the tower",
-        "radio tower",
-        "the relay tower",
-        "relay station",
-        "the relay station"
-      ],
-      "hints": [
-        "The answer appears after unlocking the hidden incident materials. Think about the search photos.",
-        "Look at what appears in the background of the forest search photographs.",
-        "Naomi confronted Voss at the relay tower outside town."
-      ],
-      "passwordUnlocks": [
-        {
-          "password": "MH-7734",
-          "unlocksEvidence": [
-            "ev-014",
-            "au-003"
-          ]
-        }
-      ],
-      "unlockedEvidence": [
-        "ev-012",
-        "ev-013"
-      ],
-      "visibleLocked": [
-        "ev-014",
-        "au-003"
-      ],
-      "hiddenLocked": []
+      "onComplete": {
+        "finding": "The tape was returned to the station archive after Naomi's disappearance by whoever conducted the experiment — not by Naomi.",
+        "unlockEvidence": ["ev-008", "ev-009", "ev-009a"],
+        "unlockLeads": ["lead-06-lena-hart"],
+        "revealPeople": []
+      }
     },
+
     {
-      "id": "stage-6-final",
-      "triggeredBy": {
-        "type": "viewed",
-        "item": "ev-014"
+      "id": "lead-06-lena-hart",
+      "title": "Lena Hart's Trail",
+      "question": "What did Lena discover — and why did she disappear?",
+      "status": "locked",
+      "detectiveNote": "Naomi's younger sister. Twelve years old when Naomi disappeared. By 2006 she was a journalism student pulling on the same threads. She found something specific enough to get her killed. I need to find out what that was.",
+      "startHereEvidence": ["ev-008", "ev-009", "ev-009a"],
+      "unlockTask": {
+        "type": "evidenceSelect",
+        "prompt": "Which evidence most clearly shows that Lena identified a specific person connected to Naomi's disappearance?",
+        "options": [
+          { "id": "ev-008", "text": "Lena's blog archive — research notes on WHLW broadcast patterns" },
+          { "id": "ev-009a", "text": "College photo — handwritten note on the reverse" },
+          { "id": "ev-009", "text": "Forum threads — Lena posted under her real name" },
+          { "id": "ev-001", "text": "Missing person report — original 1998 record" }
+        ],
+        "correct": ["ev-009a"],
+        "minSelect": 1,
+        "maxSelect": 1,
+        "hints": [
+          "Lena left something behind that points to a specific person — not just the station, not just the tapes, but a name. Look at every piece of evidence she produced.",
+          "The college photo has a note written on the back. Read it carefully. Lena wasn't just documenting the case — she was naming someone.",
+          "The note on the back of the college photo is Lena's most direct statement. She names the experiment and connects it to a specific individual at WHLW. That name is what got her killed."
+        ]
       },
-      "detectiveNote": "It's all here. Every piece connects. The broadcasts, the conditioning, the cover-up, the tower. Voss designed all of it. And he's still out there.",
-      "dispatchMessage": "Detective [NAME] — you have enough to reconstruct what happened. Submit your final case assessment.",
-      "finalQuestions": [
-        {
-          "type": "multipleChoice",
-          "prompt": "Based on the full evidence, what best describes Dr. Voss's role in the Moth Hollow broadcasts?",
-          "options": [
-            "He was an innocent bystander who noticed the broadcasts",
-            "He designed and embedded the broadcasts as part of a psychological experiment",
-            "He was a victim of the experiment like everyone else",
-            "He was attempting to expose the experiments from inside the station"
-          ],
-          "correctIndex": 1
-        },
-        {
-          "type": "topicSelect",
-          "prompt": "Select the true purpose of the recordings.",
-          "topics": [
-            "Supernatural signal",
-            "Community radio programming",
-            "Psychological conditioning",
-            "Frequency weapon",
-            "Emergency broadcast test"
-          ],
-          "correctIndex": 2
-        },
-        {
-          "type": "typeIn",
-          "prompt": "Why was the evidence surrounding Naomi's disappearance contradictory and incomplete?",
-          "acceptedAnswers": [
-            "cover up",
-            "cover-up",
-            "coverup",
-            "voss covered it up",
-            "evidence was altered",
-            "voss altered the evidence",
-            "concealment",
-            "to hide the truth",
-            "voss destroyed evidence",
-            "it was deliberately fragmented",
-            "deliberate concealment",
-            "he hid what happened",
-            "voss manipulated the evidence",
-            "the evidence was manipulated",
-            "to protect voss",
-            "so no one would find out"
-          ]
-        }
-      ],
-      "unlockedEvidence": [],
-      "visibleLocked": [],
-      "hiddenLocked": []
+      "onComplete": {
+        "finding": "Lena connected Naomi's evidence to a specific person at WHLW — and disappeared in March 2007 before she could publish her findings.",
+        "unlockEvidence": ["ev-002", "ev-010"],
+        "unlockLeads": ["lead-07-gabriel", "lead-08-dr-voss"],
+        "revealPeople": ["lena-hart", "gabriel-hart"]
+      }
+    },
+
+    {
+      "id": "lead-07-gabriel",
+      "title": "Gabriel's Posts",
+      "question": "Who kept the case alive online — and what do they know?",
+      "status": "locked",
+      "detectiveNote": "Someone has been posting in Moth Hollow forums for years under an anonymous handle. They know too much to be a random true crime follower. The interview record from 1998 might tell me who this actually is.",
+      "startHereEvidence": ["ev-009", "ev-001"],
+      "optional": true,
+      "unlockTask": {
+        "type": "evidenceSelect",
+        "prompt": "Which two pieces of evidence together confirm the identity of the anonymous forum poster?",
+        "options": [
+          { "id": "ev-009", "text": "Forum threads — anonymous username active in Moth Hollow discussions" },
+          { "id": "ev-001", "text": "Missing person report — Gabriel Hart listed as interviewed family contact" },
+          { "id": "ev-008", "text": "Lena's blog archive — references to research collaboration" },
+          { "id": "ev-009a", "text": "College photo — Lena's handwritten note" }
+        ],
+        "correct": ["ev-009", "ev-001"],
+        "minSelect": 2,
+        "maxSelect": 2,
+        "hints": [
+          "The forum poster uses an anonymous handle but makes references that only someone close to the case would know. Cross-reference with the police interview record from 1998.",
+          "The missing person report lists family contacts interviewed. One of those names matches details the anonymous poster mentions in the forums that were never made public.",
+          "Gabriel Hart was interviewed in October 1998. The forum poster references details about Naomi's shift pattern and the family's private timeline — information that was never in any public record. It's Gabriel."
+        ]
+      },
+      "onComplete": {
+        "finding": "Gabriel Hart — Naomi and Lena's brother — has been the anonymous forum poster, searching for answers for over two decades.",
+        "unlockEvidence": [],
+        "unlockLeads": [],
+        "revealPeople": ["gabriel-hart"]
+      }
+    },
+
+    {
+      "id": "lead-08-dr-voss",
+      "title": "Dr. Elias Voss",
+      "question": "Who was Voss — and what was he doing at WHLW?",
+      "status": "locked",
+      "detectiveNote": "The initials on the broadcast schedule. The consulting badge in the maintenance memo. Lena named him. Now I need to understand exactly what he was running inside that station.",
+      "startHereEvidence": ["ev-002", "ev-003", "ev-007", "ev-010", "ev-new3"],
+      "unlockTask": {
+        "type": "theorySelect",
+        "prompt": "What was Dr. Voss conducting at WHLW?",
+        "options": [
+          { "id": "opt-a", "text": "An unauthorized behavioral conditioning experiment using the overnight broadcast signal" },
+          { "id": "opt-b", "text": "A licensed community psychology outreach program approved by station management" },
+          { "id": "opt-c", "text": "A frequency calibration study commissioned by the station's engineering team" },
+          { "id": "opt-d", "text": "A personal research project on radio audience demographics with no harmful intent" }
+        ],
+        "correct": ["opt-a"],
+        "hints": [
+          "Read Voss's academic paper alongside the calibration sheet. His published research describes exactly the methodology that the WHLW equipment was modified to support.",
+          "The therapy notes are redacted — but the visible sections describe patient responses that match the patterns Lena documented in her blog. The patients were WHLW listeners.",
+          "Voss's 1991 paper describes embedding behavioral response triggers in audio signals. The calibration sheet shows WHLW equipment was modified to exactly those specifications. The therapy notes document the effects on listeners. This was a live experiment on an unwitting public."
+        ]
+      },
+      "onComplete": {
+        "finding": "Voss used WHLW's overnight broadcast to run an unauthorized behavioral conditioning experiment on the station's listening audience.",
+        "unlockEvidence": ["ev-011", "ev-012"],
+        "unlockLeads": ["lead-09-naomi-knew"],
+        "revealPeople": ["dr-voss"]
+      }
+    },
+
+    {
+      "id": "lead-09-naomi-knew",
+      "title": "Naomi Knew",
+      "question": "Why did Naomi become a threat to Voss?",
+      "status": "locked",
+      "detectiveNote": "She filed a complaint five days before she disappeared. She named Voss. She had the tape. She had connected everything. For someone running an illegal experiment, Naomi was no longer just a problem — she was a deadline.",
+      "startHereEvidence": ["ev-011", "ev-004a", "ev-003", "ev-012"],
+      "unlockTask": {
+        "type": "theorySelect",
+        "prompt": "What made Naomi a direct threat to Voss specifically?",
+        "options": [
+          { "id": "opt-a", "text": "She discovered physical evidence of the experiment and filed a formal complaint naming Voss before she disappeared" },
+          { "id": "opt-b", "text": "She confronted Voss publicly at the station and threatened to go to the press" },
+          { "id": "opt-c", "text": "She had recorded Voss accessing the archive after hours and kept the footage" },
+          { "id": "opt-d", "text": "She had told multiple coworkers about her suspicions and word had reached Voss" }
+        ],
+        "correct": ["opt-a"],
+        "hints": [
+          "Look at the date on the internal complaint and the date of Naomi's disappearance. Then look at what the complaint actually says.",
+          "The complaint is dated October 9, 1998 — five days before Naomi disappeared. It names Voss directly and references the unauthorized broadcast segment.",
+          "Naomi filed a formal written complaint naming Voss, citing the unlisted tape and the unauthorized segment. That complaint — if it had entered the official record — would have ended the experiment and exposed Voss. It never made it into the case file."
+        ]
+      },
+      "onComplete": {
+        "finding": "Naomi filed a formal complaint naming Voss five days before she disappeared. The complaint was never entered into the official investigation record.",
+        "unlockEvidence": ["ev-013"],
+        "unlockLeads": ["lead-10-the-tower"],
+        "revealPeople": []
+      }
+    },
+
+    {
+      "id": "lead-10-the-tower",
+      "title": "The Tower",
+      "question": "What happened on the night of October 14, 1998?",
+      "status": "locked",
+      "detectiveNote": "Everything points to the relay tower on Route 7. Naomi's car. The search photos. The restricted incident report. One more thing — there's an authorization code somewhere in this archive. Find it.",
+      "startHereEvidence": ["ev-013", "ev-014", "ev-new4"],
+      "unlockTask": {
+        "type": "caseReport",
+        "prompt": "Reconstruct what happened on October 14, 1998.",
+        "fields": [
+          {
+            "id": "field-code",
+            "label": "Authorization code to access restricted file EV-014",
+            "type": "codeEntry",
+            "acceptedAnswers": ["MH-7734", "mh-7734", "MH7734", "mh7734"],
+            "hint": "The code appears somewhere in the evidence archive. Look at documents that reference case numbers or file IDs."
+          },
+          {
+            "id": "field-who",
+            "label": "Who confronted Naomi at the relay tower?",
+            "type": "suspectSelect",
+            "acceptedAnswers": ["dr-voss"],
+            "hint": "Only one person had both the motive and the knowledge of where Naomi would be that night."
+          },
+          {
+            "id": "field-why",
+            "label": "Why did Voss go to the tower?",
+            "type": "theorySelect",
+            "options": [
+              { "id": "opt-a", "text": "To silence Naomi before her complaint could be investigated" },
+              { "id": "opt-b", "text": "To retrieve the cassette tape she had taken from the archive" },
+              { "id": "opt-c", "text": "To warn Naomi that her life was in danger from a third party" },
+              { "id": "opt-d", "text": "To offer Naomi compensation in exchange for her silence" }
+            ],
+            "acceptedAnswers": ["opt-a"]
+          }
+        ],
+        "hints": [
+          "You need three things: the authorization code, a suspect, and a motive. The code is in the archive. The suspect is already revealed. The motive follows directly from the complaint.",
+          "The authorization code MH-7734 appears in the case documentation. The suspect is Dr. Voss. The motive: the complaint she filed would have exposed and ended everything he had spent years building.",
+          "Voss followed Naomi to the tower — the only place she would be alone that night, far from the station, after the shift. The complaint made her a deadline. The tower made it possible."
+        ]
+      },
+      "onComplete": {
+        "finding": "Naomi confronted Voss at the relay tower on October 14, 1998. Voss silenced her before her complaint could be investigated. The case was closed eleven days later with no charges filed.",
+        "unlockEvidence": ["ev-014", "au-003", "au-004"],
+        "unlockLeads": [],
+        "revealPeople": [],
+        "triggerSolution": true
+      }
     }
+
   ],
+
   "evidence": [
     {
       "id": "ev-000",
@@ -305,8 +366,7 @@
       "icon": "📋",
       "name": "Case Briefing — Moth Hollow Archive",
       "description": "Initial case assignment. Sealed File Co. Archive Division.",
-      "file": null,
-      "lockedHint": null
+      "file": null
     },
     {
       "id": "ev-001",
@@ -314,8 +374,7 @@
       "icon": "📋",
       "name": "Missing Person Report",
       "description": "Official report filed October 1998 — Naomi Elise Vale",
-      "file": "evidence/ev-001-missing-person-report.html",
-      "lockedHint": null
+      "file": "evidence/ev-001-missing-person-report.html"
     },
     {
       "id": "ev-002",
@@ -323,8 +382,7 @@
       "icon": "📋",
       "name": "WHLW Staff Directory",
       "description": "Internal station personnel directory, circa 1998",
-      "file": "evidence/ev-002-staff-directory.html",
-      "lockedHint": null
+      "file": "evidence/ev-002-staff-directory.html"
     },
     {
       "id": "ev-003",
@@ -332,26 +390,7 @@
       "icon": "📋",
       "name": "Broadcast Schedule",
       "description": "WHLW weekly schedule — October 1998",
-      "file": "evidence/ev-003_broadcast-schedule.html",
-      "lockedHint": null
-    },
-    {
-      "id": "ev-004a",
-      "type": "image",
-      "icon": "📷",
-      "name": "Cassette Evidence Photo",
-      "description": "Evidence photo — cassette tape recovered near station",
-      "file": "evidence/ev-004a-cassette-photo.jpg",
-      "lockedHint": null
-    },
-    {
-      "id": "au-001",
-      "type": "audio",
-      "icon": "🎙️",
-      "name": "TAPE-001 — Caller 03 Recording",
-      "description": "Late-night call during Naomi's final broadcast week",
-      "file": "audio/au-001-caller03.mp3",
-      "lockedHint": "Answer a case question to access"
+      "file": "evidence/ev-003_broadcast-schedule.html"
     },
     {
       "id": "ev-004",
@@ -359,8 +398,15 @@
       "icon": "📋",
       "name": "911 Call Transcript",
       "description": "Emergency dispatch transcript — October 14, 1998",
-      "file": "evidence/ev-004-911-transcript.pdf",
-      "lockedHint": "Answer a case question to access"
+      "file": "evidence/ev-004_911-call-transcript.html"
+    },
+    {
+      "id": "ev-004a",
+      "type": "image",
+      "icon": "📷",
+      "name": "Cassette Evidence Photo",
+      "description": "Evidence photo — cassette tape recovered from station archive",
+      "file": "evidence/ev-004A_cassette-evidence-photo.html"
     },
     {
       "id": "ev-005",
@@ -368,8 +414,7 @@
       "icon": "📋",
       "name": "Witness Statement — Evelyn Pike",
       "description": "Recorded statement from station technician",
-      "file": "evidence/ev-005-evelyn-statement.pdf",
-      "lockedHint": "Answer a case question to access"
+      "file": "evidence/ev-005_evelyn-pike-statement.html"
     },
     {
       "id": "ev-006",
@@ -377,26 +422,15 @@
       "icon": "📋",
       "name": "Station Phone Records",
       "description": "Incoming call log — WHLW 88.3, October 1998",
-      "file": "evidence/ev-006-phone-records.pdf",
-      "lockedHint": "Answer a case question to access"
-    },
-    {
-      "id": "au-002",
-      "type": "audio",
-      "icon": "📞",
-      "name": "TAPE-002 — Voicemail Recording",
-      "description": "Retrieved from station line — caller unknown",
-      "file": "audio/au-002-voicemail.mp3",
-      "lockedHint": "Discovered during investigation"
+      "file": "evidence/ev-006-phone-records.html"
     },
     {
       "id": "ev-007",
       "type": "document",
       "icon": "📋",
       "name": "Station Maintenance Memo",
-      "description": "Internal engineering memo — frequency and archive notes",
-      "file": "evidence/ev-007-maintenance-memo.pdf",
-      "lockedHint": "Answer a case question to access"
+      "description": "Internal engineering memo — frequency and archive access notes",
+      "file": "evidence/ev-007-maintenance-memo.html"
     },
     {
       "id": "ev-008",
@@ -404,8 +438,7 @@
       "icon": "🖥️",
       "name": "Lena Hart — Blog Archive",
       "description": "Recovered screenshots from Lena Hart's personal research blog",
-      "file": "evidence/ev-008-lena-blog.pdf",
-      "lockedHint": "Discovered during investigation"
+      "file": "evidence/ev-008-lena-blog.html"
     },
     {
       "id": "ev-009",
@@ -413,8 +446,7 @@
       "icon": "🖥️",
       "name": "Archived Forum Threads",
       "description": "Three recovered discussion threads — Moth Hollow community forums",
-      "file": "evidence/ev-009-forum-threads.pdf",
-      "lockedHint": "Answer a case question to access"
+      "file": "evidence/ev-009-forum-threads.html"
     },
     {
       "id": "ev-009a",
@@ -422,8 +454,7 @@
       "icon": "📷",
       "name": "Lena Hart — College Photo",
       "description": "Recovered photograph — handwritten note on reverse",
-      "file": "evidence/ev-009a-lena-photo.jpg",
-      "lockedHint": "Answer a case question to access"
+      "file": "evidence/ev-009a-lena-photo.html"
     },
     {
       "id": "ev-010",
@@ -431,8 +462,7 @@
       "icon": "📋",
       "name": "Therapy Session Notes",
       "description": "Recovered clinical notes — heavily redacted",
-      "file": "evidence/ev-010-therapy-notes.pdf",
-      "lockedHint": "Answer a case question to access"
+      "file": "evidence/ev-010-therapy-notes.html"
     },
     {
       "id": "ev-011",
@@ -440,17 +470,15 @@
       "icon": "📋",
       "name": "Internal Station Complaint",
       "description": "Complaint filed by Naomi Vale — October 9, 1998",
-      "file": "evidence/ev-011-station-complaint.pdf",
-      "lockedHint": "Answer a case question to access"
+      "file": "evidence/ev-011-station-complaint.html"
     },
     {
       "id": "ev-012",
       "type": "document",
       "icon": "📋",
       "name": "Equipment Calibration Sheet",
-      "description": "Technical broadcast calibration records — WHLW engineering",
-      "file": "evidence/ev-012-calibration-sheet.pdf",
-      "lockedHint": "Answer a case question to access"
+      "description": "Technical broadcast calibration records — WHLW engineering, 1994",
+      "file": "evidence/ev-012-calibration-sheet.html"
     },
     {
       "id": "ev-013",
@@ -458,17 +486,63 @@
       "icon": "📷",
       "name": "Forest Search Photos",
       "description": "Search team photographs — relay tower perimeter, October 1998",
-      "file": "evidence/ev-013-search-photos.pdf",
-      "lockedHint": "Answer a case question to access"
+      "file": "evidence/ev-013-search-photos.html"
     },
     {
       "id": "ev-014",
       "type": "document",
       "icon": "🔒",
       "name": "Incident Report — RESTRICTED",
-      "description": "Classified tower incident file — access requires authorization",
-      "file": "evidence/ev-014-incident-report.pdf",
-      "lockedHint": "Requires authorization code"
+      "description": "Classified tower incident file — access requires authorization code",
+      "file": "evidence/ev-014-incident-report.html"
+    },
+    {
+      "id": "ev-new1",
+      "type": "document",
+      "icon": "📋",
+      "name": "Case Closure Memo",
+      "description": "Sheriff Mercer's closure memo — October 25, 1998",
+      "file": "evidence/ev-new1-closure-memo.html"
+    },
+    {
+      "id": "ev-new2",
+      "type": "document",
+      "icon": "📋",
+      "name": "Personal Effects Inventory",
+      "description": "Naomi Vale's recovered belongings — Deputy Caulfield notation",
+      "file": "evidence/ev-new2-personal-effects.html"
+    },
+    {
+      "id": "ev-new3",
+      "type": "document",
+      "icon": "📋",
+      "name": "Academic Paper Excerpt — Voss, 1991",
+      "description": "Excerpt with Lena Hart's margin annotations",
+      "file": "evidence/ev-new3-voss-paper.html"
+    },
+    {
+      "id": "ev-new4",
+      "type": "image",
+      "icon": "🗺️",
+      "name": "Area Map — Moth Hollow",
+      "description": "Hand-drawn map — key locations, vehicle recovery site marked",
+      "file": "evidence/ev-new4-map.html"
+    },
+    {
+      "id": "au-001",
+      "type": "audio",
+      "icon": "🎙️",
+      "name": "TAPE-001 — Caller 03 Recording",
+      "description": "Late-night call during Naomi's final broadcast week",
+      "file": "evidence/audio/au-001-caller03.mp3"
+    },
+    {
+      "id": "au-002",
+      "type": "audio",
+      "icon": "📞",
+      "name": "TAPE-002 — Voicemail Recording",
+      "description": "Retrieved from station line — caller unknown",
+      "file": "evidence/audio/au-002-voicemail.mp3"
     },
     {
       "id": "au-003",
@@ -476,537 +550,236 @@
       "icon": "🎙️",
       "name": "TAPE-003 — Voss Interview Recording",
       "description": "Police interview recording — Dr. Elias Voss, October 1998",
-      "file": "audio/au-003-voss-interview.mp3",
-      "lockedHint": "Requires authorization code"
+      "file": "evidence/audio/au-003-voss-interview.mp3"
     },
     {
       "id": "au-004",
       "type": "audio",
-      "secret": true,
       "icon": "📼",
       "name": "TAPE-004 — Distorted Transfer B",
       "description": "Recovered audio transfer — origin unknown",
-      "file": "audio/au-004-distorted-transfer.mp3",
-      "lockedHint": null
+      "file": "evidence/audio/au-004-distorted-transfer-b.wav",
+      "secret": true
     }
   ],
-  "suspects": [
+
+  "people": [
     {
       "id": "naomi-vale",
-      "name": "Naomi Elise Vale",
-      "role": "Victim / Overnight Radio Host",
+      "name": "Naomi Vale",
+      "role": "Overnight Radio Host — WHLW 88.3",
       "status": "missing",
-      "revealedAtStage": "start",
-      "photo": null
-    },
-    {
-      "id": "dr-voss",
-      "name": "Dr. Elias Voss",
-      "role": "Station Consulting Psychologist",
-      "status": "review",
-      "revealTrigger": {
-        "viewed": "ev-001"
-      },
-      "revealedAtStage": "start",
-      "photo": null
+      "photo": "images/naomi-vale.png",
+      "revealedAtStart": true
     },
     {
       "id": "evelyn-pike",
       "name": "Evelyn Pike",
-      "role": "Station Technician, WHW 88.3",
-      "status": "review",
-      "revealTrigger": {
-        "viewed": "ev-005"
-      },
-      "revealedAtStage": "start",
-      "photo": null
+      "role": "Station Technician — WHLW",
+      "status": "witness",
+      "photo": "images/evelyn-pike.png",
+      "revealedAtStart": false
     },
     {
       "id": "sheriff-mercer",
       "name": "Sheriff Dale Mercer",
-      "role": "Lead Investigator, 1998 Case",
+      "role": "Lead Investigator — 1998",
       "status": "review",
-      "revealTrigger": {
-        "viewed": "ev-004"
-      },
-      "revealedAtStage": "start",
-      "photo": null
+      "photo": "images/sheriff-mercer.png",
+      "revealedAtStart": true
     },
     {
       "id": "gabriel-hart",
       "name": "Gabriel Hart",
-      "role": "Naomi's Brother / Lena's Brother",
+      "role": "Brother of Naomi Vale and Lena Hart",
       "status": "review",
-      "revealedAtStage": "start",
-      "revealTrigger": {
-        "viewed": "ev-001"
-      },
-      "photo": null
+      "photo": "images/gabriel-hart.png",
+      "revealedAtStart": false
     },
     {
       "id": "lena-hart",
       "name": "Lena Hart",
-      "role": "Independent Investigator / Naomi's Sister",
+      "role": "Investigative Journalist — Missing 2007",
       "status": "missing",
-      "revealTrigger": {
-        "viewed": "ev-008"
-      },
-      "revealedAtStage": "start",
-      "photo": null
-    }
-  ],
-  "phoneNumbers": {
-    "304-555-0176": {
-      "playsAudio": "audio/au-002-voicemail.mp3",
-      "description": "Station line — distorted voicemail retrieved"
-    }
-  },
-  "solution": {
-    "visibleAtStage": "stage-6-final",
-    "correctSuspect": "dr-voss",
-    "revealFile": "evidence/case-resolution.pdf",
-    "caseClosedText": "Dr. Elias Voss conducted an unauthorized psychological experiment using WHLW 88.3 broadcasts between 1994 and 1998. Naomi Vale discovered the truth through a recovered recording in the station archive. She confronted Voss at the relay tower on October 14, 1998. She did not survive that confrontation. Voss concealed her death and systematically fragmented the evidence. Years later, Lena Hart independently uncovered the manipulation — and then she too disappeared. The case is closed. But not every question has been answered."
-  },
-  "spectrogramTool": {
-    "unlocksAfterReveal": true,
-    "notificationText": "NEW TOOL UNLOCKED — Spectrogram Analyzer has been added to your evidence kit. Return to your audio files to run visual analysis.",
-    "eligibleAudio": [
-      "au-004"
-    ],
-    "resultImage": "hidden/spectrogram/index.html",
-    "resultLabel": "Spectrogram Analysis — DISTORTED_TRANSFER_B"
-  },
-  "finalNote": "This file has been archived. Case 001 — The Moth Hollow Tapes — is considered closed pending new evidence. The Sealed File Co continues to receive materials. Additional sealed files are under review.",
-  "popups": {
-    "caseBriefing": {
-      "header": "ARCHIVED CASE MATERIAL — ACCESS RESTRICTED",
-      "body": "In 2025, a private archivist recovered a collection of sealed investigative files from a decommissioned storage facility in rural West Virginia.\n\nThe files had been classified under a departmental case closure order issued in October 1998. The closure was signed before a formal investigation was completed.\n\nThe archivist has since gone quiet. The files remain.\n\nThe case assigned to you was never officially solved.\n\nNaomi Vale, 26, overnight radio host at WHLW 88.3 in Moth Hollow, West Virginia — disappeared October 14, 1998. Her vehicle was found two miles from the station. No body was recovered. The investigation was suspended eleven days later.\n\nThe evidence in this archive is incomplete. Some files appear damaged. Others appear to have been intentionally removed.\n\nWhat remains is what you have. Work with it.\n\n— SEALED FILE CO. ARCHIVE DIVISION",
-      "dismissText": "I HAVE READ AND UNDERSTOOD — BEGIN INVESTIGATION"
+      "photo": "images/lena-hart.png",
+      "revealedAtStart": false
     },
-    "stage-1": {
-      "header": "NEW EVIDENCE RECOVERED",
-      "body": "Three additional files have been located in the archive.\n\nThe original detective's notes indicate these were part of the initial evidence package but were catalogued separately from the primary case briefing. The reason for the separation is not noted.\n\nReview all materials before proceeding.",
-      "dismissText": "CONTINUE INVESTIGATION"
-    },
-    "stage-3": {
-      "header": "SUPPLEMENTARY MATERIALS RECOVERED",
-      "body": "The archivist who originally recovered these files included supplementary materials gathered during research into the Moth Hollow case.\n\nThese materials are not part of the original 1998 evidence package. They were collected between 2002 and 2007 by a secondary researcher who independently investigated the case.\n\nThat researcher's name was Lena Hart.",
-      "dismissText": "CONTINUE INVESTIGATION"
-    },
-    "stage-5": {
-      "header": "SECONDARY MATERIALS LOCATED",
-      "body": "The original search of the area surrounding the WHLW relay tower was conducted over three days in October 1998. Initial search results were logged but not included in the primary case file.\n\nThe following materials were recovered from a secondary storage box associated with this case. They appear to have been separated from the main file at some point between 1998 and 2003.",
-      "dismissText": "CONTINUE INVESTIGATION"
-    }
-  },
-  "revealCharacters": [
     {
-      "icon": "🧠",
+      "id": "dr-voss",
       "name": "Dr. Elias Voss",
-      "role": "Station Consulting Psychologist",
-      "verdict": "Conducted an unauthorized psychological experiment using WHLW 88.3 broadcasts between 1994 and 1998. He designed the experiment, chose the subjects, manufactured the evidence of manipulation. When Naomi discovered the truth, he ensured her silence. He has never been charged. As of 2026, he remains in Moth Hollow.",
-      "status": "guilty",
-      "statusLabel": "Responsible party"
-    },
-    {
-      "icon": "🎙️",
-      "name": "Naomi Elise Vale",
-      "role": "Victim / Overnight Radio Host",
-      "verdict": "Discovered the truth through a recording recovered from the station archive. Confronted Voss at the relay tower on October 14, 1998. Did not survive that confrontation. Her death was made to look like a disappearance. She was 26 years old.",
-      "status": "missing",
-      "statusLabel": "Deceased — case never formally closed"
-    },
-    {
-      "icon": "📓",
-      "name": "Lena Hart",
-      "role": "Independent Investigator",
-      "verdict": "Independently uncovered fragments of the experiment years after Naomi's disappearance. Vanished in 2007 before she could make her findings public. Her research blog was taken offline. Her current whereabouts are unknown.",
-      "status": "missing",
-      "statusLabel": "Missing — 2007"
-    },
-    {
-      "icon": "📻",
-      "name": "Evelyn Pike",
-      "role": "Station Technician, WHLW 88.3",
-      "verdict": "Altered broadcast logs and lied in her witness statement — not to protect Voss, but to protect Naomi's reputation. She feared the unusual broadcasts would be blamed on Naomi after her disappearance. She had no knowledge of the experiment. She acted out of loyalty.",
-      "status": "innocent",
-      "statusLabel": "Cleared — no criminal intent"
-    },
-    {
-      "icon": "⭐",
-      "name": "Sheriff Dale Mercer",
-      "role": "Lead Investigator, 1998",
-      "verdict": "Closed the original case prematurely to protect his department from scrutiny over early investigation failures. Did not know about the experiment. Did not know Voss caused Naomi's death. His failures allowed Voss to avoid accountability permanently.",
-      "status": "unknown",
-      "statusLabel": "Dereliction — not criminal"
-    },
-    {
-      "icon": "🌾",
-      "name": "Gabriel Hart",
-      "role": "Naomi's Brother / Lena's Brother",
-      "verdict": "Has been quietly investigating since Lena's disappearance in 2007. He is still looking. He does not know the case has been formally reopened.",
-      "status": "unknown",
-      "statusLabel": "Whereabouts unknown — 2026"
+      "role": "Consulting Psychologist — WHLW",
+      "status": "poi",
+      "photo": "images/dr-voss.png",
+      "revealedAtStart": false
     }
   ],
+
   "characterProfiles": {
     "naomi-vale": {
       "fileId": "PERS-001",
-      "footerRef": "FILE: PERS-001 / CASE: WHL-1998-001 / STATUS: OPEN",
+      "footerRef": "FILE: PERS-001 / CASE: WHL-1998-001 / STATUS: MISSING",
       "basicInfo": [
-        {
-          "label": "Age at Disappearance",
-          "value": "26"
-        },
-        {
-          "label": "Occupation",
-          "value": "Overnight Radio Host, WHLW 88.3"
-        },
-        {
-          "label": "Last Known Location",
-          "value": "WHLW Station Parking Lot"
-        },
-        {
-          "label": "Disappearance Date",
-          "value": "October 14, 1998"
-        },
-        {
-          "label": "Hometown",
-          "value": "Moth Hollow, West Virginia"
-        },
-        {
-          "label": "Current Status",
-          "value": "Missing / Cold Case"
-        }
+        { "label": "Age in 1998", "value": "29" },
+        { "label": "Occupation", "value": "Overnight radio host — WHLW 88.3" },
+        { "label": "Shift", "value": "Tuesday/Thursday overnight — 10 PM to 2 AM" },
+        { "label": "Last Seen", "value": "October 14, 1998 — WHLW station" },
+        { "label": "Status", "value": "Missing — no remains recovered" }
       ],
-      "summary": "Naomi Vale hosted the overnight shift at WHLW 88.3 for approximately one year before her disappearance. Colleagues described her as warm and professional. No body was recovered. Her vehicle was found abandoned on Tower Road two days after she was reported missing. The case was suspended after eleven days with no primary suspect named.",
+      "summary": "Naomi Vale hosted the overnight slot at WHLW 88.3 for three years before her disappearance. In the weeks before October 14, 1998, she documented unusual broadcast activity and filed an internal complaint naming an external consultant. The complaint was never entered into the official investigation record. Her vehicle was recovered near the Route 7 relay tower on October 15.",
       "statement": {
         "requiresEvidence": "ev-011",
-        "quote": "\"Somebody is changing things after hours. I've found tapes I didn't put there. Recordings have been altered. I believe I know who is responsible.\"",
-        "source": "Internal station complaint — EV-011 — October 9, 1998"
+        "quote": "\"Something is wrong with the signal. I don't know how to explain it yet but I've been keeping notes. Someone has been in the archive. The tapes don't match the logs.\"",
+        "source": "Internal station complaint — October 9, 1998 — EV-011"
       },
       "evidenceLinks": [
-        {
-          "evidenceId": "ev-001",
-          "badge": "doc",
-          "desc": "Official filing — lists Naomi's timeline and family contacts"
-        },
-        {
-          "evidenceId": "ev-002",
-          "badge": "doc",
-          "desc": "Station directory — Naomi's extension crossed out in pen"
-        },
-        {
-          "evidenceId": "ev-003",
-          "badge": "doc",
-          "desc": "October 1998 schedule — missing maintenance block on her shift"
-        },
-        {
-          "evidenceId": "ev-004",
-          "badge": "doc",
-          "desc": "Emergency dispatch record — timestamp contradicts witness account"
-        },
-        {
-          "evidenceId": "ev-011",
-          "badge": "doc",
-          "desc": "Complaint filed by Naomi — never received or date-stamped"
-        },
-        {
-          "evidenceId": "au-001",
-          "badge": "audio",
-          "desc": "Late-night call during Naomi's final broadcast week"
-        }
+        { "evidenceId": "ev-003", "badge": "doc", "desc": "Broadcast schedule — unauthorized segment on her shift" },
+        { "evidenceId": "ev-011", "badge": "doc", "desc": "Her internal complaint — filed five days before she disappeared" },
+        { "evidenceId": "ev-004a", "badge": "image", "desc": "Cassette evidence photo — tape recovered after her disappearance" }
       ],
       "socialLinks": []
     },
-    "dr-voss": {
-      "fileId": "PERS-002",
-      "footerRef": "FILE: PERS-002 / CASE: WHL-1998-001 / STATUS: ACTIVE REVIEW",
-      "basicInfo": [
-        {
-          "label": "Age in 1998",
-          "value": "51"
-        },
-        {
-          "label": "Occupation",
-          "value": "Psychologist — Private Practice"
-        },
-        {
-          "label": "Station Role",
-          "value": "Community Outreach Consultant (since 1993)"
-        },
-        {
-          "label": "Residence",
-          "value": "Moth Hollow, West Virginia"
-        },
-        {
-          "label": "Current Status",
-          "value": "Still practicing as of 2026"
-        },
-        {
-          "label": "Charges Filed",
-          "value": "None"
-        }
-      ],
-      "summary": "Dr. Elias Voss served as a consulting psychologist for WHLW's Community Outreach Program beginning in 1993. His role is described vaguely in station records. He had authorized access to the station during business hours. His connection to Naomi Vale's case emerged through the station's internal files.",
-      "statement": {
-        "requiresEvidence": "au-003",
-        "quote": "\"Memory is incredibly easy to shape, Detective. People often believe they remember things that never occurred. And sometimes they can't remember what did.\"\n\n\"Is that a yes or a no?\"\n\n\"It's an observation.\"",
-        "source": "Police interview recording — AU-003 — October 1998"
-      },
-      "evidenceLinks": [
-        {
-          "evidenceId": "ev-002",
-          "badge": "doc",
-          "desc": "Staff directory — Voss entry may have been added after initial printing"
-        },
-        {
-          "evidenceId": "ev-010",
-          "badge": "doc",
-          "desc": "Clinical notes — language mirrors broadcast recordings"
-        },
-        {
-          "evidenceId": "ev-011",
-          "badge": "doc",
-          "desc": "Naomi's complaint — Voss named as having unauthorized archive access"
-        },
-        {
-          "evidenceId": "ev-014",
-          "badge": "doc",
-          "desc": "Restricted incident report — relay tower"
-        },
-        {
-          "evidenceId": "au-003",
-          "badge": "audio",
-          "desc": "Police interview — \"Memory is incredibly easy to shape.\""
-        }
-      ],
-      "socialLinks": [
-        {
-          "icon": "🌐",
-          "label": "Moth Hollow Community Psychology",
-          "sublabel": "Dr. Voss — Practice website (archived)",
-          "url": "social/voss-practice/index.html"
-        }
-      ]
-    },
     "evelyn-pike": {
-      "fileId": "PERS-003",
-      "footerRef": "FILE: PERS-003 / CASE: WHL-1998-001 / STATUS: UNDER REVIEW",
+      "fileId": "PERS-002",
+      "footerRef": "FILE: PERS-002 / CASE: WHL-1998-001 / STATUS: WITNESS",
       "basicInfo": [
-        {
-          "label": "Age in 1998",
-          "value": "38"
-        },
-        {
-          "label": "Employment",
-          "value": "WHLW 88.3 — 1991 to 2001"
-        },
-        {
-          "label": "Role",
-          "value": "Primary Technician on Naomi's shifts"
-        },
-        {
-          "label": "Current Status",
-          "value": "Retired — location unknown"
-        },
-        {
-          "label": "Charges Filed",
-          "value": "None"
-        }
+        { "label": "Age in 1998", "value": "41" },
+        { "label": "Role", "value": "Station technician — WHLW" },
+        { "label": "Present Night Of", "value": "Yes — stayed late to lock up" },
+        { "label": "Current Status", "value": "Retired — location unknown" }
       ],
-      "summary": "Evelyn Pike was the primary technician on duty during Naomi Vale's overnight shifts. She was among the last confirmed station staff to see Naomi before her disappearance. Her witness statement and the official emergency record do not align.",
+      "summary": "Evelyn Pike was the station technician on duty the night of October 14, 1998. She was the last confirmed person to see Naomi Vale before her disappearance. Her witness statement places Naomi leaving the station around 10 PM — creating a 1 hour 42 minute gap before the 911 call was placed.",
       "statement": {
         "requiresEvidence": "ev-005",
         "quote": "\"Naomi seemed stressed. The phones kept ringing after hours — more than usual. She left earlier than scheduled. Around 10, maybe just before. I stayed late to lock up.\"",
         "source": "Witness statement — EV-005"
       },
       "evidenceLinks": [
-        {
-          "evidenceId": "ev-003",
-          "badge": "doc",
-          "desc": "Broadcast schedule — alterations traced to Evelyn's credentials"
-        },
-        {
-          "evidenceId": "ev-005",
-          "badge": "doc",
-          "desc": "Evelyn's witness statement — timeline contradicts 911 record"
-        },
-        {
-          "evidenceId": "ev-004",
-          "badge": "doc",
-          "desc": "911 transcript — timestamped 11:42 PM"
-        }
+        { "evidenceId": "ev-005", "badge": "doc", "desc": "Evelyn's witness statement — timeline contradicts 911 record" },
+        { "evidenceId": "ev-003", "badge": "doc", "desc": "Broadcast schedule — prepared by E. Pike, approved without review" },
+        { "evidenceId": "ev-004", "badge": "doc", "desc": "911 transcript — timestamped 11:42 PM" }
       ],
       "socialLinks": []
     },
     "sheriff-mercer": {
-      "fileId": "PERS-004",
-      "footerRef": "FILE: PERS-004 / CASE: WHL-1998-001 / STATUS: UNDER REVIEW",
+      "fileId": "PERS-003",
+      "footerRef": "FILE: PERS-003 / CASE: WHL-1998-001 / STATUS: UNDER REVIEW",
       "basicInfo": [
-        {
-          "label": "Age in 1998",
-          "value": "44"
-        },
-        {
-          "label": "Jurisdiction",
-          "value": "Moth Hollow County Sheriff's Dept."
-        },
-        {
-          "label": "Case Closed",
-          "value": "October 25, 1998 — 11 days after disappearance"
-        },
-        {
-          "label": "Current Status",
-          "value": "Retired — 2009"
-        },
-        {
-          "label": "Charges Filed",
-          "value": "None"
-        }
+        { "label": "Age in 1998", "value": "44" },
+        { "label": "Jurisdiction", "value": "Moth Hollow County Sheriff's Dept." },
+        { "label": "Case Closed", "value": "October 25, 1998 — 11 days after disappearance" },
+        { "label": "Current Status", "value": "Retired — 2009" },
+        { "label": "Charges Filed", "value": "None" }
       ],
-      "summary": "Sheriff Dale Mercer led the original investigation into Naomi Vale's disappearance in October 1998. The investigation was closed after eleven days with no charges filed and no primary suspect named. A review of the case files has identified several procedural gaps that were never formally addressed.",
+      "summary": "Sheriff Dale Mercer led the original investigation into Naomi Vale's disappearance in October 1998. The investigation was closed after eleven days with no charges filed and no primary suspect named. Naomi's internal station complaint — which named a specific person of interest — was never entered into the official case record.",
       "statement": {
-        "requiresEvidence": "ev-001",
-        "quote": "\"Investigation has produced no physical evidence sufficient to establish criminal cause of disappearance. Case is suspended pending new information. The department extends its condolences to the Vale family.\"",
-        "source": "Case closure report — October 25, 1998 — EV-001"
+        "requiresEvidence": "ev-new1",
+        "quote": "\"Investigation has produced no physical evidence sufficient to establish criminal cause of disappearance. Case is suspended pending new information.\"",
+        "source": "Case closure memo — October 25, 1998 — EV-NEW1"
       },
       "evidenceLinks": [
-        {
-          "evidenceId": "ev-001",
-          "badge": "doc",
-          "desc": "Missing person report — filed under Mercer's department"
-        },
-        {
-          "evidenceId": "ev-013",
-          "badge": "doc",
-          "desc": "Search photos — relay tower tip was logged and ignored"
-        },
-        {
-          "evidenceId": "ev-011",
-          "badge": "doc",
-          "desc": "Naomi's complaint — never entered into official case record"
-        }
+        { "evidenceId": "ev-001", "badge": "doc", "desc": "Missing person report — filed under Mercer's department" },
+        { "evidenceId": "ev-new1", "badge": "doc", "desc": "Closure memo — issued 11 days into investigation" },
+        { "evidenceId": "ev-011", "badge": "doc", "desc": "Naomi's complaint — never entered into official case record" }
       ],
       "socialLinks": []
     },
     "gabriel-hart": {
-      "fileId": "PERS-005",
-      "footerRef": "FILE: PERS-005 / CASE: WHL-1998-001 / STATUS: ACTIVE THREAD",
+      "fileId": "PERS-004",
+      "footerRef": "FILE: PERS-004 / CASE: WHL-1998-001 / STATUS: ACTIVE THREAD",
       "basicInfo": [
-        {
-          "label": "Age in 1998",
-          "value": "18 — interviewed October 22, 1998"
-        },
-        {
-          "label": "Age in 2026",
-          "value": "46"
-        },
-        {
-          "label": "Occupation",
-          "value": "Unknown — construction and IT per public records"
-        },
-        {
-          "label": "Current Status",
-          "value": "Whereabouts unknown"
-        },
-        {
-          "label": "Online Presence",
-          "value": "Active — anonymous username"
-        }
+        { "label": "Age in 1998", "value": "18 — interviewed October 22, 1998" },
+        { "label": "Age in 2026", "value": "46" },
+        { "label": "Occupation", "value": "Unknown — construction and IT per public records" },
+        { "label": "Current Status", "value": "Whereabouts unknown" },
+        { "label": "Online Presence", "value": "Active — anonymous username" }
       ],
-      "summary": "Gabriel Hart is the brother of both Naomi Vale and Lena Hart — the only family contact connected to both disappearances. He was interviewed once in October 1998 and provided limited information at that time. He has since maintained an anonymous presence in online communities discussing the Moth Hollow case.",
+      "summary": "Gabriel Hart is the brother of both Naomi Vale and Lena Hart — the only family contact connected to both disappearances. He was interviewed once in October 1998 and provided limited information. He has since maintained an anonymous presence in online communities discussing the Moth Hollow case.",
       "statement": {
         "requiresEvidence": "ev-001",
         "quote": "\"She was trying to do the right thing. Whatever happened — she was trying to do the right thing. That's all I know.\"",
         "source": "Police interview transcript — October 22, 1998 — EV-001"
       },
       "evidenceLinks": [
-        {
-          "evidenceId": "ev-001",
-          "badge": "doc",
-          "desc": "Missing person report — Gabriel listed as interviewed family contact"
-        },
-        {
-          "evidenceId": "ev-008",
-          "badge": "doc",
-          "desc": "Lena's blog archive — Gabriel referenced in research notes"
-        },
-        {
-          "evidenceId": "ev-009",
-          "badge": "doc",
-          "desc": "Forum threads — anonymous username active in Moth Hollow discussions"
-        },
-        {
-          "evidenceId": "ev-009a",
-          "badge": "image",
-          "desc": "Lena's college photo — note on reverse references further investigation"
-        }
+        { "evidenceId": "ev-001", "badge": "doc", "desc": "Missing person report — Gabriel listed as interviewed family contact" },
+        { "evidenceId": "ev-009", "badge": "doc", "desc": "Forum threads — anonymous username active in Moth Hollow discussions" },
+        { "evidenceId": "ev-009a", "badge": "image", "desc": "Lena's college photo — note on reverse references further investigation" }
       ],
       "socialLinks": []
     },
     "lena-hart": {
-      "fileId": "PERS-006",
-      "footerRef": "FILE: PERS-006 / CASE: WHL-1998-001 / STATUS: MISSING — ACTIVE THREAD",
+      "fileId": "PERS-005",
+      "footerRef": "FILE: PERS-005 / CASE: WHL-1998-001 / STATUS: MISSING — ACTIVE THREAD",
       "basicInfo": [
-        {
-          "label": "Age in 2007",
-          "value": "21 — disappeared March 2007"
-        },
-        {
-          "label": "Occupation",
-          "value": "Journalism student"
-        },
-        {
-          "label": "Investigation Period",
-          "value": "2006–2007"
-        },
-        {
-          "label": "Relation to Case",
-          "value": "Sister of Naomi Vale / Gabriel Hart"
-        },
-        {
-          "label": "Current Status",
-          "value": "Missing since March 2007"
-        }
+        { "label": "Age in 2007", "value": "21 — disappeared March 2007" },
+        { "label": "Occupation", "value": "Journalism student" },
+        { "label": "Investigation Period", "value": "2006–2007" },
+        { "label": "Relation to Case", "value": "Sister of Naomi Vale / Gabriel Hart" },
+        { "label": "Current Status", "value": "Missing since March 2007" }
       ],
       "summary": "Lena Hart independently investigated Naomi Vale's disappearance as a journalism research project beginning in 2006. She disappeared in March 2007 before completing or publishing her findings. A collection of her archived research materials has recently resurfaced and is now part of this case file.",
       "statement": {
         "requiresEvidence": "ev-008",
-        "quote": "\"The conditioning patterns in the WHLW broadcast record are not accidental. Someone designed this. I don't know who. But I know why Naomi disappeared.\"",
+        "quote": "\"The conditioning patterns in the WHLW broadcast record are not accidental. Someone designed this. I don't know who yet. But I know why Naomi disappeared.\"",
         "source": "Recovered blog archive — EV-008"
       },
       "evidenceLinks": [
-        {
-          "evidenceId": "ev-008",
-          "badge": "doc",
-          "desc": "Lena's blog archive — recovered research screenshots"
-        },
-        {
-          "evidenceId": "ev-009",
-          "badge": "doc",
-          "desc": "Archived forum threads — Lena posted under her real name"
-        },
-        {
-          "evidenceId": "ev-009a",
-          "badge": "image",
-          "desc": "College photo — handwritten note on reverse"
-        }
+        { "evidenceId": "ev-008", "badge": "doc", "desc": "Lena's blog archive — recovered research screenshots" },
+        { "evidenceId": "ev-009", "badge": "doc", "desc": "Archived forum threads — Lena posted under her real name" },
+        { "evidenceId": "ev-009a", "badge": "image", "desc": "College photo — handwritten note on reverse" }
       ],
       "socialLinks": [
         {
           "icon": "📸",
           "label": "lena.hart.1986 — Instagram",
           "sublabel": "Personal account — last active 2006",
-          "url": "social/lena-instagram/index.html"
-        },
+          "url": "social/lena-hart/index.html"
+        }
+      ]
+    },
+    "dr-voss": {
+      "fileId": "PERS-006",
+      "footerRef": "FILE: PERS-006 / CASE: WHL-1998-001 / STATUS: PERSON OF INTEREST",
+      "basicInfo": [
+        { "label": "Role at WHLW", "value": "External consulting psychologist — 1994 to 1998" },
+        { "label": "Credentials", "value": "PhD — Behavioral Psychology, 1989" },
+        { "label": "Published", "value": "\"Signal and Response\" — 1991" },
+        { "label": "Current Status", "value": "Whereabouts unknown — left Moth Hollow October 1998" },
+        { "label": "Interviewed", "value": "Once — October 17, 1998. Released without charge." }
+      ],
+      "summary": "Dr. Elias Voss served as a consulting psychologist at WHLW from 1994 until Naomi Vale's disappearance in October 1998. His role was documented as community outreach consultation, but maintenance records show he had after-hours access to the station archive using a consulting badge. His 1991 academic paper describes behavioral conditioning methodology that matches modifications made to WHLW broadcast equipment.",
+      "statement": {
+        "requiresEvidence": "au-003",
+        "quote": "\"I was a consultant. I attended meetings. I had no involvement in any technical operations at the station. I don't know what happened to Miss Vale.\"",
+        "source": "Police interview recording — October 17, 1998 — AU-003"
+      },
+      "evidenceLinks": [
+        { "evidenceId": "ev-002", "badge": "doc", "desc": "Staff directory — listed with archive access restriction" },
+        { "evidenceId": "ev-new3", "badge": "doc", "desc": "Academic paper excerpt — methodology matches WHLW modifications" },
+        { "evidenceId": "ev-010", "badge": "doc", "desc": "Therapy notes — patient responses match broadcast listener patterns" },
+        { "evidenceId": "ev-012", "badge": "doc", "desc": "Calibration sheet — equipment modified to Voss's published specifications" }
+      ],
+      "socialLinks": [
         {
           "icon": "🌐",
-          "label": "Lena Hart — Archived Research Blog",
-          "sublabel": "Personal research site — recovered 2025",
-          "url": "social/lena-blog/index.html"
+          "label": "Community Psychology — WHLW",
+          "sublabel": "Archived station page — Voss consulting profile",
+          "url": "hidden/community-psychology.html"
         }
       ]
     }
+  },
+
+  "solution": {
+    "correctSuspect": "dr-voss",
+    "triggerLead": "lead-10-the-tower",
+    "revealStory": "Dr. Elias Voss spent four years conducting an unauthorized behavioral conditioning experiment through WHLW's overnight broadcast signal. When Naomi Vale discovered the unlisted tapes and filed a formal complaint naming him, she gave him a deadline. On the night of October 14, 1998, Voss followed her to the relay tower on Route 7 — the one place she would be alone and unreachable. The case was closed eleven days later by a sheriff's department that never received her complaint. Lena Hart found the same trail eight years later. She disappeared in March 2007. The experiment is over. The evidence is here. The case is yours to close.",
+    "characterFates": [
+      { "personId": "naomi-vale", "fate": "Disappeared October 14, 1998. No remains recovered. Case closed without charges." },
+      { "personId": "dr-voss", "fate": "Left Moth Hollow October 1998. Whereabouts unknown. Never charged." },
+      { "personId": "lena-hart", "fate": "Disappeared March 2007. Investigation ongoing." },
+      { "personId": "gabriel-hart", "fate": "Still searching. Location unknown." },
+      { "personId": "sheriff-mercer", "fate": "Retired 2009. Never publicly addressed the case closure." },
+      { "personId": "evelyn-pike", "fate": "Left WHLW in 1999. Retired. Location unknown." }
+    ]
   }
 }

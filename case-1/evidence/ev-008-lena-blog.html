@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EV-008 — Lena Hart Blog Archive</title>
+<link href="https://fonts.googleapis.com/css2?family=Georgia:ital,wght@0,400;0,700;1,400&family=Trebuchet+MS:wght@400;700&family=Courier+New&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── OUTER WRAPPER — archived browser chrome ── */
+
+  body {
+    background: #b0b8c8;
+    padding: 30px 16px 50px;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+  }
+
+  /* Evidence label above the browser */
+  .evidence-label {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #2a3a52;
+    background: #c8d0dc;
+    border: 1px solid #8a9ab0;
+    padding: 4px 10px;
+    display: inline-block;
+    margin-bottom: 6px;
+  }
+
+  /* Fake browser window */
+  .browser-chrome {
+    background: #d4d0c8;
+    border: 2px solid #7a7a7a;
+    border-bottom: none;
+    box-shadow: 2px 2px 0 #888, inset 1px 1px 0 #fff, inset -1px -1px 0 #999;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  .browser-titlebar {
+    background: linear-gradient(to bottom, #0a246a, #3a6ea5);
+    padding: 3px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .browser-title-text {
+    color: white;
+    font-size: 11px;
+    font-family: 'Trebuchet MS', Arial, sans-serif;
+    font-weight: bold;
+    letter-spacing: 0.02em;
+  }
+
+  .browser-controls {
+    display: flex;
+    gap: 2px;
+  }
+
+  .browser-btn {
+    width: 16px;
+    height: 14px;
+    background: #d4d0c8;
+    border: 1px solid #888;
+    border-top-color: #fff;
+    border-left-color: #fff;
+    font-size: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1a1a1a;
+    font-family: 'Courier New', monospace;
+    box-shadow: inset -1px -1px 0 #999;
+  }
+
+  .browser-toolbar {
+    background: #d4d0c8;
+    padding: 4px 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border-bottom: 1px solid #999;
+  }
+
+  .toolbar-btn {
+    background: #d4d0c8;
+    border: 1px solid #888;
+    border-top-color: #fff;
+    border-left-color: #fff;
+    padding: 1px 6px;
+    font-size: 10px;
+    font-family: Arial, sans-serif;
+    color: #1a1a1a;
+    box-shadow: inset -1px -1px 0 #999;
+    cursor: default;
+  }
+
+  .toolbar-btn.disabled {
+    color: #999;
+  }
+
+  .address-bar {
+    flex: 1;
+    background: white;
+    border: 1px solid #888;
+    border-top-color: #555;
+    border-left-color: #555;
+    padding: 1px 4px;
+    font-size: 11px;
+    font-family: 'Courier New', monospace;
+    color: #1a1a1a;
+  }
+
+  /* Wayback machine-style banner */
+  .wayback-bar {
+    background: #fff3a0;
+    border-bottom: 1px solid #c8b800;
+    padding: 5px 12px;
+    font-size: 10px;
+    font-family: Arial, sans-serif;
+    color: #3a3000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .wayback-bar strong {
+    font-weight: bold;
+  }
+
+  /* ── ACTUAL BLOG PAGE ── */
+
+  .blog-page {
+    background: #e8e8e8;
+    border: 2px solid #7a7a7a;
+    border-top: none;
+    box-shadow: 2px 2px 0 #888;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  /* Old blogger-style layout */
+  .blog-layout {
+    display: flex;
+    gap: 0;
+    background: white;
+  }
+
+  /* Main content column */
+  .blog-main {
+    flex: 1;
+    padding: 0;
+    min-width: 0;
+  }
+
+  /* Sidebar */
+  .blog-sidebar {
+    width: 190px;
+    flex-shrink: 0;
+    background: #f0f0f0;
+    border-left: 1px solid #c0c0c0;
+    padding: 14px 12px;
+    font-size: 11px;
+    font-family: Arial, sans-serif;
+  }
+
+  /* Blog header */
+  .blog-header {
+    background: #2b4a7a;
+    padding: 18px 20px 14px;
+    border-bottom: 3px solid #8aaccc;
+  }
+
+  .blog-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 24px;
+    color: #e8f0f8;
+    font-weight: bold;
+    letter-spacing: 0.02em;
+  }
+
+  .blog-desc {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    color: #a8c4dc;
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  /* Nav bar */
+  .blog-nav {
+    background: #3a5f96;
+    padding: 4px 20px;
+    display: flex;
+    gap: 16px;
+    border-bottom: 1px solid #6a8fc4;
+  }
+
+  .blog-nav a {
+    color: #c8ddf0;
+    font-size: 11px;
+    font-family: Arial, sans-serif;
+    text-decoration: none;
+    cursor: default;
+  }
+
+  .blog-nav a:hover {
+    text-decoration: underline;
+    color: white;
+  }
+
+  /* Individual post */
+  .blog-post {
+    border-bottom: 1px solid #d8d8d8;
+    padding: 18px 20px 16px;
+  }
+
+  .post-date-header {
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 5px;
+  }
+
+  .post-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 17px;
+    color: #2b4a7a;
+    font-weight: bold;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .post-body {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 13px;
+    line-height: 1.72;
+    color: #222;
+  }
+
+  .post-body p {
+    margin-bottom: 12px;
+  }
+
+  .post-body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .post-meta {
+    margin-top: 12px;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    color: #999;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .post-meta a {
+    color: #3a5f96;
+    text-decoration: none;
+    cursor: default;
+  }
+
+  .comments-count {
+    font-size: 10px;
+    color: #3a5f96;
+    cursor: default;
+  }
+
+  /* Image break */
+  .broken-img {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid #d0d0d0;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-family: Arial, sans-serif;
+    color: #888;
+    background: #f8f8f8;
+    margin: 8px 0;
+  }
+
+  .broken-img-icon {
+    width: 16px;
+    height: 14px;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: #aaa;
+  }
+
+  /* Sidebar widgets */
+  .sidebar-widget {
+    margin-bottom: 18px;
+  }
+
+  .sidebar-widget-title {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    color: #2b4a7a;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid #c0c0c0;
+    padding-bottom: 4px;
+    margin-bottom: 8px;
+  }
+
+  .sidebar-widget ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .sidebar-widget ul li {
+    font-size: 11px;
+    color: #333;
+    padding: 2px 0;
+    border-bottom: 1px dotted #d8d8d8;
+    line-height: 1.4;
+  }
+
+  .sidebar-widget ul li a {
+    color: #3a5f96;
+    text-decoration: none;
+    cursor: default;
+    font-size: 10.5px;
+  }
+
+  .sidebar-widget ul li a:hover {
+    text-decoration: underline;
+  }
+
+  .sidebar-profile-text {
+    font-size: 11px;
+    color: #444;
+    line-height: 1.5;
+  }
+
+  .sidebar-profile-img {
+    width: 48px;
+    height: 48px;
+    background: #c8c8c8;
+    border: 1px solid #aaa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: #888;
+    font-family: Arial, sans-serif;
+    margin-bottom: 6px;
+  }
+
+  /* Archive entry notice */
+  .archive-notice {
+    background: #fff8e0;
+    border: 1px solid #d8c060;
+    border-left: 3px solid #b09020;
+    padding: 6px 10px;
+    font-family: Arial, sans-serif;
+    font-size: 10.5px;
+    color: #4a3800;
+    margin: 0;
+  }
+
+  /* Blog footer */
+  .blog-footer {
+    background: #2b4a7a;
+    padding: 8px 20px;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    color: #8aaccc;
+    text-align: center;
+  }
+
+  /* Corruption artifact on final post */
+  .corrupted-line {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    color: #bbb;
+    letter-spacing: 0.04em;
+    display: block;
+    margin-top: 6px;
+  }
+
+  /* Status bar */
+  .browser-statusbar {
+    background: #d4d0c8;
+    border-top: 1px solid #999;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-family: Arial, sans-serif;
+    color: #444;
+    display: flex;
+    justify-content: space-between;
+    max-width: 820px;
+    margin: 0 auto;
+    border: 2px solid #7a7a7a;
+    border-top: none;
+    box-shadow: 2px 2px 0 #888;
+  }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .browser-chrome, .blog-page, .browser-statusbar { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="evidence-label">EV-008 &nbsp;·&nbsp; Archived Screenshots &nbsp;·&nbsp; Lena Hart Personal Blog &nbsp;·&nbsp; Recovered 2026</div>
+
+<!-- BROWSER CHROME -->
+<div class="browser-chrome">
+  <div class="browser-titlebar">
+    <div class="browser-title-text">Notes from Nowhere — Lena Hart — Windows Internet Explorer</div>
+    <div class="browser-controls">
+      <div class="browser-btn">_</div>
+      <div class="browser-btn">□</div>
+      <div class="browser-btn">✕</div>
+    </div>
+  </div>
+  <div class="browser-toolbar">
+    <div class="toolbar-btn disabled">← Back</div>
+    <div class="toolbar-btn disabled">→ Fwd</div>
+    <div class="toolbar-btn">Stop</div>
+    <div class="toolbar-btn">Refresh</div>
+    <div class="toolbar-btn">Home</div>
+    <div class="address-bar">http://notesfromnowhere.blogspot.com/</div>
+    <div class="toolbar-btn">Go</div>
+  </div>
+</div>
+
+<!-- WAYBACK BANNER -->
+<div style="max-width:820px; margin:0 auto;">
+<div class="wayback-bar">
+  ⚑ &nbsp;<strong>Archived Page.</strong> &nbsp;This page was captured by the Web Archive on <strong>March 14, 2007</strong>. Some links and images may not function correctly. &nbsp;<span style="color:#888;">[Retrieved for case file reference — Sealed File Archive, 2026]</span>
+</div>
+</div>
+
+<!-- BLOG PAGE -->
+<div class="blog-page">
+
+  <!-- BLOG HEADER -->
+  <div class="blog-header">
+    <div class="blog-title">Notes from Nowhere</div>
+    <div class="blog-desc">A private investigation into a public disappearance. Moth Hollow, WV. Still looking.</div>
+  </div>
+
+  <!-- NAV -->
+  <div class="blog-nav">
+    <a href="#">Home</a>
+    <a href="#">About</a>
+    <a href="#">Archive</a>
+    <a href="#">Contact</a>
+  </div>
+
+  <!-- LAYOUT -->
+  <div class="blog-layout">
+
+    <!-- MAIN POSTS -->
+    <div class="blog-main">
+
+      <!-- ARCHIVE NOTICE -->
+      <div class="archive-notice">
+        Showing recovered posts. &nbsp;3 of 47 entries retrieved. &nbsp;Remaining entries: corrupted or unavailable.
+      </div>
+
+      <!-- ── POST 1 — early, 2003, grounded ── -->
+      <div class="blog-post">
+        <div class="post-date-header">Wednesday, September 10, 2003</div>
+        <div class="post-title">What they're not telling us about WHLW</div>
+        <div class="post-body">
+          <p>My sister Naomi disappeared in October 1998. The case is officially still open. In practice, it has been closed since November of that year, when the sheriff's office stopped returning my mother's calls.</p>
+
+          <p>I started this blog because I needed somewhere to put what I've been finding. I'm not a journalist. I'm a graduate student in communication studies, which means I know how to research and I know how to read between the lines of official documents. I've spent the last two years quietly requesting records, cross-referencing timelines, and talking to people who knew Naomi and the station.</p>
+
+          <p>Here is what I know for certain: Naomi worked the overnight slot at WHLW 88.3 from May 1997 through October 1998. She was good at her job. She had regular listeners. The calls during her slot increased steadily across that period — which the station counted as a success.</p>
+
+          <p>Here is what I don't know: why the station's consulting psychologist, Dr. Elias Voss, was involved with the programming schedule at all. His name appears in the station's internal records as a "content consultant." I don't know what that means. I've asked the station. I've asked the county. No one has explained it to me.</p>
+
+          <div class="broken-img"><div class="broken-img-icon">✕</div> [Image: WHLW station exterior, 1997 — link unavailable]</div>
+
+          <p>I'm going to keep pulling at this. If anyone reading this has memories of the WHLW overnight broadcasts during 1997 or 1998 — what you heard, what you felt, anything unusual — I'd like to hear from you. The contact form is in the sidebar.</p>
+        </div>
+        <div class="post-meta">
+          <span>Posted by <strong>lenahart</strong> at 11:14 PM &nbsp;|&nbsp; <a href="#">Permalink</a></span>
+          <span class="comments-count"><a href="#">4 Comments</a></span>
+        </div>
+      </div>
+
+      <!-- ── POST 2 — middle period, 2005, sharper ── -->
+      <div class="blog-post">
+        <div class="post-date-header">Friday, March 4, 2005</div>
+        <div class="post-title">Conditioning patterns in the broadcast record</div>
+        <div class="post-body">
+          <p>I've been sitting on this for a while because I wanted to be sure before I wrote it down.</p>
+
+          <p>I found a reference to Dr. Voss in an academic paper from 1994 — a study on audience response to repeated audio stimuli published in a small communications journal. His name appears in a footnote as a contributor to unpublished supplementary research. The language in that footnote is careful, but specific. It refers to <span class="highlight">"behavioral response patterns emerging from sustained tonal repetition in passive listening environments."</span></p>
+
+          <p>That paper was published three years before he turned up at WHLW.</p>
+
+          <p>What I've been piecing together from listener accounts — and I've now spoken with eleven people who called in or regularly listened to Naomi's show — is that something consistent was happening. Not to everyone. But to a subset of regular listeners. They describe: <span class="highlight">an increasing sense that the humming in the background of the broadcast meant something.</span> A feeling that it was communicating. Some describe changing their behavior in small ways based on that feeling — routes they drove, times they stayed awake, things they said to themselves. None of them connected these experiences to the radio until I asked them directly.</p>
+
+          <p>I'm not saying this is what happened. I'm saying the pattern is there, and the pattern is <span class="highlight">consistent with documented conditioning methodology.</span> Stimulus. Repetition. Reinforced response. If you designed this deliberately, this is what the data would look like.</p>
+
+          <p>I want to be clear: I'm not suggesting anything supernatural. I'm suggesting that someone understood how repeated audio stimuli shape behavior over time — and that this understanding was applied to Naomi's broadcasts without her knowledge or consent.</p>
+
+          <p>Voss is the person who fits. I haven't been able to confirm his whereabouts after 1999. His academic profile was removed from two university websites sometime between 2001 and 2003.</p>
+        </div>
+        <div class="post-meta">
+          <span>Posted by <strong>lenahart</strong> at 2:27 AM &nbsp;|&nbsp; <a href="#">Permalink</a></span>
+          <span class="comments-count"><a href="#">12 Comments</a></span>
+        </div>
+      </div>
+
+      <!-- ── POST 3 — late, 2007, urgent and strange ── -->
+      <div class="blog-post">
+        <div class="post-date-header">Saturday, February 3, 2007</div>
+        <div class="post-title">The calls aren't random</div>
+        <div class="post-body">
+          <p>I have the call log now. I don't want to say how I got it.</p>
+
+          <p>The incoming call record for Naomi's show — specifically the request line — shows a pattern I didn't expect. The same number appears weekly. Always after 10 PM. Always within the last two hours of her broadcast window. The duration increases each week over the final month. I don't know whose number it is. The subscriber information is sealed by court order.</p>
+
+          <p>I called the number. There was a voicemail. I'm not going to write down what it said here.</p>
+
+          <p><span class="highlight">People don't disappear because of the sound. They disappear because they believe the sound means something.</span></p>
+
+          <p>I wrote that sentence two years ago and I stand by it. What I didn't understand then was that "believing" doesn't have to be voluntary. That's what conditioning means. <span class="highlight">You don't know you've been shaped. You just act differently, and you don't know why.</span></p>
+
+          <p>I've found references in the station records — maintenance logs, engineering memos — to after-hours archive access. A consulting badge that wasn't assigned to any named staff member. Tape duplication activity that was never logged. The maintenance engineer noted it and filed a memo. I can find no evidence anyone responded to it.</p>
+
+          <p>Naomi filed a complaint five days before she disappeared. I only recently found this. The complaint was never stamped as received.</p>
+
+          <p>I've been doing this for four years. I have more now than I've ever had. I'm going to take what I have to someone who can do something with it. If I don't post again for a while, that's why. Not because I stopped. Because I'm moving.</p>
+
+          <span class="corrupted-line">[remainder of post — retrieval error — content unavailable]</span>
+        </div>
+        <div class="post-meta">
+          <span>Posted by <strong>lenahart</strong> at 12:08 AM &nbsp;|&nbsp; <a href="#">Permalink</a></span>
+          <span class="comments-count"><a href="#">0 Comments</a></span>
+        </div>
+      </div>
+
+      <!-- FOOTER NOTE -->
+      <div style="padding:14px 20px; background:#f8f8f8; border-top:1px solid #e0e0e0; font-family:Arial,sans-serif; font-size:10px; color:#aaa; text-align:center;">
+        No further posts available in this archive. &nbsp;Last captured: March 14, 2007. &nbsp;Blog status: inactive.
+      </div>
+
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="blog-sidebar">
+
+      <div class="sidebar-widget">
+        <div class="sidebar-profile-img">photo<br>N/A</div>
+        <div class="sidebar-widget-title">About</div>
+        <div class="sidebar-profile-text">
+          My name is Lena Hart. I'm a researcher. My sister Naomi disappeared in 1998. This blog is my working notes. I'm not writing for an audience. But if you're reading this and you know something — please use the contact form.
+        </div>
+      </div>
+
+      <div class="sidebar-widget">
+        <div class="sidebar-widget-title">Archive</div>
+        <ul>
+          <li><a href="#">February 2007 (1)</a></li>
+          <li><a href="#">October 2006 (3)</a></li>
+          <li><a href="#">June 2006 (2)</a></li>
+          <li><a href="#">November 2005 (4)</a></li>
+          <li><a href="#">March 2005 (1)</a></li>
+          <li><a href="#">August 2004 (6)</a></li>
+          <li><a href="#">March 2004 (5)</a></li>
+          <li><a href="#">September 2003 (3)</a></li>
+          <li><a href="#">April 2003 (2)</a></li>
+          <li style="color:#bbb; font-style:italic;">... [unavailable]</li>
+        </ul>
+      </div>
+
+      <div class="sidebar-widget">
+        <div class="sidebar-widget-title">Recent Posts</div>
+        <ul>
+          <li><a href="#">The calls aren't random</a></li>
+          <li><a href="#">Voss — what I've confirmed</a></li>
+          <li><a href="#">Listener accounts: a summary</a></li>
+          <li><a href="#">Conditioning patterns in the broadcast record</a></li>
+          <li><a href="#">What they're not telling us about WHLW</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-widget">
+        <div class="sidebar-widget-title">Links</div>
+        <ul>
+          <li><a href="#">Nicholas Co. Sheriff Records Request</a></li>
+          <li><a href="#">FCC Broadcast Complaint Archive</a></li>
+          <li><a href="#">WV Missing Persons Network</a></li>
+          <li style="color:#bbb;"><a href="#" style="color:#bbb;">WHLW 88.3 [link dead]</a></li>
+        </ul>
+      </div>
+
+      <div style="font-size:9.5px; color:#999; font-family:Arial,sans-serif; border-top:1px dotted #ccc; padding-top:8px; line-height:1.6;">
+        Powered by Blogger.<br>
+        Template: Minima Blue.<br>
+        &copy; 2003–2007 lenahart.
+      </div>
+
+    </div>
+  </div>
+
+  <div class="blog-footer">
+    notesfromnowhere.blogspot.com &nbsp;·&nbsp; &copy; 2003–2007 Lena Hart &nbsp;·&nbsp; Powered by Blogger
+  </div>
+</div>
+
+<!-- STATUS BAR -->
+<div class="browser-statusbar">
+  <span>Done</span>
+  <span>⊙ Internet</span>
+</div>
+
+</body>
+</html>

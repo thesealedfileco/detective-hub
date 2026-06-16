@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EV-006 — Station Phone Records — WHLW 88.3</title>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #e8e0d0;
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
+
+  .doc-wrap {
+    background: #f8f4ec;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    color: #1a1a1a;
+    max-width: 760px;
+    margin: 0 auto;
+    position: relative;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18), 0 1px 4px rgba(0,0,0,0.10);
+  }
+
+  /* Scan line texture */
+  .doc-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(0,0,0,0.010) 3px,
+      rgba(0,0,0,0.010) 4px
+    );
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* Slight paper edge darkening */
+  .doc-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 40px rgba(0,0,0,0.06);
+    pointer-events: none;
+    z-index: 11;
+  }
+
+  .page {
+    padding: 44px 48px 40px;
+    position: relative;
+  }
+
+  /* ── HEADER ────────────────────────────────── */
+
+  .telco-header {
+    border-bottom: 2px solid #1a1a1a;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+  }
+
+  .telco-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .telco-name {
+    font-family: 'Special Elite', serif;
+    font-size: 19px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #1a1a1a;
+  }
+
+  .telco-sub {
+    font-size: 9.5px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #4a4a4a;
+    margin-top: 3px;
+  }
+
+  .doc-stamp {
+    text-align: right;
+  }
+
+  .doc-stamp .doc-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .doc-stamp .doc-date {
+    font-size: 9.5px;
+    color: #4a4a4a;
+    margin-top: 3px;
+    line-height: 1.6;
+  }
+
+  /* ── TITLE BAR ─────────────────────────────── */
+
+  .doc-title-bar {
+    background: #1a1a1a;
+    color: #f8f4ec;
+    text-align: center;
+    padding: 6px;
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  /* ── META TABLE ────────────────────────────── */
+
+  .meta-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 0.5px solid #8a7d6a;
+    margin-bottom: 14px;
+  }
+
+  .meta-cell {
+    padding: 5px 9px;
+    border: 0.5px solid #8a7d6a;
+    font-size: 10px;
+    line-height: 1.4;
+  }
+
+  .meta-cell.label {
+    color: #5a5040;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: rgba(0,0,0,0.04);
+    font-weight: 700;
+    font-size: 9px;
+  }
+
+  .meta-cell.value {
+    color: #1a1a1a;
+  }
+
+  /* ── SECTION LABEL ─────────────────────────── */
+
+  .section-label {
+    font-size: 9.5px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: #4a4040;
+    font-weight: 700;
+    border-bottom: 0.5px solid #8a7d6a;
+    padding-bottom: 4px;
+    margin-bottom: 8px;
+    margin-top: 14px;
+  }
+
+  /* ── CALL TABLE ────────────────────────────── */
+
+  .call-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10px;
+  }
+
+  .call-table thead tr {
+    background: #d8d0be;
+  }
+
+  .call-table th {
+    padding: 5px 6px;
+    text-align: left;
+    font-size: 9px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    font-weight: 700;
+    border: 0.5px solid #8a7d6a;
+    color: #2a2010;
+  }
+
+  .call-table td {
+    padding: 4px 6px;
+    border: 0.5px solid #c0b8a5;
+    vertical-align: top;
+    color: #1a1a1a;
+    line-height: 1.4;
+  }
+
+  .call-table tr:nth-child(even) td {
+    background: rgba(0,0,0,0.02);
+  }
+
+  .call-table tr.flagged td {
+    background: rgba(180,160,90,0.14);
+  }
+
+  .circle-mark {
+    display: inline-block;
+    border: 1.5px solid #1a1a1a;
+    border-radius: 50px;
+    padding: 0 4px;
+    font-size: 9.5px;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+  }
+
+  .note-col {
+    font-style: italic;
+    color: #4a4040;
+    font-size: 9.5px;
+  }
+
+  /* ── REDACTED ──────────────────────────────── */
+
+  .redacted-bar {
+    display: inline-block;
+    background: #1a1a1a;
+    height: 10px;
+    vertical-align: middle;
+    border-radius: 1px;
+  }
+
+  /* ── FOOTER ────────────────────────────────── */
+
+  .footer-block {
+    margin-top: 16px;
+    border-top: 0.5px solid #8a7d6a;
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .footer-left {
+    font-size: 8.5px;
+    color: #5a5040;
+    line-height: 1.7;
+  }
+
+  .footer-right {
+    text-align: right;
+  }
+
+  .court-stamp {
+    font-family: 'Special Elite', serif;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #2a4066;
+    border: 2px solid #2a4066;
+    padding: 6px 10px;
+    display: inline-block;
+    transform: rotate(-1.5deg);
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .url-fragment {
+    font-size: 8px;
+    color: #9a9a9a;
+    letter-spacing: 0.03em;
+    margin-top: 4px;
+  }
+
+  .page-num {
+    text-align: center;
+    font-size: 8.5px;
+    color: #7a6b50;
+    margin-top: 10px;
+    letter-spacing: 0.08em;
+  }
+
+  /* Print styles */
+  @media print {
+    body { background: white; padding: 0; }
+    .doc-wrap { box-shadow: none; max-width: 100%; }
+    .doc-wrap::before, .doc-wrap::after { display: none; }
+    .page { padding: 28px 36px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-wrap">
+  <div class="page">
+
+    <!-- HEADER -->
+    <div class="telco-header">
+      <div class="telco-top">
+        <div>
+          <div class="telco-name">Mountain State Telephone Co.</div>
+          <div class="telco-sub">Business Account Services &nbsp;·&nbsp; Subpoena Compliance Division &nbsp;·&nbsp; Clarksburg, WV 26301</div>
+        </div>
+        <div class="doc-stamp">
+          <div class="doc-num">DOC. NO. MST-98-4471-B</div>
+          <div class="doc-date">Requested: November 3, 1998<br>Produced: November 9, 1998</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TITLE BAR -->
+    <div class="doc-title-bar">Subpoena Response &nbsp;·&nbsp; Incoming Call Records &nbsp;·&nbsp; Business Line Detail Report</div>
+
+    <!-- META -->
+    <div class="meta-block">
+      <div class="meta-cell label">Account Name</div>
+      <div class="meta-cell value">WHLW Radio Broadcasting LLC</div>
+
+      <div class="meta-cell label">Account Number</div>
+      <div class="meta-cell value">WV-0344-8821-00</div>
+
+      <div class="meta-cell label">Service Address</div>
+      <div class="meta-cell value">14 Relay Tower Road, Moth Hollow, WV 26257</div>
+
+      <div class="meta-cell label">Lines Included</div>
+      <div class="meta-cell value">Main Studio Line (x201) &nbsp;·&nbsp; Request Line (x204) &nbsp;·&nbsp; After-Hours Line (x209)</div>
+
+      <div class="meta-cell label">Report Period</div>
+      <div class="meta-cell value">September 28, 1998 — October 14, 1998</div>
+
+      <div class="meta-cell label">Case Reference</div>
+      <div class="meta-cell value">Nicholas Co. Sheriff's Office — File No. 98-0471-NV</div>
+    </div>
+
+    <!-- CALL LOG -->
+    <div class="section-label">Incoming Call Detail — October 1998 (Selected Dates)</div>
+
+    <table class="call-table">
+      <thead>
+        <tr>
+          <th style="width:42px;">Line</th>
+          <th style="width:72px;">Date</th>
+          <th style="width:58px;">Time</th>
+          <th style="width:120px;">Calling Number</th>
+          <th style="width:40px;">Ext.</th>
+          <th style="width:58px;">Duration</th>
+          <th style="width:72px;">Class</th>
+          <th>Notes / Flags</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td>x201</td><td>Sept 28</td><td>8:14 PM</td><td>(304) 555-0081</td><td>—</td><td>0:38</td><td>INCOM-STD</td><td class="note-col">Brief. Disconnected.</td>
+        </tr>
+        <tr>
+          <td>x204</td><td>Sept 28</td><td>9:02 PM</td><td>(304) 555-1247</td><td>—</td><td>2:11</td><td>INCOM-STD</td><td class="note-col">Request line, normal.</td>
+        </tr>
+        <tr>
+          <td>x204</td><td>Sept 28</td><td>10:44 PM</td><td>(304) 555-0081</td><td>—</td><td>0:22</td><td>INCOM-STD</td><td class="note-col">Repeat caller, no message.</td>
+        </tr>
+
+        <tr>
+          <td>x201</td><td>Oct 1</td><td>8:55 PM</td><td>(304) 555-2204</td><td>—</td><td>4:02</td><td>INCOM-STD</td><td class="note-col">—</td>
+        </tr>
+        <tr>
+          <td>x204</td><td>Oct 1</td><td>9:31 PM</td><td>(304) 555-1100</td><td>—</td><td>1:05</td><td>INCOM-STD</td><td class="note-col">Request line.</td>
+        </tr>
+
+        <tr class="flagged">
+          <td>x204</td><td>Oct 2</td><td>11:07 PM</td><td><span class="circle-mark">(304) 555-0176</span></td><td>—</td><td>1:12</td><td>INCOM-STD</td><td class="note-col">After-hours call, request line.</td>
+        </tr>
+
+        <tr>
+          <td>x201</td><td>Oct 4</td><td>7:48 PM</td><td>(304) 555-3305</td><td>—</td><td>0:51</td><td>INCOM-STD</td><td class="note-col">—</td>
+        </tr>
+        <tr>
+          <td>x209</td><td>Oct 4</td><td>11:58 PM</td><td>(304) 555-0081</td><td>—</td><td>0:09</td><td>INCOM-STD</td><td class="note-col">After-hours. No message left.</td>
+        </tr>
+
+        <tr>
+          <td>x201</td><td>Oct 5</td><td>2:06 PM</td><td>(304) 555-8812</td><td>—</td><td>3:47</td><td>INCOM-STD</td><td class="note-col">Business hours, normal.</td>
+        </tr>
+        <tr>
+          <td>x204</td><td>Oct 6</td><td>9:17 PM</td><td>(304) 555-1247</td><td>—</td><td>1:33</td><td>INCOM-STD</td><td class="note-col">Request line.</td>
+        </tr>
+
+        <tr class="flagged">
+          <td>x204</td><td>Oct 8</td><td>10:51 PM</td><td><span class="circle-mark">(304) 555-0176</span></td><td>—</td><td>2:38</td><td>INCOM-STD</td><td class="note-col">After-hours call, request line.</td>
+        </tr>
+
+        <tr>
+          <td>x201</td><td>Oct 9</td><td>8:03 PM</td><td>(304) 555-4491</td><td>—</td><td>0:44</td><td>INCOM-STD</td><td class="note-col">—</td>
+        </tr>
+        <tr>
+          <td>x209</td><td>Oct 9</td><td>10:22 PM</td><td>(304) 555-0081</td><td>—</td><td>0:14</td><td>INCOM-STD</td><td class="note-col">No message.</td>
+        </tr>
+
+        <tr>
+          <td>x201</td><td>Oct 10</td><td>3:15 PM</td><td>(304) 555-8812</td><td>—</td><td>5:20</td><td>INCOM-STD</td><td class="note-col">Business hours, ext. duration.</td>
+        </tr>
+        <tr>
+          <td>x204</td><td>Oct 10</td><td>9:44 PM</td><td>(304) 555-2204</td><td>—</td><td>1:50</td><td>INCOM-STD</td><td class="note-col">Request line.</td>
+        </tr>
+
+        <tr class="flagged">
+          <td>x204</td><td>Oct 11</td><td>11:19 PM</td><td><span class="circle-mark">(304) 555-0176</span></td><td>—</td><td>3:07</td><td>INCOM-STD</td><td class="note-col">After-hours. Request line.</td>
+        </tr>
+
+        <tr>
+          <td>x209</td><td>Oct 12</td><td>12:02 AM</td><td>(304) 555-0081</td><td>—</td><td>0:07</td><td>INCOM-STD</td><td class="note-col">After-hours. Brief, no message.</td>
+        </tr>
+
+        <tr>
+          <td>x201</td><td>Oct 13</td><td>7:55 PM</td><td>(304) 555-1100</td><td>—</td><td>2:21</td><td>INCOM-STD</td><td class="note-col">—</td>
+        </tr>
+        <tr>
+          <td>x204</td><td>Oct 13</td><td>9:28 PM</td><td>(304) 555-3305</td><td>—</td><td>0:58</td><td>INCOM-STD</td><td class="note-col">Request line.</td>
+        </tr>
+
+        <tr class="flagged">
+          <td>x204</td><td>Oct 13</td><td>11:55 PM</td><td><span class="circle-mark">(304) 555-0176</span></td><td>—</td><td>4:44</td><td>INCOM-STD</td><td class="note-col">After-hours. Request line. <em>Last recorded call from this number.</em></td>
+        </tr>
+
+        <tr>
+          <td>x201</td><td>Oct 14</td><td>6:42 PM</td><td>(304) 555-2204</td><td>—</td><td>1:15</td><td>INCOM-STD</td><td class="note-col">—</td>
+        </tr>
+        <tr>
+          <td>x201</td><td>Oct 14</td><td>8:11 PM</td><td>(304) 555-4491</td><td>—</td><td>0:33</td><td>INCOM-STD</td><td class="note-col">—</td>
+        </tr>
+        <tr>
+          <td>x209</td><td>Oct 14</td><td>11:49 PM</td><td><span class="redacted-bar" style="width:90px;"></span></td><td>—</td><td>0:02</td><td>INCOM-STD</td><td class="note-col"><em>Number withheld — see attached court order 98-CV-0091.</em></td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <!-- SUBSCRIBER ID SECTION -->
+    <div class="section-label">Subscriber Identification — Flagged Number</div>
+
+    <table class="call-table">
+      <thead>
+        <tr>
+          <th style="width:120px;">Number</th>
+          <th style="width:160px;">Registered Name</th>
+          <th style="width:180px;">Service Address</th>
+          <th>Account Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>(304) 555-0176</td>
+          <td><span class="redacted-bar" style="width:100px;"></span></td>
+          <td><span class="redacted-bar" style="width:130px;"></span></td>
+          <td class="note-col">Active — Residential. Subscriber details sealed per Order 98-CV-0091.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- FOOTER -->
+    <div class="footer-block">
+      <div class="footer-left">
+        Records produced in response to subpoena issued by the Nicholas County Sheriff's Office.<br>
+        All call records represent raw switch data. Mountain State Telephone Co. makes no claims<br>
+        regarding content of calls. Retention period: 24 months from call date.<br>
+        <span style="display:block; margin-top:3px;">Preparer: D. Fowler, Compliance Division &nbsp;·&nbsp; Reviewed by: T. Ansel, Legal</span>
+        <div class="url-fragment">whlw-archive.net/logs &nbsp;&nbsp; [print header artifact — disregard]</div>
+      </div>
+      <div class="footer-right">
+        <div class="court-stamp">Subpoena Response<br>Case 98-0471-NV</div>
+      </div>
+    </div>
+
+    <div class="page-num">PAGE 1 OF 1 &nbsp;·&nbsp; DOCUMENT MST-98-4471-B &nbsp;·&nbsp; CONFIDENTIAL — LAW ENFORCEMENT USE ONLY</div>
+
+  </div>
+</div>
+
+</body>
+</html>

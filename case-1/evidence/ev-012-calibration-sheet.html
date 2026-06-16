@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EV-012 — Calibration Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #232018;
+    min-height: 100vh;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    font-family: 'Courier Prime', monospace;
+  }
+
+  .document {
+    width: 680px;
+    max-width: 100%;
+  }
+
+  /* ── PAGE ── */
+  .page {
+    background: #f0ece0;
+    position: relative;
+    box-shadow:
+      0 1px 3px rgba(0,0,0,0.22),
+      0 8px 24px rgba(0,0,0,0.4);
+    overflow: hidden;
+  }
+
+  /* dot-matrix printer texture — very faint horizontal bands */
+  .page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 11px,
+      rgba(0,0,0,0.012) 11px,
+      rgba(0,0,0,0.012) 12px
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* tractor feed holes — left edge */
+  .feed-holes {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 28px;
+    background: #e0dbd0;
+    border-right: 0.5px solid #c8c0b0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 22px;
+    gap: 0;
+  }
+
+  .hole {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #f0ece0;
+    border: 0.5px solid #b8b0a0;
+    flex-shrink: 0;
+    margin-bottom: 16.5px;
+  }
+
+  .page-inner {
+    padding: 36px 44px 48px 52px;
+    margin-left: 28px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .stain {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* ── HEADER ── */
+  .doc-header {
+    border-bottom: 1px solid #3a3020;
+    padding-bottom: 10px;
+    margin-bottom: 16px;
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+
+  .station-id {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #1a1408;
+  }
+
+  .doc-type {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #1a1408;
+    text-align: right;
+  }
+
+  .header-meta {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    font-size: 9px;
+    color: #5a5040;
+    letter-spacing: 0.08em;
+  }
+
+  .meta-item b {
+    color: #1a1408;
+  }
+
+  /* ── SECTION LABEL ── */
+  .sec-label {
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #7a6a50;
+    background: #e4e0d4;
+    padding: 3px 8px;
+    margin-bottom: 10px;
+    margin-top: 18px;
+    display: inline-block;
+  }
+
+  .sec-label:first-of-type {
+    margin-top: 4px;
+  }
+
+  /* ── DATA TABLE ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 4px;
+    font-size: 10px;
+  }
+
+  th {
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #5a5040;
+    text-align: left;
+    padding: 4px 8px;
+    border-bottom: 0.75px solid #b0a888;
+    font-weight: 700;
+    background: rgba(0,0,0,0.03);
+  }
+
+  td {
+    padding: 4px 8px;
+    border-bottom: 0.5px solid #d0c8b8;
+    color: #1a1408;
+    vertical-align: top;
+    line-height: 1.4;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  td.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+  }
+
+  td.status-ok {
+    color: #3a5028;
+    font-weight: 700;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+  }
+
+  td.status-ok::before {
+    content: '✓ ';
+  }
+
+  /* ── WAVEFORM DIAGRAM ── */
+  .waveform-wrap {
+    border: 0.75px solid #b0a888;
+    padding: 10px 12px 8px;
+    margin: 14px 0;
+    position: relative;
+    background: rgba(255,255,252,0.4);
+  }
+
+  .waveform-label {
+    font-size: 7.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #7a6a50;
+    margin-bottom: 8px;
+  }
+
+  .waveform-svg {
+    width: 100%;
+    height: 52px;
+    display: block;
+  }
+
+  .waveform-axis {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+
+  .waveform-axis span {
+    font-size: 7.5px;
+    color: #8a7a60;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── MARGIN NOTES ── */
+  /* these sit in a right-margin column */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 120px;
+    gap: 0;
+    align-items: start;
+  }
+
+  .margin-col {
+    padding-left: 14px;
+    border-left: 0.5px dashed #c0b8a8;
+    position: relative;
+  }
+
+  .margin-note {
+    font-family: 'Special Elite', serif;
+    font-size: 9px;
+    color: #5a4030;
+    line-height: 1.6;
+    margin-bottom: 14px;
+    opacity: 0.75;
+  }
+
+  .margin-note.faint {
+    opacity: 0.5;
+  }
+
+  /* ── FOOTER / SIGN-OFF ── */
+  .signoff {
+    margin-top: 24px;
+    border-top: 0.75px solid #b0a888;
+    padding-top: 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+
+  .sig-block {}
+
+  .sig-line {
+    border-bottom: 0.75px solid #7a6a50;
+    height: 28px;
+    width: 100%;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 3px;
+  }
+
+  .sig-initials {
+    font-family: 'Special Elite', serif;
+    font-size: 13px;
+    color: #1a1408;
+    opacity: 0.6;
+  }
+
+  .sig-caption {
+    font-size: 7.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #7a6a50;
+  }
+
+  .page-footer {
+    margin-top: 20px;
+    border-top: 0.5px solid #c0b8a8;
+    padding-top: 7px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 7.5px;
+    color: #9a8a70;
+    letter-spacing: 0.1em;
+  }
+</style>
+</head>
+<body>
+<div class="document">
+  <div class="page">
+
+    <!-- tractor feed holes -->
+    <div class="feed-holes" id="feedHoles"></div>
+
+    <div class="stain" style="width:70px;height:55px;top:180px;right:36px;background:radial-gradient(ellipse,rgba(120,90,40,0.055),transparent 70%);"></div>
+    <div class="stain" style="width:90px;height:72px;bottom:160px;right:28px;background:radial-gradient(ellipse,rgba(120,90,40,0.05),transparent 70%);"></div>
+    <div class="stain" style="width:45px;height:36px;top:420px;left:38px;background:radial-gradient(ellipse,rgba(120,90,40,0.04),transparent 70%);"></div>
+
+    <div class="page-inner">
+
+      <!-- HEADER -->
+      <div class="doc-header">
+        <div class="header-top">
+          <div>
+            <div class="station-id">WHLW 88.3 FM &nbsp;·&nbsp; MOTH HOLLOW, WV</div>
+          </div>
+          <div class="doc-type">
+            Transmitter &amp; Audio Chain<br>Calibration Record
+          </div>
+        </div>
+        <div class="header-meta">
+          <div class="meta-item">Form: <b>ENG-CAL-94-09</b></div>
+          <div class="meta-item">Date: <b>September 12, 1994</b></div>
+          <div class="meta-item">Engineer: <b>R. Aldiss</b></div>
+          <div class="meta-item">Station license: <b>BLH-19880614AB</b></div>
+          <div class="meta-item">Schedule: <b>Annual — regulatory compliance</b></div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="main-col">
+
+          <!-- SECTION 1 -->
+          <div class="sec-label">1. Transmitter output — main</div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:38%">Parameter</th>
+                <th style="width:20%">Nominal</th>
+                <th style="width:20%">Measured</th>
+                <th style="width:12%">Unit</th>
+                <th style="width:10%">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Carrier frequency</td>
+                <td class="num">88.300</td>
+                <td class="num">88.301</td>
+                <td>MHz</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+              <tr>
+                <td>Effective radiated power</td>
+                <td class="num">3,000</td>
+                <td class="num">2,988</td>
+                <td>W</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+              <tr>
+                <td>Antenna impedance</td>
+                <td class="num">50.0</td>
+                <td class="num">50.4</td>
+                <td>Ω</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+              <tr>
+                <td>Modulation — peak deviation</td>
+                <td class="num">±75.0</td>
+                <td class="num">±74.8</td>
+                <td>kHz</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+              <tr>
+                <td>Pilot tone — stereo subcarrier</td>
+                <td class="num">19.000</td>
+                <td class="num">19.001</td>
+                <td>kHz</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+              <tr>
+                <td>Total harmonic distortion</td>
+                <td class="num">&lt; 1.0</td>
+                <td class="num">0.62</td>
+                <td>%</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- SECTION 2 -->
+          <div class="sec-label">2. Audio processing chain</div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:38%">Stage</th>
+                <th style="width:20%">Setting</th>
+                <th style="width:20%">Measured</th>
+                <th style="width:12%">Unit</th>
+                <th style="width:10%">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Input gain — line A (studio)</td>
+                <td class="num">+4.0</td>
+                <td class="num">+3.9</td>
+                <td>dBu</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+              <tr>
+                <td>Input gain — line B (overnight)</td>
+                <td class="num">+4.0</td>
+                <td class="num">+4.1</td>
+                <td>dBu</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+              <tr>
+                <td>Compressor threshold</td>
+                <td class="num">−18.0</td>
+                <td class="num">−18.2</td>
+                <td>dBFS</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+              <tr>
+                <td>Compressor ratio</td>
+                <td class="num">3.0:1</td>
+                <td class="num">3.1:1</td>
+                <td>—</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+              <tr>
+                <td>High-pass filter — rolloff</td>
+                <td class="num">80</td>
+                <td class="num">80</td>
+                <td>Hz</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+              <tr>
+                <td>Low-pass filter — rolloff</td>
+                <td class="num">15,000</td>
+                <td class="num">14,980</td>
+                <td>Hz</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+              <tr>
+                <td>Pre-emphasis time constant</td>
+                <td class="num">75</td>
+                <td class="num">75</td>
+                <td>μs</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+              <tr>
+                <td>Audio delay — air chain</td>
+                <td class="num">2.2</td>
+                <td class="num">2.2</td>
+                <td>sec</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- WAVEFORM -->
+          <div class="waveform-wrap">
+            <div class="waveform-label">Fig. 1 — Modulation envelope — overnight broadcast window — 23:00–01:00</div>
+            <svg class="waveform-svg" viewBox="0 0 580 52" xmlns="http://www.w3.org/2000/svg">
+              <!-- grid lines -->
+              <line x1="0" y1="26" x2="580" y2="26" stroke="#c0b8a8" stroke-width="0.5"/>
+              <line x1="0" y1="10" x2="580" y2="10" stroke="#d0c8b8" stroke-width="0.3" stroke-dasharray="3,4"/>
+              <line x1="0" y1="42" x2="580" y2="42" stroke="#d0c8b8" stroke-width="0.3" stroke-dasharray="3,4"/>
+              <!-- waveform — normal FM modulation envelope, nothing unusual -->
+              <polyline
+                fill="none"
+                stroke="#4a6040"
+                stroke-width="0.9"
+                points="
+                  0,26 8,18 16,10 24,18 32,26 40,34 48,42 56,34 64,26
+                  72,20 80,14 88,20 96,26 104,32 112,38 120,32 128,26
+                  136,19 144,12 152,19 160,26 168,33 176,40 184,33 192,26
+                  200,21 208,16 216,21 224,26 232,31 240,36 248,31 256,26
+                  264,18 272,11 280,18 288,26 296,33 304,40 312,33 320,26
+                  328,20 336,14 344,20 352,26 360,32 368,38 376,32 384,26
+                  392,19 400,13 408,19 416,26 424,33 432,39 440,33 448,26
+                  456,21 464,16 472,21 480,26 488,31 496,36 504,31 512,26
+                  520,19 528,12 536,19 544,26 552,33 560,40 568,33 576,26 580,26
+                "
+              />
+              <!-- peak deviation markers -->
+              <line x1="0" y1="8" x2="580" y2="8" stroke="#b83a2a" stroke-width="0.4" stroke-dasharray="6,5" opacity="0.4"/>
+              <line x1="0" y1="44" x2="580" y2="44" stroke="#b83a2a" stroke-width="0.4" stroke-dasharray="6,5" opacity="0.4"/>
+              <text x="2" y="7" font-family="Courier Prime, monospace" font-size="6" fill="#b83a2a" opacity="0.5">+75 kHz</text>
+              <text x="2" y="50" font-family="Courier Prime, monospace" font-size="6" fill="#b83a2a" opacity="0.5">−75 kHz</text>
+            </svg>
+            <div class="waveform-axis">
+              <span>23:00</span>
+              <span>23:30</span>
+              <span>00:00</span>
+              <span>00:30</span>
+              <span>01:00</span>
+            </div>
+          </div>
+
+          <!-- SECTION 3 -->
+          <div class="sec-label">3. Auxiliary input — community outreach program feed</div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:38%">Parameter</th>
+                <th style="width:20%">Nominal</th>
+                <th style="width:20%">Measured</th>
+                <th style="width:12%">Unit</th>
+                <th style="width:10%">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Aux input level — line C</td>
+                <td class="num">+4.0</td>
+                <td class="num">+4.0</td>
+                <td>dBu</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+              <tr>
+                <td>Aux routing — air chain integration</td>
+                <td>Enabled</td>
+                <td>Enabled</td>
+                <td>—</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+              <tr>
+                <td>Aux scheduling — automated insert</td>
+                <td>Configured</td>
+                <td>Configured</td>
+                <td>—</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+              <tr>
+                <td>Aux signal-to-noise ratio</td>
+                <td class="num">&gt; 60</td>
+                <td class="num">63.4</td>
+                <td>dB</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- SECTION 4 -->
+          <div class="sec-label">4. Antenna &amp; tower — relay station</div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:38%">Parameter</th>
+                <th style="width:20%">Nominal</th>
+                <th style="width:20%">Measured</th>
+                <th style="width:12%">Unit</th>
+                <th style="width:10%">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Forward power</td>
+                <td class="num">3,000</td>
+                <td class="num">2,991</td>
+                <td>W</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+              <tr>
+                <td>Reflected power</td>
+                <td class="num">&lt; 30</td>
+                <td class="num">18</td>
+                <td>W</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+              <tr>
+                <td>VSWR</td>
+                <td class="num">&lt; 1.5</td>
+                <td class="num">1.24</td>
+                <td>—</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+              <tr>
+                <td>Tower ground resistance</td>
+                <td class="num">&lt; 5.0</td>
+                <td class="num">3.8</td>
+                <td>Ω</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+              <tr>
+                <td>Tower lighting — FAA compliance</td>
+                <td>Operational</td>
+                <td>Operational</td>
+                <td>—</td>
+                <td class="status-ok">Pass</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+
+        <!-- MARGIN NOTES -->
+        <div class="margin-col">
+          <div class="margin-note" style="margin-top:6px;">
+            checked vs.<br>prev. annual<br>— within tol.<br>R.A. 9/12
+          </div>
+          <div class="margin-note faint" style="margin-top:32px;">
+            line B gain<br>slightly high<br>monitor
+          </div>
+          <div class="margin-note" style="margin-top:48px;">
+            HPF setting<br>confirmed<br>per spec
+          </div>
+          <div class="margin-note faint" style="margin-top:16px;">
+            75μs std.<br>US broadcast<br>✓
+          </div>
+          <div class="margin-note" style="margin-top:52px;">
+            fig.1 within<br>normal range<br>no anomalies
+          </div>
+          <div class="margin-note faint" style="margin-top:24px;">
+            confirm w/ V<br>before next<br>cycle
+          </div>
+          <div class="margin-note" style="margin-top:36px;">
+            aux sched.<br>reviewed<br>9/10/94
+          </div>
+          <div class="margin-note faint" style="margin-top:62px;">
+            tower access<br>road needs<br>clearing
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SIGN-OFF -->
+      <div class="signoff">
+        <div class="sig-block">
+          <div class="sig-line">
+            <span class="sig-initials">R.A.</span>
+          </div>
+          <div class="sig-caption">Lead engineer — signature</div>
+        </div>
+        <div class="sig-block">
+          <div class="sig-line"></div>
+          <div class="sig-caption">Station manager — approval</div>
+        </div>
+        <div class="sig-block">
+          <div class="sig-line">
+            <span class="sig-initials">E.V.</span>
+          </div>
+          <div class="sig-caption">Program consultant — approval</div>
+        </div>
+      </div>
+
+      <div class="page-footer">
+        <span>WHLW 88.3 &nbsp;·&nbsp; ENG-CAL-94-09</span>
+        <span>FCC compliance copy — retain 2 years</span>
+        <span>September 12, 1994</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // generate tractor feed holes to fill page height
+  var container = document.getElementById('feedHoles');
+  var pageHeight = document.querySelector('.page').offsetHeight;
+  var hole, count = Math.floor((pageHeight - 22) / 26.5);
+  for (var i = 0; i < count; i++) {
+    hole = document.createElement('div');
+    hole.className = 'hole';
+    container.appendChild(hole);
+  }
+</script>
+
+</body>
+</html>

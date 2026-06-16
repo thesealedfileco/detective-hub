@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EV-013 — Search Photos</title>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1a1714;
+    min-height: 100vh;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    font-family: 'Courier Prime', monospace;
+  }
+
+  .document {
+    width: 680px;
+    max-width: 100%;
+  }
+
+  /* ── COVER SHEET ── */
+  .cover {
+    background: #f0ebe0;
+    padding: 36px 44px 32px;
+    margin-bottom: 20px;
+    box-shadow:
+      0 1px 3px rgba(0,0,0,0.25),
+      0 6px 20px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* dot-matrix texture */
+  .cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 11px,
+      rgba(0,0,0,0.011) 11px,
+      rgba(0,0,0,0.011) 12px
+    );
+    pointer-events: none;
+  }
+
+  .cover-inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1.5px solid #2a2015;
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+  }
+
+  .agency {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #5a4a32;
+    line-height: 1.8;
+  }
+
+  .agency b {
+    font-size: 12px;
+    color: #1a1208;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  .form-ref {
+    text-align: right;
+    font-size: 9px;
+    color: #5a4a32;
+    letter-spacing: 0.1em;
+    line-height: 1.8;
+  }
+
+  .form-ref b {
+    color: #1a1208;
+  }
+
+  /* cover field grid */
+  .field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 0.75px solid #b0a080;
+    margin-bottom: 16px;
+  }
+
+  .field-cell {
+    padding: 7px 10px 6px;
+    border-right: 0.75px solid #b0a080;
+    border-bottom: 0.75px solid #b0a080;
+  }
+
+  .field-cell:nth-child(even) {
+    border-right: none;
+  }
+
+  .field-cell.full {
+    grid-column: 1 / -1;
+    border-right: none;
+  }
+
+  .field-cell.no-bottom {
+    border-bottom: none;
+  }
+
+  .field-label {
+    font-size: 7.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #8a7558;
+    margin-bottom: 3px;
+    display: block;
+  }
+
+  .field-value {
+    font-size: 11px;
+    color: #1a1208;
+    letter-spacing: 0.02em;
+  }
+
+  .cover-note {
+    font-size: 9px;
+    color: #6a5a40;
+    letter-spacing: 0.08em;
+    line-height: 1.7;
+    border-top: 0.5px solid #c0ae88;
+    padding-top: 10px;
+    font-style: italic;
+  }
+
+  /* ── STAMP ── */
+  .stamp {
+    position: absolute;
+    font-family: 'Special Elite', serif;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  /* ── PHOTO BLOCK ── */
+  .photo-block {
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  /* photo label bar — above each photo */
+  .photo-label-bar {
+    background: #2a2015;
+    padding: 7px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .photo-id {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #c0ae88;
+    font-weight: 700;
+  }
+
+  .photo-caption {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: #8a7a60;
+    text-transform: uppercase;
+  }
+
+  /* photo container */
+  .photo-wrap {
+    position: relative;
+    display: block;
+    line-height: 0;
+    overflow: hidden;
+  }
+
+  .photo-wrap img {
+    width: 100%;
+    display: block;
+    filter: sepia(8%) contrast(1.05) brightness(0.96);
+  }
+
+  /* film-edge overlay — top and bottom */
+  .photo-wrap::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.25) 0%, transparent 100%);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .photo-wrap::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(0deg, rgba(0,0,0,0.25) 0%, transparent 100%);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* ruler strip below each photo */
+  .ruler-strip {
+    background: #e8e2d0;
+    padding: 5px 14px 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 0.5px solid #c0ae88;
+  }
+
+  .ruler-meta {
+    font-size: 8px;
+    color: #7a6a50;
+    letter-spacing: 0.1em;
+  }
+
+  .ruler-code {
+    font-size: 8px;
+    color: #5a4a32;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+  }
+
+  /* photo 3 special — evidence bag callout strip */
+  .evidence-strip {
+    background: #2a2015;
+    padding: 6px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-top: 1px solid #9a7b2e;
+  }
+
+  .evidence-strip-icon {
+    font-size: 10px;
+    color: #9a7b2e;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .evidence-strip-text {
+    font-size: 8.5px;
+    color: #c0ae88;
+    letter-spacing: 0.1em;
+    font-style: italic;
+  }
+
+  /* ── CLOSING STRIP ── */
+  .closing {
+    background: #f0ebe0;
+    padding: 16px 44px;
+    box-shadow:
+      0 1px 3px rgba(0,0,0,0.2),
+      0 4px 12px rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+  }
+
+  .closing-text {
+    font-size: 8px;
+    color: #7a6a50;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1.8;
+  }
+
+  .closing-sig {
+    text-align: right;
+  }
+
+  .sig-line {
+    border-bottom: 0.75px solid #8a7558;
+    width: 140px;
+    height: 24px;
+    margin-bottom: 4px;
+  }
+
+  .sig-caption {
+    font-size: 7.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #8a7558;
+  }
+
+  /* stain */
+  .stain {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div class="document">
+
+  <!-- ══ COVER SHEET ══ -->
+  <div class="cover">
+    <div class="stain" style="width:80px;height:65px;top:60px;right:36px;background:radial-gradient(ellipse,rgba(120,90,40,0.055),transparent 70%);z-index:0;"></div>
+
+    <div class="stamp" style="top:32px;right:40px;font-size:10px;color:#b83a2a;border:1.5px solid #b83a2a;padding:4px 10px;opacity:0.55;transform:rotate(10deg);">Evidence — Filed</div>
+
+    <div class="cover-inner">
+      <div class="cover-header">
+        <div class="agency">
+          <b>West Virginia State Police</b>
+          Troop 3 — Fairmont Detachment<br>
+          Criminal Investigation Division
+        </div>
+        <div class="form-ref">
+          Form: <b>CID-PHOTO-LOG</b><br>
+          Case: <b>MH-1998-0014</b><br>
+          Page: <b>1 of 1</b>
+        </div>
+      </div>
+
+      <div class="field-grid">
+        <div class="field-cell">
+          <span class="field-label">Evidence type</span>
+          <span class="field-value">Photographic record — search documentation</span>
+        </div>
+        <div class="field-cell">
+          <span class="field-label">Evidence ID</span>
+          <span class="field-value">EV-013 &nbsp;·&nbsp; Photos 1–4 of 4</span>
+        </div>
+        <div class="field-cell">
+          <span class="field-label">Date photographed</span>
+          <span class="field-value">October 17, 1998 &nbsp;·&nbsp; approx. 23:15–00:40</span>
+        </div>
+        <div class="field-cell">
+          <span class="field-label">Photographer</span>
+          <span class="field-value">Cpl. D. Haynes — WVSP CID</span>
+        </div>
+        <div class="field-cell">
+          <span class="field-label">Search area</span>
+          <span class="field-value">Relay tower perimeter — Route 7 access road</span>
+        </div>
+        <div class="field-cell">
+          <span class="field-label">Search team</span>
+          <span class="field-value">WVSP Search Unit — 4 officers</span>
+        </div>
+        <div class="field-cell full no-bottom">
+          <span class="field-label">Notes</span>
+          <span class="field-value">Night search. Flashlight documentation only — no auxiliary lighting available. ISO 800 film. Photos developed and printed October 19, 1998. One evidence item recovered and bagged on site — see Photo 3.</span>
+        </div>
+      </div>
+
+      <div class="cover-note">
+        These photographs are submitted as part of case file MH-1998-0014 and are restricted to authorized personnel only.
+        Reproduction or distribution without written authorization from the CID supervisor is prohibited.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PHOTO 1 ══ -->
+  <div class="photo-block">
+    <div class="photo-label-bar">
+      <span class="photo-id">Photo 1 of 4 &nbsp;·&nbsp; EV-013</span>
+      <span class="photo-caption">Tower access road — north approach</span>
+    </div>
+    <div class="photo-wrap">
+      <img src="img01.png" alt="Tower access road photographed at night — relay tower silhouette visible at end of road">
+    </div>
+    <div class="ruler-strip">
+      <span class="ruler-meta">Oct 17 1998 &nbsp;·&nbsp; 23:18 &nbsp;·&nbsp; ISO 800</span>
+      <span class="ruler-code">MH-1998-0014 / P01</span>
+    </div>
+  </div>
+
+  <!-- ══ PHOTO 2 ══ -->
+  <div class="photo-block">
+    <div class="photo-label-bar">
+      <span class="photo-id">Photo 2 of 4 &nbsp;·&nbsp; EV-013</span>
+      <span class="photo-caption">Disturbed ground — maintenance path</span>
+    </div>
+    <div class="photo-wrap">
+      <img src="img02.png" alt="Disturbed ground near maintenance path — broken fence post visible, tower structure in background">
+    </div>
+    <div class="ruler-strip">
+      <span class="ruler-meta">Oct 17 1998 &nbsp;·&nbsp; 23:41 &nbsp;·&nbsp; ISO 800</span>
+      <span class="ruler-code">MH-1998-0014 / P02</span>
+    </div>
+  </div>
+
+  <!-- ══ PHOTO 3 ══ -->
+  <div class="photo-block">
+    <div class="photo-label-bar">
+      <span class="photo-id">Photo 3 of 4 &nbsp;·&nbsp; EV-013</span>
+      <span class="photo-caption">Tower fence line — evidence item recovered</span>
+    </div>
+    <div class="photo-wrap">
+      <img src="img03.png" alt="Tower fence line — evidence bag visible lower left, footprints in mud">
+    </div>
+    <div class="evidence-strip">
+      <span class="evidence-strip-icon">⬡ Item recovered</span>
+      <span class="evidence-strip-text">One sealed evidence bag recovered from site — contents logged separately — see case inventory</span>
+    </div>
+    <div class="ruler-strip">
+      <span class="ruler-meta">Oct 17 1998 &nbsp;·&nbsp; 23:58 &nbsp;·&nbsp; ISO 800</span>
+      <span class="ruler-code">MH-1998-0014 / P03</span>
+    </div>
+  </div>
+
+  <!-- ══ PHOTO 4 ══ -->
+  <div class="photo-block">
+    <div class="photo-label-bar">
+      <span class="photo-id">Photo 4 of 4 &nbsp;·&nbsp; EV-013</span>
+      <span class="photo-caption">Tower base — gate and access point</span>
+    </div>
+    <div class="photo-wrap">
+      <img src="img04.png" alt="Tower base — chain link gate with NO ENTRY sign, chain present, tower ascending into darkness">
+    </div>
+    <div class="ruler-strip">
+      <span class="ruler-meta">Oct 17 1998 &nbsp;·&nbsp; 00:33 &nbsp;·&nbsp; ISO 800</span>
+      <span class="ruler-code">MH-1998-0014 / P04</span>
+    </div>
+  </div>
+
+  <!-- ══ CLOSING ══ -->
+  <div class="closing">
+    <div class="closing-text">
+      West Virginia State Police — CID Fairmont<br>
+      Case MH-1998-0014 &nbsp;·&nbsp; Photo log EV-013<br>
+      Submitted October 19, 1998
+    </div>
+    <div class="closing-sig">
+      <div class="sig-line"></div>
+      <div class="sig-caption">CID supervisor — approval</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

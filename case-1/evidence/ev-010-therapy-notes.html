@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EV-010 — Session Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #2a2520;
+    min-height: 100vh;
+    padding: 40px 20px;
+    font-family: 'Courier Prime', monospace;
+    display: flex;
+    justify-content: center;
+  }
+
+  .document {
+    width: 680px;
+    max-width: 100%;
+  }
+
+  /* ── PAGE ── */
+  .page {
+    background: #f4efe6;
+    padding: 54px 60px 70px 72px;
+    position: relative;
+    margin-bottom: 28px;
+    box-shadow:
+      0 1px 3px rgba(0,0,0,0.2),
+      0 6px 20px rgba(0,0,0,0.38);
+  }
+
+  /* left margin line — red, like a legal pad */
+  .page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 52px;
+    width: 1px;
+    background: rgba(180,80,80,0.2);
+  }
+
+  /* faint ruled lines */
+  .page::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 27px,
+      rgba(140,120,90,0.055) 27px,
+      rgba(140,120,90,0.055) 28px
+    );
+    pointer-events: none;
+  }
+
+  .stain {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  .doc-header {
+    border-bottom: 0.75px solid #b0a088;
+    padding-bottom: 16px;
+    margin-bottom: 26px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .doc-institution {
+    font-size: 8.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #6a5a42;
+    margin-bottom: 7px;
+  }
+
+  .doc-title {
+    font-family: 'Special Elite', serif;
+    font-size: 14px;
+    color: #221a10;
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+  }
+
+  .meta-field {
+    font-size: 9.5px;
+    color: #6a5a42;
+    letter-spacing: 0.07em;
+  }
+
+  .meta-field b {
+    color: #221a10;
+    font-weight: 700;
+  }
+
+  /* ── CONTENT ── */
+  .content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .section-label {
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #8a7558;
+    border-bottom: 0.5px solid #c0ae90;
+    padding-bottom: 4px;
+    margin-bottom: 18px;
+    margin-top: 28px;
+  }
+
+  .section-label:first-child {
+    margin-top: 0;
+  }
+
+  /* ── SESSION ENTRY ── */
+  .entry {
+    margin-bottom: 24px;
+    padding-left: 18px;
+    border-left: 1px solid #c8b898;
+    position: relative;
+  }
+
+  .entry-date {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #7a6848;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  /* ── BODY TEXT ── */
+  .body {
+    font-size: 11.5px;
+    color: #221a10;
+    line-height: 1.88;
+  }
+
+  .body p {
+    margin-bottom: 10px;
+  }
+
+  .body p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* subtle typewriter variance */
+  .body p:nth-child(2n) { letter-spacing: 0.015em; }
+  .body p:nth-child(3n) { letter-spacing: 0.005em; }
+
+  /* ── REDACTION ── */
+  .r {
+    background: #181210;
+    color: transparent;
+    user-select: none;
+    display: inline;
+    padding: 0 1px;
+    line-height: 1;
+  }
+
+  /* ── SINGLE UNDERLINE — used once, looks like Voss's pen ── */
+  .pen {
+    text-decoration: underline;
+    text-decoration-color: rgba(80,55,25,0.4);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+
+  /* ── ITALIC notation ── */
+  .note {
+    font-style: italic;
+    color: #3a2e1a;
+    font-size: 11px;
+    line-height: 1.75;
+    margin-top: 8px;
+    padding-left: 10px;
+    border-left: 1px solid #c0ae90;
+  }
+
+  /* ── STAMP ── */
+  .stamp {
+    position: absolute;
+    font-family: 'Special Elite', serif;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .stamp-conf {
+    top: 36px;
+    right: 46px;
+    font-size: 10px;
+    color: #b83a2a;
+    border: 1.5px solid #b83a2a;
+    padding: 4px 10px;
+    opacity: 0.55;
+    transform: rotate(11deg);
+  }
+
+  .stamp-archive {
+    bottom: 46px;
+    right: 46px;
+    font-size: 8px;
+    color: #2a4066;
+    border: 1px solid #2a4066;
+    padding: 3px 8px;
+    opacity: 0.45;
+    transform: rotate(-5deg);
+  }
+
+  /* ── PAGE FOOTER ── */
+  .page-footer {
+    position: absolute;
+    bottom: 20px;
+    left: 72px;
+    right: 60px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 8px;
+    color: #9a8870;
+    letter-spacing: 0.1em;
+    border-top: 0.5px solid #c0ae90;
+    padding-top: 8px;
+    z-index: 1;
+  }
+
+  /* ── SIGNATURE BLOCK ── */
+  .sig-block {
+    display: flex;
+    gap: 60px;
+    margin-top: 28px;
+  }
+
+  .sig-line-wrap {
+    width: 170px;
+  }
+
+  .sig-line {
+    border-bottom: 0.75px solid #8a7558;
+    height: 30px;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 4px;
+  }
+
+  .sig-initials {
+    font-family: 'Special Elite', serif;
+    font-size: 14px;
+    color: #221a10;
+    opacity: 0.65;
+    letter-spacing: 0.04em;
+  }
+
+  .sig-label {
+    font-size: 8.5px;
+    color: #8a7558;
+    letter-spacing: 0.08em;
+    margin-top: 5px;
+  }
+
+  /* ── PAGE BREAK LABEL ── */
+  .break-label {
+    text-align: center;
+    font-size: 8.5px;
+    letter-spacing: 0.15em;
+    color: #6a5a42;
+    text-transform: uppercase;
+    margin: 6px 0 28px;
+  }
+</style>
+</head>
+<body>
+<div class="document">
+
+  <!-- ══════════════ PAGE 1 ══════════════ -->
+  <div class="page">
+    <div class="stain" style="width:110px;height:85px;top:100px;right:28px;background:radial-gradient(ellipse,rgba(130,95,45,0.055),transparent 70%);"></div>
+    <div class="stain" style="width:55px;height:45px;bottom:90px;left:62px;background:radial-gradient(ellipse,rgba(130,95,45,0.05),transparent 70%);"></div>
+
+    <div class="stamp stamp-conf">Confidential</div>
+
+    <div class="doc-header">
+      <div class="doc-institution">Community Behavioral Research Unit &nbsp;·&nbsp; WHLW 88.3 Outreach Program</div>
+      <div class="doc-title">Clinical Observation Notes — Ongoing Study</div>
+      <div class="meta-row">
+        <div class="meta-field">File ref: <b><span class="r">██████</span></b></div>
+        <div class="meta-field">Supervising clinician: <b>E. Voss, Ph.D.</b></div>
+        <div class="meta-field">Study period: <b>1994 — ongoing</b></div>
+        <div class="meta-field">Classification: <b>Internal — restricted distribution</b></div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="section-label">Preliminary notes</div>
+      <div class="body">
+        <p>The following session records document participant responses over the course of the <span class="r">████████████████████</span> study. All participants provided consent under the Community Outreach Program agreement. Identifying information has been removed from this copy per institutional protocol.</p>
+        <p>Broadcast material was prepared in coordination with <span class="r">████████</span> and delivered via standard overnight transmission during scheduled programming hours. Participants were not informed of the conditioning component of the study design.</p>
+      </div>
+
+      <div class="section-label">Session records — subject group A</div>
+
+      <div class="entry">
+        <div class="entry-date">Session 04 &nbsp;·&nbsp; October 1994</div>
+        <div class="body">
+          <p>Subjects in Group A report unprompted awareness of <span class="r">████</span> during standard listening sessions. Three of seven subjects described a low-frequency sound — referred to independently as "a hum" or "humming." No audio stimulus corresponding to this description was present in the broadcast material for this session.</p>
+          <p>This is consistent with the expected onset of associative suggestion response. The absence of an external stimulus producing the reported experience is not unexpected at this stage of exposure.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-date">Session 07 &nbsp;·&nbsp; March 1995</div>
+        <div class="body">
+          <p>Increased suggestibility confirmed across all Group A subjects following three consecutive exposure sessions. Language adoption is progressing at a rate <span class="r">████████████</span> above baseline projections.</p>
+          <p>Subjects have begun using introduced language without prompting. The phrase "you hear it too" was recorded in unsolicited written communication between two Group A subjects who had not previously made direct contact. Neither subject appeared aware they were using introduced phrasing. Phrase conditioning is functioning as designed — subjects begin self-reinforcing with introduced language. The group becomes its own transmission mechanism.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-date">Session 11 &nbsp;·&nbsp; November 1995</div>
+        <div class="body">
+          <p>Anomalous result requiring documentation. Subject <span class="r">███</span>, identified as a non-exposed control participant, reported experiencing <span class="r">██████████████████████</span> consistent with Group A symptom profile. Subject used the phrase "the humming" without prior exposure to Group A broadcast materials.</p>
+          <p>Spontaneous adoption by non-exposed control subjects was not projected at this stage of the study. This may indicate <span class="r">████████████████████████████████████████</span>. Finding has been flagged for separate documentation and will not appear in the primary study summary.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="page-footer">
+      <span>WHLW-CBR / VOSS / RESTRICTED</span>
+      <span>Page 1 of 3</span>
+      <span>Do not copy or distribute</span>
+    </div>
+  </div>
+
+  <div class="break-label">— page 2 —</div>
+
+  <!-- ══════════════ PAGE 2 ══════════════ -->
+  <div class="page">
+    <div class="stain" style="width:90px;height:70px;top:180px;right:22px;background:radial-gradient(ellipse,rgba(130,95,45,0.06),transparent 70%);"></div>
+    <div class="stain" style="width:65px;height:55px;top:320px;left:58px;background:radial-gradient(ellipse,rgba(130,95,45,0.04),transparent 70%);"></div>
+
+    <div class="doc-header" style="margin-bottom:22px;">
+      <div class="doc-institution">Community Behavioral Research Unit — Session Records, continued</div>
+      <div class="meta-row">
+        <div class="meta-field">File ref: <b><span class="r">██████</span></b></div>
+        <div class="meta-field">Period: <b>1996 — 1998</b></div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="section-label">Session records — subject group B / broadcast integration phase</div>
+
+      <div class="entry">
+        <div class="entry-date">Session 14 &nbsp;·&nbsp; February 1996</div>
+        <div class="body">
+          <p>Group B subjects introduced to <span class="r">████████████████</span> via the overnight broadcast window. The call-in format provides a naturalistic interaction context that reduces subject resistance significantly — subjects do not conceptualize passive listening as participation in a structured study.</p>
+          <p>Memory shaping is progressing as expected. Subjects in the second week of exposure are beginning to report experiences consistent with suggestion rather than direct experience. Two subjects described visiting <span class="r">████████████</span> and encountering phenomena they attribute to the broadcast. No such visit is corroborated by <span class="r">████████████████████</span>.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-date">Session 19 &nbsp;·&nbsp; January 1997</div>
+        <div class="body">
+          <p>The overnight host has become a significant variable in Group B outcomes. <span class="r">████████████████████████████████████</span>. Her relationship with regular callers is more personal than the study design anticipated. Subjects in Group B reference her directly by name in unsolicited communications. Several repeat phrases she has used on-air verbatim — phrases not introduced as conditioning material by the study.</p>
+          <p>Emotional vulnerability increases susceptibility significantly. Subjects who reported personal distress during the study period showed <span class="r">████████████</span> higher language adoption rates than the general Group B population. The host's own apparent anxiety — communicated through vocal pacing, unscripted pauses, audible tension during caller interactions — may be functioning as an unintended <span class="pen">conditioning signal</span> for the listener group.</p>
+          <p class="note">This variable was not designed into the study. Its effects will be monitored but not corrected at this stage.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-date">Session 22 &nbsp;·&nbsp; September 1997</div>
+        <div class="body">
+          <p>Reference to "the tower" has entered subject language without introduction from study materials. Origin unclear. Three Group B subjects and one control subject have independently used this phrase in the context of <span class="r">██████████████████████████</span>. The phrase does not appear in any prepared broadcast material.</p>
+          <p>Possible sources: <span class="r">████████████████████████████████████████████████████████</span>. Organic propagation of location-specific association is a significant finding. No corrective material will be introduced at this stage.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-date">Session 24 &nbsp;·&nbsp; April 1998</div>
+        <div class="body">
+          <p>Study integrity is under pressure. The host has begun asking questions that suggest awareness of <span class="r">████████████████████████</span>. She has not made direct contact but her on-air behavior has shifted — questions to callers are more pointed, her responses more guarded. She appears to be <span class="r">████████████████████████████████</span>.</p>
+          <p>Memory is incredibly easy to shape. It is considerably more difficult to <span class="r">███████████████████████████████████████████████████████████████████</span>.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="page-footer">
+      <span>WHLW-CBR / VOSS / RESTRICTED</span>
+      <span>Page 2 of 3</span>
+      <span>Do not copy or distribute</span>
+    </div>
+  </div>
+
+  <div class="break-label">— page 3 —</div>
+
+  <!-- ══════════════ PAGE 3 ══════════════ -->
+  <div class="page">
+    <div class="stain" style="width:130px;height:100px;bottom:95px;right:28px;background:radial-gradient(ellipse,rgba(130,95,45,0.07),transparent 70%);"></div>
+    <div class="stain" style="width:70px;height:55px;top:160px;left:60px;background:radial-gradient(ellipse,rgba(130,95,45,0.04),transparent 70%);"></div>
+
+    <div class="stamp stamp-archive">Archive copy — 2025</div>
+
+    <div class="doc-header" style="margin-bottom:22px;">
+      <div class="doc-institution">Community Behavioral Research Unit — Final Observations</div>
+      <div class="meta-row">
+        <div class="meta-field">File ref: <b><span class="r">██████</span></b></div>
+        <div class="meta-field">Period: <b>October 1998</b></div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="section-label">Closing observations — October 1998</div>
+
+      <div class="body" style="margin-bottom:24px;">
+        <p>The following notes were appended to the study file in October 1998 and represent the final entries before the study was suspended.</p>
+      </div>
+
+      <div class="entry">
+        <div class="entry-date">Final entry &nbsp;·&nbsp; October 1998</div>
+        <div class="body">
+          <p>Study materials have been secured. The primary record — <span class="r">████████████████████████████████████████████</span> — has been removed from the station archive and is no longer accessible through standard channels.</p>
+          <p>Subject responses across the full study period demonstrate that tonal repetition combined with controlled emotional context produces measurable, durable changes in recall, perception, and language behavior across a general listening population. The broadcast medium is effective as a delivery mechanism because subjects do not conceptualize passive listening as participation. Results exceed projections across all primary metrics.</p>
+          <p>The questions raised by the host's <span class="r">████████████████████████████████████████████████████████████████████████████████████</span> have been resolved. No further documentation is required on that matter.</p>
+          <p>Findings have been transmitted to <span class="r">████████████████</span> per agreement. This copy of the session notes is not intended for institutional review.</p>
+          <p class="note">The study is complete. Results will be archived separately under <span class="r">████████████████</span>. This copy should not exist outside this office.</p>
+        </div>
+      </div>
+
+      <div class="section-label" style="margin-top:36px;">Signatures</div>
+
+      <div class="sig-block">
+        <div class="sig-line-wrap">
+          <div class="sig-line">
+            <span class="sig-initials">E.V.</span>
+          </div>
+          <div class="sig-label">E. Voss, Ph.D. — Supervising clinician</div>
+        </div>
+        <div class="sig-line-wrap">
+          <div class="sig-line"></div>
+          <div class="sig-label">Co-investigator — <span class="r">████████████</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="page-footer">
+      <span>WHLW-CBR / VOSS / RESTRICTED</span>
+      <span>Page 3 of 3</span>
+      <span>Archive copy — recovered 2025</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
